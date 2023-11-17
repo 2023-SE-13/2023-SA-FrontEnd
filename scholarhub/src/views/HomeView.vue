@@ -1,18 +1,17 @@
-<template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template lang="html">
+  <div>
+    <NaviBar />
   </div>
 </template>
-
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import NaviBar from '@/components/NaviBar.vue';
 
 export default {
-  name: 'HomeView',
-  components: {
-    HelloWorld
-  }
+  components: { // 在这里注册想要在本页面中使用的子组件
+    NaviBar
+  },
 }
 </script>
+<style lang="">
+  
+</style>
