@@ -1,15 +1,40 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+// import MainPage from '@/views/MainPage.vue' 
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: '首页',
+    redirect:'/home'
   },
+  {
+    path:'/home',
+    name:'主页',
+    component:()=>import('@/views/HomeView'),
+    children:[
+      {
+        path:'/about',
+        name:'关于我们',
+        component:()=>import('@/views/AboutUs')
+      },
+      {
+        path:'/introduce',
+        name:'资源介绍',
+        component:()=>import('@/views/Introduce')
+      },
+      {
+        path:'/temp1',
+        name:'暂定1',
+        component:()=>import('@/views/Temp')
+      }
+    ]
+  },
+
+
 ]
 
 const router = new VueRouter({

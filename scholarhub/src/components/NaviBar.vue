@@ -1,19 +1,19 @@
 <template lang="html">
   <div class="navi">
     <div class="navi-item">
-      <router-link to="/">首页</router-link>
+      <router-link to="/home">首页</router-link>
     </div>
     <div class="navi-item">
-      <router-link to="/">资源介绍</router-link>
+      <router-link to="/introduce">资源介绍</router-link>
     </div>
     <div class="navi-item">
-      <router-link to="/">学术交流</router-link>
+      <router-link to="/temp1">学术交流</router-link>
     </div>
     <div class="navi-item">
-      <router-link to="/">网站声明</router-link>
+      <router-link to="/temp1">网站声明</router-link>
     </div>
     <div class="navi-item">
-      <router-link to="/">关于我们</router-link>
+      <router-link to="/about">关于我们</router-link>
     </div>
     <div class="navi-item">
       <input type="text">

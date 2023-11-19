@@ -1,9 +1,18 @@
 <template>
   <div id="app">
     <router-view/>
+    <!-- <HomeView/> -->
   </div>
 </template>
-
+<script>
+import HomeView from './views/HomeView.vue';
+export default{
+  name:'App',
+  components:{
+    HomeView
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
