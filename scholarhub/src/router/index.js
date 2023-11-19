@@ -30,6 +30,16 @@ const routes = [
         path:'/temp1',
         name:'暂定1',
         component:()=>import('@/views/Temp')
+      },
+      // {
+      //   path:'/main',
+      //   name:'首页1',
+      //   component:()=>import('@/views/Main')
+      // }
+      {
+        path:'/main',
+        name:'首页1',
+        component:()=>import('@/views/HomePage')
       }
     ]
   },

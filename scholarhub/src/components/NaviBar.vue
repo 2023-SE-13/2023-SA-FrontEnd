@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="navi">
     <div class="navi-item">
-      <router-link to="/home">首页</router-link>
+      <router-link to="/main">首页</router-link>
     </div>
     <div class="navi-item">
       <router-link to="/introduce">资源介绍</router-link>
