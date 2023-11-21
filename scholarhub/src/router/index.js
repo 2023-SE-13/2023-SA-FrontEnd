@@ -40,6 +40,11 @@ const routes = [
         path:'/main',
         name:'首页1',
         component:()=>import('@/views/HomePage')
+      },
+      {
+        path:'/login',
+        name:'登录',
+        component:()=>import('@/views/LoginPage')
       }
     ]
   },
