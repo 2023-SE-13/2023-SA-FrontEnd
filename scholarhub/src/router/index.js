@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-// import MainPage from '@/views/MainPage.vue' 
+// import MainPage from '@/views/MainPage.vue'
 
 Vue.use(VueRouter)
 
@@ -46,13 +46,13 @@ const routes = [
         name:'登录',
         component:()=>import('@/views/LoginPage')
       },
-      {
-        path:'/personHomepage',
-        name:'个人主页',
-        component:()=>import('@/views/PersonHomepage')
-      }
     ]
   },
+  {
+    path:'/personHomepage',
+    name:'个人主页',
+    component:()=>import('@/views/PersonHomepage')
+  }
 
 
 ]

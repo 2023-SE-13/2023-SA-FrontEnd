@@ -53,12 +53,10 @@ export default {
 
 .input-with-select {
     width: 1000px;
-    height: 50px;
-
 }
 
-.el-input__inner {
-    height: 50px;
+::v-deep.input-with-select .el-input__inner {
+    height: 100px;
 }
 
 .input-with-select .el-input-group__prepend {

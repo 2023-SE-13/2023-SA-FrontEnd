@@ -110,10 +110,10 @@ export default {
   height: 65%;
   float: left;
   position: relative;
-  top: 16%;
+  top: 18%;
   left: 11%;
   text-align: left;
-  line-height: 100%;
+  line-height: 250%;
 }
 
 .Info #PersonalInfo .el-icon-edit{
