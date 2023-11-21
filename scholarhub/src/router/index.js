@@ -45,7 +45,7 @@ const routes = [
         path:'/login',
         name:'登录',
         component:()=>import('@/views/LoginPage')
-      }
+      },
     ]
   },
 

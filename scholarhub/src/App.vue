@@ -1,19 +1,24 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
     <!-- <HomeView/> -->
   </div>
 </template>
 <script>
 import HomeView from './views/HomeView.vue';
-export default{
-  name:'App',
-  components:{
+export default {
+  name: 'App',
+  components: {
     HomeView
   }
 }
 </script>
 <style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
