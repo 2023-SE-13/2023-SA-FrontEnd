@@ -46,6 +46,11 @@ const routes = [
         name:'登录',
         component:()=>import('@/views/LoginPage')
       },
+      {
+        path:'/personHomepage',
+        name:'个人主页',
+        component:()=>import('@/views/PersonHomepage')
+      }
     ]
   },
 
