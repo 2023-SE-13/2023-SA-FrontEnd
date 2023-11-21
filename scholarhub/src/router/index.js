@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/',
     name: '首页',
-    redirect:'/home'
+    redirect:'/main'
   },
   {
     path:'/home',

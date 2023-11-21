@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <div class="home-page">
+        <div class="img-container">
+            
+        </div>
         {{ aboout }}
     </div>
 </template>
@@ -12,4 +15,11 @@ export default {
     }
 }
 </script>
-<style></style>
+<style lang="scss">
+    .img-container{
+        display: block;
+        width: 100%;
+        height: 435px;
+        background-color: aqua;
+    }
+</style>
