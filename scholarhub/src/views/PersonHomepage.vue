@@ -29,9 +29,15 @@
           <el-menu-item index="1">论文</el-menu-item>
           <el-menu-item id="item2" index="2">专利</el-menu-item>
         </el-menu>
-        <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
-          <el-button slot="suffix" icon="el-icon-search" @click="search" ></el-button>
-        </el-input>
+        <div v-show="Menu1Idx === '1'">
+          <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
+            <el-button slot="suffix" icon="el-icon-search" @click="search" ></el-button>
+          </el-input>
+          <el-switch class="mp_switch" v-model="isMasterpieceOnly" active-text="仅看代表作" active-color="#2f3a91" inactive-color="#646464"></el-switch>
+        </div>
+        <div v-show="Menu1Idx === '2'">
+
+        </div>
       </div>
       <div class="BottomContent2" v-show="MidNavIdx === '2'">
 
@@ -73,7 +79,8 @@ export default {
       institution: "institution",
       MidNavIdx: '1',
       Menu1Idx: '1',
-      keywordsInput: ""
+      keywordsInput: "",
+      isMasterpieceOnly: false,
     };
   },
   methods: {
@@ -193,16 +200,44 @@ export default {
 
 .BottomContent1 .keywordSearch{
   width: 25%;
-  position: relative;
+  height: 34px;
   float: left;
 }
 
-.BottomContent1 .keywordSearch .el-button{
-  border: none;
-  height: 90%;
-  position: relative;
-  top: 4.5%;
-  left: 5%;
+::v-deep.BottomContent1 .keywordSearch .el-input__inner{
+  height: 100%;
+  border: 1px solid #dcdfe6;
+  border-radius: 20px;
+  background-color: #f4f4f4;
 }
 
+::v-deep.BottomContent1 .keywordSearch .el-button{
+  height: 100%;
+  position: relative;
+  left: 6%;
+  background-color: transparent;
+  border: none;
+  border-radius: 0 20px 20px 0;
+  color: #121212;
+  display: inline-block;
+}
+
+::v-deep.BottomContent1 .keywordSearch .el-button:hover{
+  color: #2f3a91;
+}
+
+.BottomContent1 .mp_switch{
+  float: left;
+  position: relative;
+  left: 1%;
+  top: 7px;
+}
+
+::v-deep.BottomContent1 .mp_switch .el-switch__label{
+  color: #646464;
+}
+
+::v-deep.BottomContent1 .mp_switch .el-switch__label.is-active{
+  color: #2f3a91;
+}
 </style>
