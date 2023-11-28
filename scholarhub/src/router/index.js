@@ -46,6 +46,11 @@ const routes = [
         name:'登录',
         component:()=>import('@/views/LoginPage')
       },
+      {
+        path:'/settings',
+        name:'设置',
+        component:()=>import('@/views/Setting')
+      },
     ]
   },
   {
