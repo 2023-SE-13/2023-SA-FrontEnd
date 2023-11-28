@@ -51,6 +51,11 @@ const routes = [
         name:'设置',
         component:()=>import('@/views/Setting')
       },
+      {
+        path:'/authentication',
+        name:'账号认证',
+        component:()=>import('@/views/Authentication.vue')
+      },
     ]
   },
   {
