@@ -27,6 +27,7 @@
             {{ isBound ? Phone : '未绑定' }}
           </span>
           <el-button v-if="!isBound" type="primary" round @click="EditPhone = true">去绑定</el-button>
+          <el-button v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
         </div>
         <el-divider></el-divider>
         <div class="cell">
@@ -35,6 +36,7 @@
             {{ isBound ? Email : '未绑定' }}
           </span>
           <el-button v-if="!isBound" type="primary" round @click="EditEmail = true">去绑定</el-button>
+          <el-button v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
         </div>
         <el-divider></el-divider>
         <div class="cell">
@@ -43,6 +45,7 @@
             {{ isBound ? Wechat : '未绑定' }}
           </span>
           <el-button v-if="!isBound" type="primary" round @click="EditWechat = true">去绑定</el-button>
+          <el-button v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
