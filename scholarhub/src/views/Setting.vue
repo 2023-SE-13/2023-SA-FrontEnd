@@ -2,7 +2,7 @@
 
   <div>
     <div class="title">
-      <span style="margin-right: 2%">账号设置</span><i class="el-icon-user-solid"></i>
+      <span style="margin-right: 2%">账号信息</span><i class="el-icon-user-solid"></i>
     </div>
 
     <el-collapse v-model="activeName" accordion>
@@ -11,79 +11,41 @@
         <el-divider></el-divider>
         <div class="cell">
           <span style="font-size: 16px;font-weight: bold;margin-left: 3%">个人认证</span>
-          <span style="padding-left: 10%;margin-right: 50%;color: darkgrey">
+          <span style="padding-left: 10%;margin-right: 60%;color: darkgrey">
             {{ isBound ? Name : '未实名' }}
           </span>
-          <el-button v-if="!isBound" type="primary" round @click="gotoBinding">去认证</el-button>
+          <el-button class="" v-if="!isBound" type="primary" round @click="gotoBinding">去认证</el-button>
         </div>
       </el-collapse-item>
 
-      <el-collapse-item title="绑定账户" name="2">
-        <div class="note">绑定手机、邮箱和微信，可以使用任意方式进行登录</div>
+      <el-collapse-item title="账户设置" name="2">
         <el-divider></el-divider>
         <div class="cell">
-          <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定手机</span>
-          <span style="margin-left: 10%;margin-right: 50%;color: darkgrey">
-            {{ isBound ? Phone : '未绑定' }}
-          </span>
-          <el-button v-if="!isBound" type="primary" round @click="EditPhone = true">去绑定</el-button>
-          <el-button v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
+          <span style="font-size: 16px;font-weight: bold;margin-left: 3%">修改密码</span>
+          <el-button class="edit-pwd-btn" type="danger" round @click="EditPwd = true" style="margin-left: 72.5%">修改</el-button>
         </div>
+
         <el-divider></el-divider>
         <div class="cell">
           <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定邮箱</span>
-          <span style="margin-left: 10%;margin-right: 50%;color: darkgrey">
+          <span style="margin-left: 10%;margin-right: 60%;color: darkgrey">
             {{ isBound ? Email : '未绑定' }}
           </span>
-          <el-button v-if="!isBound" type="primary" round @click="EditEmail = true">去绑定</el-button>
-          <el-button v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
-        </div>
-        <el-divider></el-divider>
-        <div class="cell">
-          <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定微信</span>
-          <span style="margin-left: 10%;margin-right: 50%;color: darkgrey">
-            {{ isBound ? Wechat : '未绑定' }}
-          </span>
-          <el-button v-if="!isBound" type="primary" round @click="EditWechat = true">去绑定</el-button>
-          <el-button v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
+          <el-button class="edit-email-btn" v-if="!isBound" type="primary" round @click="EditEmail = true">绑定</el-button>
+          <el-button class="edit-email-btn-btn" v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
 
     <el-dialog
-        title="绑定手机号"
-        :visible.sync="EditPhone"
-        width="50%"
-        :before-close="handleClose">
-      <span>手机验证通过后，可以使用绑定的手机号登录</span>
-      <el-form :model="phoneForm" :rules="phoneFormRules" ref="regForm">
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="phoneForm.phone"></el-input>
-        </el-form-item>
-        <el-form-item class="buttons">
-          <el-button @click="sendVerificationCode" :disabled="verificationSent">
-            {{ verificationSent ? '已发送' : '发送验证码' }}
-          </el-button>
-        </el-form-item>
-        <el-form-item label="验证码" prop="code">
-          <el-input v-model=phoneForm.code></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="EditPhone = false">取 消</el-button>
-        <el-button type="primary" @click="submitPhone">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <el-dialog
-        title="绑定手机号"
+        title="绑定邮箱"
         :visible.sync="EditEmail"
-        width="50%"
+        width="500px"
         :before-close="handleClose">
       <span>邮箱验证通过后，可以使用绑定的邮箱登录</span>
       <el-form :model="emailForm" :rules="emailFormRules" ref="regForm">
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="emailForm.phone"></el-input>
+        <el-form-item label="绑定邮箱" prop="email">
+          <el-input v-model="emailForm.email"></el-input>
         </el-form-item>
         <el-form-item class="buttons">
           <el-button @click="sendVerificationCode" :disabled="verificationSent">
@@ -100,6 +62,25 @@
       </span>
     </el-dialog>
 
+    <el-dialog
+        title="修改密码"
+        :visible.sync="EditPwd"
+        width= 350px
+        :before-close="handleClose">
+      <el-form :model="pwdForm" :rules="pwdFormRules" ref="regForm">
+        <el-form-item label="原先密码" prop="pwd">
+          <el-input v-model="pwdForm.pwd" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="new_pwd">
+          <el-input v-model="pwdForm.new_pwd" show-password></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="EditPwd = false">取 消</el-button>
+        <el-button type="primary" @click="saveNewPwd">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 
 
@@ -110,24 +91,6 @@ export default {
   data() {
     return {
       verificationSent: false,
-      EditPhone: false,
-      phoneForm:{
-        phone: '',
-        code: ''
-      },
-      phoneFormRules: {
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          {
-            pattern: /^1\d{10}$/, // 使用正则表达式限制为11位数字，并且以1开头
-            message: '请输入合法的手机号码',
-            trigger: 'blur'
-          }
-        ],
-        code: [
-          { required: true, message: '请输入6位验证码', trigger: 'blur' },
-        ]
-      },
       EditEmail: false,
       emailForm:{
         email: '',
@@ -143,11 +106,21 @@ export default {
           }
         ],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { required: true, message: '请输入6位验证码', trigger: 'blur' },
         ]
       },
-      EditWechat: false,
-      wechatForm:{
+      EditPwd: false,
+      pwdForm:{
+        pwd: '',
+        new_pwd: ''
+      },
+      pwdFormRules: {
+        pwd: [
+          { required: true, message: '请输入原先密码', trigger: 'blur' },
+        ],
+        new_pwd: [
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+        ]
       }
     };
   },
@@ -170,34 +143,23 @@ export default {
       this.verificationSent = true; // 标记验证码已发送
     },
 
-    async submitPhone() {
-      try {
-        await this.$refs.regForm.validate();
-        const { phone, code } = this.phoneForm;
-        const response = await this.$axios.post('/api/submit', {
-          phone,
-          code
-        });
-        console.log('提交成功', response.data);
-        this.EditPhone = false;
-      } catch (error) {
-        console.error('绑定失败', error);
-      }
-    },
-
     async submitEmail() {
       try {
         await this.$refs.regForm.validate();
-        const { email, code } = this.phoneForm;
+        const { email, code } = this.emailForm;
         const response = await this.$axios.post('/api/submit', {
           email,
           code
         });
         console.log('提交成功', response.data);
-        this.EditPhone = false;
+        this.EditEmail = false;
       } catch (error) {
         console.error('绑定失败', error);
       }
+    },
+
+    async saveNewPwd() {
+
     }
   }
 };
