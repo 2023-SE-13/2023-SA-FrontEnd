@@ -2,18 +2,36 @@
     <div class="paper-unit">
         <!-- <img class="paper-img"  src="../assets/logo.png" alt="加载失败"> -->
         <div class="paper-img"> <img src="" alt="图片加载失败" class="fallback-img"></div>
-        <div class="paper-title"></div>
-        <div class="paper-abstract"></div>
-        <div class="paper-author"></div>
+        <div class="paper-title">{{ paper.title }}</div>
+        <div class="paper-abstract">{{ paper.abstract }}</div>
+        <div class="paper-author">{{ paper.author }}</div>
     </div>
 </template>
 <script>
+export default {
+    name: "PaperUnit",
+    props: {
+        paper: {
+            type: Object,
+            default: () => {
+                return {
+                    title: "Gold-Nanolayer-Derived Zincophilicity Suppressing Metallic Zinc Dendrites and Its Efficacy in Improving Electrochemical Stability of Aqueous Zinc-Ion Batteries",
+                    abstract: "抑制锌枝晶形成新机制，可支持在50 mA cm-2的高电流密度稳定循环1000次",
+                    author: "Yan, Pengfei; Zhang, Yufei; Wang, Zhiyu; et al.",
+                }
+            }
+        }
+    },
+    data() {
+        return {}
+    },
+}
 </script>
 <style>
 .paper-unit {
     width: 280px;
     height: 380px;
-    background-color: aqua;
+    background-color: rgb(249, 253, 255);
     /* padding: 10px; */
     display: inline-block;
     margin: 30px 15px;
@@ -28,7 +46,7 @@
     height: 45%;
     position: relative;
     /* background-color: bisque; */
-    background-image: url("../assets/cover.jpg");
+    background-image: url("../assets/paper-unit-cover.png");
     /* scale: 0.7; */
     background-size: cover;
     background-position: center;
@@ -60,6 +78,34 @@
 
 .paper-title {
     width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2; /* 控制显示的行数 */
+    font-weight: 700;
+    text-align: left; /* 设置文本靠左对齐 */
+}
 
+.paper-abstract {
+    padding-top: 5px;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 4; /* 控制显示的行数 */
+    font-weight: 400;
+    text-align: left; /* 设置文本靠左对齐 */
+}
+
+.paper-author {
+    padding-top: 5px;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 1; /* 控制显示的行数 */
+    font-weight: 100;
+    text-align: left; /* 设置文本靠左对齐 */
+    color:rgb(149, 149, 149)
 }
 </style>
