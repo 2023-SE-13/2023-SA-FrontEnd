@@ -1,14 +1,29 @@
 <template lang="html">
   <div class="navi">
-    <div class="navi-item" v-for="(naviUnit, index) in naviUnits" :key="index" @click="changeActive(index)"
-      :class="{ active: activeIndex === index }">
-      <router-link :to="naviUnit.link_to">{{ naviUnit.content }}</router-link>
-    </div>
-    <div class="navi-item">
-      <input type="text">
-    </div>
-    <div class="navi-item">
-      <button>登录</button>
+    <div class="navi-inner">
+      <img class="logo" alt="logo" src="../assets/logo.png">
+      <div class="navi-item" v-for="(naviUnit, index) in naviUnits" :key="index" @click="changeActive(index)"
+           :class="{ active: activeIndex === index }">
+        <router-link :to="naviUnit.link_to">{{ naviUnit.content }}</router-link>
+      </div>
+      <div class="navi-item">
+        <input type="text">
+      </div>
+      <div class="navi-item">
+        <button>登录</button>
+      </div>
+      <div class="photo">
+        <el-dropdown placement="bottom">
+          <el-avatar :size="35" src="../assets/cover.png"></el-avatar>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>主页</el-dropdown-item>
+            <el-dropdown-item>收藏</el-dropdown-item>
+            <el-dropdown-item>推荐</el-dropdown-item>
+            <el-dropdown-item>设置</el-dropdown-item>
+            <el-dropdown-item>退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -45,13 +60,27 @@ export default {
 </script>
 <style lang="css">
 .navi {
-  /* border: 1px solid #ccc; */
-  /* padding: 3px; */
+  width: 100%;
   background-color: #2f3a91;
   height: 60px;
+  padding-left: 7%;
+  padding-right: 7%;
 }
 
-.navi-item {
+.navi-inner{
+  width: 86%;
+  height: 100%;
+  position: relative;
+}
+
+.navi .navi-inner .logo{
+  display: inline-block;
+  width: 150px;
+  height: 60px;
+  float: left;
+  opacity: 0.75;
+}
+.navi .navi-inner .navi-item {
   display: inline-block;
   /* margin-left: 20px; */
   /* border: 1px solid #ccc; */
@@ -59,7 +88,7 @@ export default {
   /* padding-bottom: 2px; */
 }
 
-.navi .navi-item a {
+.navi .navi-inner .navi-item a {
   display: inline-block;
   color: #d5d8e9;
   line-height: 60px;
@@ -67,15 +96,15 @@ export default {
   padding: 0 15px;
 }
 
-.navi .navi-item:hover {
+.navi .navi-inner .navi-item:hover {
   background-color: #4e57a1;
 }
 
-.navi .navi-item:hover a {
+.navi .navi-inner .navi-item:hover a {
   color: #fff;
 }
 
-.navi .navi-item::after {
+.navi .navi-inner .navi-item::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -86,16 +115,29 @@ export default {
   opacity: 0;
 }
 
-.navi .navi-item.active::after {
+.navi .navi-inner .navi-item.active::after {
   opacity: 1;
 }
 
-.navi .navi-item.active {
+.navi .navi-inner .navi-item.active {
   background-color: #4e57a1;
 }
 
-.navi .navi-item.active a {
+.navi .navi-inner .navi-item.active a {
   font-weight: bold;
   color: #fff;
+}
+
+.navi .navi-inner .photo {
+  display: inline-block;
+  float: right;
+  position: relative;
+  height: 60px;
+  width: 60px;
+}
+
+.navi .navi-inner .photo .el-avatar {
+  position: relative;
+  top: 12.5px;
 }
 </style>

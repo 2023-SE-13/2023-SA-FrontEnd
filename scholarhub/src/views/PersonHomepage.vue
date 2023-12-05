@@ -34,6 +34,18 @@
             <el-button slot="suffix" icon="el-icon-search" @click="search" ></el-button>
           </el-input>
           <el-switch class="mp_switch" v-model="isMasterpieceOnly" active-text="仅看代表作" active-color="#2f3a91" inactive-color="#646464"></el-switch>
+          <el-dropdown class="dropdown">
+            <el-button>
+              更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>黄金糕</el-dropdown-item>
+              <el-dropdown-item>狮子头</el-dropdown-item>
+              <el-dropdown-item>螺蛳粉</el-dropdown-item>
+              <el-dropdown-item>双皮奶</el-dropdown-item>
+              <el-dropdown-item>蚵仔煎</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
         <div v-show="Menu1Idx === '2'">
 
@@ -239,5 +251,22 @@ export default {
 
 ::v-deep.BottomContent1 .mp_switch .el-switch__label.is-active{
   color: #2f3a91;
+}
+
+.BottomContent1 .dropdown{
+  width: 100px;
+  float: left;
+  position: relative;
+  left: 2%;
+}
+
+::v-deep.BottomContent1 .dropdown .el-button{
+  padding: 10px 0 10px 0;
+  width: 90%;
+  color: #2f3a91;
+  font-size: 12px;
+  font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serify;
+  text-align: center;
+  background-color: #eaebf4;
 }
 </style>
