@@ -1,16 +1,15 @@
 <template lang="html">
   <div class="navi">
     <div class="navi-inner">
-      <img class="logo" alt="logo" src="../assets/logo.png">
+      <img class="logo" alt="logo" src="../assets/logo.png" @click="gotoMain">
       <div class="navi-item" v-for="(naviUnit, index) in naviUnits" :key="index" @click="changeActive(index)"
            :class="{ active: activeIndex === index }">
         <router-link :to="naviUnit.link_to">{{ naviUnit.content }}</router-link>
       </div>
-      <div class="navi-item">
-        <input type="text">
-      </div>
-      <div class="navi-item">
-        <button>登录</button>
+      <div class="navi-search" v-show="this.$route.path !== '/main'">
+        <el-input placeholder="请输入内容" v-model="input1">
+          <template slot="prepend">Http://</template>
+        </el-input>
       </div>
       <div class="photo">
         <el-dropdown placement="bottom">
@@ -38,12 +37,17 @@ export default {
         { content: "学术交流", link_to: "/temp1" },
         { content: "网站声明", link_to: "/temp1" },
         { content: "关于我们", link_to: "/about" }
-      ]
+      ],
+      input1: ''
     }
   },
   methods: {
     changeActive(index) {
       this.activeIndex = index
+      console.log(this.activeIndex)
+    },
+    gotoMain() {
+      this.$router.push("/main")
     }
   },
   created() {
@@ -80,12 +84,13 @@ export default {
   float: left;
   opacity: 0.75;
 }
+
 .navi .navi-inner .navi-item {
   display: inline-block;
-  /* margin-left: 20px; */
-  /* border: 1px solid #ccc; */
+  float: left;
+  height: 60px;
   position: relative;
-  /* padding-bottom: 2px; */
+  left: 10px;
 }
 
 .navi .navi-inner .navi-item a {
@@ -134,6 +139,12 @@ export default {
   position: relative;
   height: 60px;
   width: 60px;
+}
+
+.navi .navi-inner .navi-search{
+  width: 100px;
+  height: 60px;
+  float: left;
 }
 
 .navi .navi-inner .photo .el-avatar {
