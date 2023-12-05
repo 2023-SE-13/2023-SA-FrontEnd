@@ -10,7 +10,8 @@
                         <el-option label="作者" value="3"></el-option>
                     </el-select>
                     <!-- <el-button slot="append" type="text">文字按钮</el-button> -->
-                    <el-link slot="append" id="pro-search" type="primary" :underline="false">高级检索</el-link>
+                    <el-link slot="append" id="pro-search" type="primary" :underline="false"
+                        @click="dialogVisible = true">高级检索</el-link>
                     <!-- <el-button id="pro-search" slot="append" icon="el-icon-search">高级检索</el-button> -->
                     <el-button slot="append" id="search-button" icon="el-icon-search">检索</el-button>
                 </el-input>
@@ -20,10 +21,29 @@
             <PaperUnit v-for="index in 4" :key="index"></PaperUnit>
         </div>
         {{ aboout }}
+        <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+            <!-- <span>这是一段信息</span> -->
+            <div>
+                <el-input placeholder="请输入标题" class="pro-input" v-model="input4">
+                    <template slot="prepend">标题</template>
+                </el-input>
+                <el-input placeholder="请输入关键词" class="pro-input" v-model="input5">
+                    <template slot="prepend">关键词</template>
+                </el-input>
+                <el-input placeholder="请输入作者" class="pro-input" v-model="input6">
+                    <template slot="prepend">作者</template>
+                </el-input>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button class="pro-but" style="background-color: rgba(47, 58, 145, .8) !important;" type="primary" @click="Jump()">确 定</el-button>
+                <el-button class="pro-but" @click="ResetProSearch()">重置条件</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 import PaperUnit from "@/components/PaperUnit.vue"
+import router from "@/router";
 export default {
     data() {
         return {
@@ -31,10 +51,32 @@ export default {
             input1: '',
             input2: '',
             input3: '',
-            select: ''
+            input4: '',
+            input5: '',
+            input6: '',
+            select: '',
+            dialogVisible: false
         }
     },
     components: { PaperUnit }
+    , methods: {
+        handleClose(done) {
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    done();
+                })
+                .catch(_ => { });
+        },
+        Jump() {
+            this.dialogVisible = false;
+            router.push("/temp1")
+        },
+        ResetProSearch(){
+            this.input4 = ''
+            this.input5 = ''
+            this.input6 = ''
+        }
+    }
 }
 </script>
 <style scoped>
@@ -42,7 +84,7 @@ export default {
     display: block;
     width: 100%;
     height: 435px;
-    background-color: aqua;
+    background-color:aquamarine;
     /* float: left; */
     position: relative;
 }
@@ -139,5 +181,35 @@ export default {
     /* 设置分隔线的宽度 */
     background-color: #d6dbe3;
     /* 设置分隔线颜色 */
+}
+
+.pro-input {
+    /* border: #bfc3de solid 2px; */
+    width: 70%;
+    border-radius: 10px;
+    /* border-top-right-radius: 10px; */
+    /* padding: 10px; */
+    margin: 10px 0px;
+}
+
+.pro-input /deep/.el-input__inner {
+    height: 35px;
+    border: #bfc3de solid 2px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.pro-input /deep/.el-input__inner:hover{
+    border-color: rgba(47, 58, 145, .8) !important;
+}
+
+.pro-input /deep/.el-input-group__prepend {
+    border: #bfc3de solid 2px;
+    width: 80px;
+    border-radius: 5px;
+    /* margin-right: 10px; */
+}
+.pro-but{
+    width: 115px;
 }
 </style>

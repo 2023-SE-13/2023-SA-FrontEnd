@@ -30,6 +30,16 @@ export default {
     changeActive(index) {
       this.activeIndex = index
     }
+  },
+  created() {
+    const currentRouteIndex = this.naviUnits.findIndex(unit => unit.link_to == this.$route.path);
+    this.activeIndex = currentRouteIndex !== -1 ? currentRouteIndex : null;
+
+
+    this.$watch('$route', () => {
+      const currentRouteIndex = this.naviUnits.findIndex(unit => unit.link_to === this.$route.path);
+      this.activeIndex = currentRouteIndex !== -1 ? currentRouteIndex : null;
+    })
   }
 }
 </script>
@@ -79,6 +89,7 @@ export default {
 .navi .navi-item.active::after {
   opacity: 1;
 }
+
 .navi .navi-item.active {
   background-color: #4e57a1;
 }
