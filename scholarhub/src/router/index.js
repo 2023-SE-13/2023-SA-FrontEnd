@@ -52,9 +52,13 @@ const routes = [
     path:'/personHomepage',
     name:'个人主页',
     component:()=>import('@/views/PersonHomepage')
+  },
+  // 文献详情模块
+  {
+    path:'/article',
+    name:'个人主页',
+    component:()=>import('@/views/Article')
   }
-
-
 ]
 
 const router = new VueRouter({
