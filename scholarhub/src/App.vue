@@ -14,6 +14,9 @@ export default {
 }
 </script>
 <style>
+::-webkit-scrollbar{
+  display: none;
+}
 * {
   margin: 0;
   padding: 0;
