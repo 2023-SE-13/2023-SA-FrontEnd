@@ -8,7 +8,11 @@
       </div>
       <div class="navi-search" v-show="this.$route.path !== '/main'">
         <el-input placeholder="请输入内容" v-model="input1">
-          <template slot="prepend">Http://</template>
+          <el-select v-model="select" slot="prepend" placeholder="">
+            <el-option label="标题" value="1" @click="select='标题'"></el-option>
+            <el-option label="关键词" value="2" @click="select='关键词'"></el-option>
+            <el-option label="作者" value="3" @click="select='作者'"></el-option>
+          </el-select>
         </el-input>
       </div>
       <div class="photo">
@@ -38,7 +42,8 @@ export default {
         { content: "网站声明", link_to: "/temp1" },
         { content: "关于我们", link_to: "/about" }
       ],
-      input1: ''
+      input1: '',
+      select: '标题'
     }
   },
   methods: {
@@ -77,7 +82,7 @@ export default {
   position: relative;
 }
 
-.navi .navi-inner .logo{
+.navi-inner .logo{
   display: inline-block;
   width: 150px;
   height: 60px;
@@ -85,7 +90,7 @@ export default {
   opacity: 0.75;
 }
 
-.navi .navi-inner .navi-item {
+.navi-inner .navi-item {
   display: inline-block;
   float: left;
   height: 60px;
@@ -93,7 +98,7 @@ export default {
   left: 10px;
 }
 
-.navi .navi-inner .navi-item a {
+.navi-inner .navi-item a {
   display: inline-block;
   color: #d5d8e9;
   line-height: 60px;
@@ -101,15 +106,15 @@ export default {
   padding: 0 15px;
 }
 
-.navi .navi-inner .navi-item:hover {
+.navi-inner .navi-item:hover {
   background-color: #4e57a1;
 }
 
-.navi .navi-inner .navi-item:hover a {
+.navi-inner .navi-item:hover a {
   color: #fff;
 }
 
-.navi .navi-inner .navi-item::after {
+.navi-inner .navi-item::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -120,20 +125,42 @@ export default {
   opacity: 0;
 }
 
-.navi .navi-inner .navi-item.active::after {
+.navi-inner .navi-item.active::after {
   opacity: 1;
 }
 
-.navi .navi-inner .navi-item.active {
+.navi-inner .navi-item.active {
   background-color: #4e57a1;
 }
 
-.navi .navi-inner .navi-item.active a {
+.navi-inner .navi-item.active a {
   font-weight: bold;
   color: #fff;
 }
 
-.navi .navi-inner .photo {
+.navi-inner .el-input {
+  width: 80px;
+  height: 40px;
+  float: left;
+  position: relative;
+  top: 10px;
+}
+
+.navi-inner .el-select {
+  width: 80px;
+  height: 40px;
+  float: left;
+  position: relative;
+}
+
+.navi-inner .el-input-group>.el-input__inner {
+  width: 416px;
+  height: 40px;
+  float: left;
+  position: relative;
+}
+
+.navi-inner .photo {
   display: inline-block;
   float: right;
   position: relative;
@@ -141,13 +168,7 @@ export default {
   width: 60px;
 }
 
-.navi .navi-inner .navi-search{
-  width: 100px;
-  height: 60px;
-  float: left;
-}
-
-.navi .navi-inner .photo .el-avatar {
+.navi-inner .photo .el-avatar {
   position: relative;
   top: 12.5px;
 }
