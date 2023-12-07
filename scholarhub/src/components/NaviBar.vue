@@ -139,18 +139,22 @@ export default {
 }
 
 .navi-inner .el-input {
-  width: 80px;
+  width: 90px;
   height: 40px;
   float: left;
   position: relative;
   top: 10px;
+  left: 20px;
 }
 
 .navi-inner .el-select {
-  width: 80px;
-  height: 40px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 40px;
   float: left;
   position: relative;
+  bottom: 10px;
+  right: 15px;
 }
 
 .navi-inner .el-input-group>.el-input__inner {
@@ -158,6 +162,7 @@ export default {
   height: 40px;
   float: left;
   position: relative;
+  background-color: #2f3a91;
 }
 
 .navi-inner .photo {
