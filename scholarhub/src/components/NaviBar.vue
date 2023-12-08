@@ -7,12 +7,12 @@
         <router-link :to="naviUnit.link_to">{{ naviUnit.content }}</router-link>
       </div>
       <div class="navi-search" v-show="this.$route.path !== '/main'">
-        <el-input placeholder="请输入内容" v-model="input1">
-          <el-select v-model="select" slot="prepend" placeholder="">
-            <el-option label="标题" value="1" @click="select='标题'"></el-option>
-            <el-option label="关键词" value="2" @click="select='关键词'"></el-option>
-            <el-option label="作者" value="3" @click="select='作者'"></el-option>
-          </el-select>
+        <el-select v-model="select" :popper-append-to-body="false" slot="prepend" class="navi-select">
+          <el-option label="标题" value="1" @click="select='标题'"></el-option>
+          <el-option label="关键词" value="2" @click="select='关键词'"></el-option>
+          <el-option label="作者" value="3" @click="select='作者'"></el-option>
+        </el-select>
+        <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input">
         </el-input>
       </div>
       <div class="photo">
@@ -138,31 +138,53 @@ export default {
   color: #fff;
 }
 
-.navi-inner .el-input {
-  width: 90px;
-  height: 40px;
+.navi-search {
+  width: 496px;
   float: left;
   position: relative;
   top: 10px;
-  left: 20px;
+  left: 30px;
+  border-radius: 20px 0 0 20px;
 }
 
-.navi-inner .el-select {
-  font-size: 14px;
-  text-align: center;
-  line-height: 40px;
+.navi-search .el-select {
   float: left;
-  position: relative;
-  bottom: 10px;
-  right: 15px;
-}
-
-.navi-inner .el-input-group>.el-input__inner {
-  width: 416px;
+  width: 80px;
   height: 40px;
+}
+
+.navi-search .el-select .el-input__inner {
+  background-color: #ffffff33;
+  color: #ffffffcc;
+  border-radius: 20px 0 0 20px;
+  border: 1px solid transparent;
+  padding: 10px 10px 10px 15px;
+  font-size: 12px;
+}
+
+.navi-search .el-select .el-input__inner:focus{
+  color: #2f3a91;
+  background-color: #ffffff;
+}
+
+.navi-search .navi-input {
   float: left;
-  position: relative;
-  background-color: #2f3a91;
+  width: 416px;
+}
+
+.navi-search .navi-input>.el-input__inner {
+  float: left;
+  width: 416px;
+  color: #ffffffcc;
+  background-color: #ffffff33;
+  font-size: 12px;
+  border-radius: 0 20px 20px 0;
+  border: 1px solid transparent;
+}
+
+.navi-search .navi-input>.el-input__inner:focus{
+  color: #2f3a91;
+  background-color: #ffffff;
 }
 
 .navi-inner .photo {
