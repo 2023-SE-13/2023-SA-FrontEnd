@@ -41,11 +41,7 @@ const routes = [
         name:'首页1',
         component:()=>import('@/views/HomePage')
       },
-      {
-        path:'/login',
-        name:'登录',
-        component:()=>import('@/views/LoginPage')
-      },
+
       {
         path:'/settings',
         name:'设置',
@@ -73,7 +69,17 @@ const routes = [
     path:'/article',
     name:'个人主页',
     component:()=>import('@/views/Article')
-  }
+  },
+  {
+    path:'/login',
+    name:'登录',
+    component:()=>import('@/views/LoginPage')
+  },
+  {
+    path:'/register',
+    name:'注册',
+    component:()=>import('@/views/RegisterPage')
+  },
 ]
 
 const router = new VueRouter({

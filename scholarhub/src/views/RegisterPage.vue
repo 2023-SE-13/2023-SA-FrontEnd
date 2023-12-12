@@ -1,28 +1,38 @@
 <template>
   <div class="box">
     <div class="main">
-      <div class="login">
+      <div class="register">
         <span class="title">
-          ScholorHub登录
+          ScholorHub注册
         </span>
-        <el-form :model="loginForm" ref="loginForm" class="form">
+        <el-form :model="registerForm" ref="registerForm" class="form">
           <el-form-item prop="username">
-            <span class="smallword">账号</span>
-            <el-input style="width: 65%;" type="text" v-model="loginForm.username" autocomplete="off"
+            <div style="width:20%;"><span class="smallword">账号</span></div>
+            <el-input style="width: 65%;" type="text" v-model="registerForm.username" autocomplete="off"
                       prefix-icon="el-icon-user" placeholder="邮箱/手机号/用户名"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <span class="smallword">密码</span>
-            <el-input style="width: 65%;" type="password" v-model="loginForm.password" show-password
+            <div style="width:20%"><span class="smallword">密码</span></div>
+            <el-input style="width: 65%;" type="password" v-model="registerForm.password" show-password
                       autocomplete="off" prefix-icon="el-icon-lock" placeholder="请输入密码"></el-input>
           </el-form-item>
+          <el-form-item prop="password">
+            <div style="width:20%"><span class="smallword">确认密码</span></div>
+            <el-input style="width: 65%;" type="password" v-model="registerForm.password2" show-password
+                      autocomplete="off" prefix-icon="el-icon-lock" placeholder="请再次输入密码"></el-input>
+          </el-form-item>
+          <el-form-item prop="email">
+            <div style="width:20%"><span class="smallword">邮箱</span></div>
+            <el-input style="width: 65%;" type="text" v-model="registerForm.email"
+                      autocomplete="off" prefix-icon="el-icon-message" placeholder="请输入邮箱"></el-input>
+          </el-form-item>
           <div class="navigation">
-            <a href="/register" style="background-color: white;color: black; width: 25%;font-size: 15px;">注册账号</a>
+            <a @click="toLogin()" style="background-color: white;color: black; width: 25%;font-size: 15px;">返回登录</a>
             <span> | </span>
-            <a href="/password" style="background-color: white;color: black; width: 25%;font-size: 15px;">找回密码</a>
+            <a href="/" style="background-color: white;color: black; width: 25%;font-size: 15px; text-decoration: none">返回首页</a>
           </div>
           <el-form-item>
-            <el-button type="primary" @click="login()" class="button">登录</el-button>
+            <el-button type="primary" @click="register()" class="button">注册</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -34,16 +44,18 @@
 export default {
   data() {
     return {
-      loginForm: {
+      registerForm: {
         username: '',
-        password: ''
+        password: '',
+        password2: '',
+        email: ''
       }
     }
   },
 
   methods: {
-    login() {
-      if (typeof this.loginForm.username == "undefined" || this.loginForm.username == null || this.loginForm.username === "") {
+    register() {
+      if (typeof this.registerForm.username == "undefined" || this.registerForm.username == null || this.registerForm.username === "") {
         //TODO: 弹出提示框
         this.$notify({
           title: '警告',
@@ -52,7 +64,7 @@ export default {
         });
         return;
       }
-      if (typeof this.loginForm.password == "undefined" || this.loginForm.password == null || this.loginForm.password === "") {
+      if (typeof this.registerForm.password == "undefined" || this.registerForm.password == null || this.registerForm.password === "") {
         //TODO: 弹出提示框
         this.$notify({
           title: '警告',
@@ -61,22 +73,33 @@ export default {
         });
         return;
       }
+      if (this.registerForm.password !== this.registerForm.password2) {
+        this.$notify({
+          title: '警告',
+          message: '两次密码不一致',
+          type: 'warning'
+        });
+        return;
+      }
       let form_data = new FormData()
-      form_data.append('username', this.loginForm.username)
-      form_data.append('password', this.loginForm.password)
-      //TODO: 发送登录请求
-      this.$axios.post('user/login', form_data).then(res => {
+      form_data.append('username', this.registerForm.username)
+      form_data.append('password', this.registerForm.password)
+      form_data.append('email', this.registerForm.email)
+      this.$axios.post('user/register', form_data).then(res => {
         if (res.status === 200) {//TODO 此判断仅用于本地测试
-            this.$router.push("/")
+          this.$router.push('/login')
         } else {
           this.$notify({
-            title: '警告',
-            message: '用户名或密码错误',
+            title: '大失败！',
+            message: "注册失败了",
             type: 'error'
-          })
+          });
         }
       })
     },
+    toLogin() {
+      this.$router.push('/login')
+    }
   }
 }
 </script>
@@ -103,9 +126,9 @@ export default {
   align-items: center;
 }
 
-.login {
+.register {
   width: 440px;
-  height: 450px;
+  height: 600px;
   background-color: white;
   align-items: center;
   border-radius: 10px;
@@ -138,8 +161,7 @@ export default {
   font-size: 20px;
   font-weight: 200;
   font-family: 黑体, serif;
-  margin-right: 20px;
-
+  text-align: right;
 }
 
 .button {
@@ -167,7 +189,14 @@ export default {
   margin-bottom: 40px;
 }
 
-a {
-  text-decoration: none;
+
+.el-form-item /deep/ .el-form-item__content {
+  display: flex;
+  justify-content: center;
+}
+
+
+a:hover {
+  cursor: pointer;
 }
 </style>

@@ -10,6 +10,10 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 
+axios.defaults.baseURL = 'https://mock.apifox.com/m1/3631387-0-default/api/'
+
+Vue.prototype.$axios = axios
+
 new Vue({
   router,
   store,
