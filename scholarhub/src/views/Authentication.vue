@@ -109,7 +109,7 @@ export default {
   display: flex;
   background-color: white;
   height: 100vh;
-  width: 650px;
+  width: 600px;
   border: 1px solid #ccc;
   justify-content: center; /* 水平居中 */
 }
@@ -141,24 +141,26 @@ export default {
 }
 
 .submit-btn {
-  background-color: #42b983;
+  background-color: #2f3a91;
   color: white;
   border: none;
   border-radius: 4px;
   padding: 13px 20px;
   font-size: 16px;
   margin-top: 40px; /* 设置间距 */
-  width: 300px;
+  width: 250px;
+  margin-right: 110px;
+  letter-spacing: 8px
 }
 .submit-btn:hover {
-  background-color: #5dd59e;
+  background-color: #45519a;
   color: white;
   border: none;
   border-radius: 4px;
   padding: 13px 20px;
   font-size: 16px;
   margin-top: 40px; /* 设置间距 */
-  width: 300px;
+  width: 250px;
 }
 
 /* 输入框样式 */
