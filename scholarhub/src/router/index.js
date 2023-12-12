@@ -56,6 +56,11 @@ const routes = [
         name:'账号认证',
         component:()=>import('@/views/Authentication.vue')
       },
+      {
+        path:'/explore',
+        name:'检索结果',
+        component:()=>import('@/views/Explore.vue')
+      }
     ]
   },
   {
