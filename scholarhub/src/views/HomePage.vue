@@ -69,7 +69,7 @@ export default {
         },
         Jump() {
             this.dialogVisible = false;
-            router.push("/temp1")
+            router.push("/explore")
         },
         ResetProSearch(){
             this.input4 = ''

@@ -52,7 +52,9 @@ export default {
       console.log(this.activeIndex)
     },
     gotoMain() {
-      this.$router.push("/main")
+      if(this.$route.path!=="/main"){
+        this.$router.push("/main")
+      }
     }
   },
   created() {
