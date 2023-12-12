@@ -1,10 +1,14 @@
 <template>
 
-  <div>
-    <div class="title">
-      <span style="margin-right: 2%;">账号信息</span><i class="el-icon-user-solid"></i>
-    </div>
+  <div class="container">
+  <div class="left-bar">
+      <el-divider></el-divider>
+      <div class="title"><span style="margin-right: 2%;">账号信息</span><i class="el-icon-user-solid"></i>
+      </div>
+    <el-divider></el-divider>
+  </div>
 
+  <div class="body">
     <div class="cell certification">
     <el-divider></el-divider>
     <div class="cell">
@@ -99,10 +103,13 @@
         <el-button type="primary" @click="saveNewPwd">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 
-
+  <div class="right-bar">
+    <div class="placeholder">
+    </div>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -197,22 +204,59 @@ export default {
 </script>
 
 <style>
+.container {
+  display: flex;
+  background-color: #f5f5f5;
+}
+
+.left-bar {
+  width: 180px;
+  height: 100vh; /* 设置边栏高度与视口高度一致 */
+  text-align: center;
+  margin-left: 170px;
+  border: 1px solid #ccc;
+  padding-top: 6px;
+  background-color: white;
+}
 /* 标题 */
 .title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
-  padding: 15px 15px 0;
+  text-align: right;
+  margin-right: 30px;
+}
+
+.body{
+  width: 900px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  height: 100vh;
+  flex: 1;
+  background-color: white;
+}
+
+.right-bar {
+  width: 350px; /* 右侧边栏的宽度 */
+  height: 100vh;
+  border: 1px solid #ccc;
+  /* 样式 */
+}
+
+.placeholder {
+  padding: 20px;
+  text-align: center;
 }
 
 /* 单元格 */
 .cell {
   text-align: left;
   position: relative;
+  margin: 30px 0 30px 0;
 }
 
 /* 实名认证和账号设置的背景颜色 */
 .certification, .account-settings {
-  background-color: #f5f5f5;
+  //background-color: #f5f5f5;
 }
 
 .edit-pwd-btn, .edit-email-btn, .binding-btn {
