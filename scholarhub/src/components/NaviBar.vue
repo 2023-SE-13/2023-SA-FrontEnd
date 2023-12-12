@@ -14,6 +14,7 @@
         </el-select>
         <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input">
         </el-input>
+        
       </div>
       <div class="photo">
         <el-dropdown placement="bottom">
