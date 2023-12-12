@@ -2,11 +2,29 @@
     <div class="footer">
         <div class="left">
             <span>
-                
+                开发小组:
+            </span>
+            <br>
+            <span>
+                小组成员:
             </span>
         </div>
-        <div class="mid"></div>
-        <div class="right"></div>
+        <div class="mid">
+            <span>
+                运营单位:
+            </span>
+            <span>
+                联系地址:
+            </span>
+            <span>
+                联系邮箱:
+            </span>
+        </div>
+        <div class="right">
+            <span>
+                问题反馈:
+            </span>
+        </div>
     </div>
 </template>
 
