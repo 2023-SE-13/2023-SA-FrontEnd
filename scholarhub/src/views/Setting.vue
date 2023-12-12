@@ -3,12 +3,12 @@
   <div class="container">
   <div class="left-bar">
       <el-divider></el-divider>
-      <div class="title"><span style="margin-right: 2%;">账号信息</span><i class="el-icon-user-solid"></i>
+      <div class="title-s"><span style="margin-right: 2%;">账号信息</span><i class="el-icon-user-solid"></i>
       </div>
     <el-divider></el-divider>
   </div>
 
-  <div class="body">
+  <div class="body-setting">
     <div class="cell certification">
     <el-divider></el-divider>
     <div class="cell">
@@ -218,15 +218,16 @@ export default {
   padding-top: 6px;
   background-color: white;
 }
+
 /* 标题 */
-.title {
+.title-s {
   font-size: 20px;
   font-weight: bold;
   text-align: right;
   margin-right: 30px;
 }
 
-.body{
+.body-setting{
   width: 900px;
   margin: 0 auto;
   border: 1px solid #ccc;
@@ -256,7 +257,7 @@ export default {
 
 /* 实名认证和账号设置的背景颜色 */
 .certification, .account-settings {
-  //background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .edit-pwd-btn, .edit-email-btn, .binding-btn {
@@ -266,12 +267,12 @@ export default {
 }
 
 .edit-email-btn, .binding-btn,.sendCode-btn {
-  background-color: #2f3a91;
+  background-color: #45519a; /* 鼠标悬浮时透明度变为80% */
 }
 
 /* 按钮悬停时的样式 */
 .edit-email-btn:hover, .binding-btn:hover,.sendCode-btn:hover {
-  background-color: #45519a; /* 鼠标悬浮时透明度变为80% */
+  background-color: #2f3a91;
 }
 
 .sendCode-btn, .sendCode-btn:hover {
