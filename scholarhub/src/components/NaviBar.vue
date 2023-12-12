@@ -12,18 +12,19 @@
           <el-option label="关键词" value="2" @click="select='关键词'"></el-option>
           <el-option label="作者" value="3" @click="select='作者'"></el-option>
         </el-select>
-        <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input">
+        <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input" @input="allow" @keyup.enter.native="search">
+          <el-button slot="suffix" icon="el-icon-search" @click="search" ref="button"></el-button>
         </el-input>
       </div>
       <div class="photo">
-        <el-dropdown placement="bottom">
+        <el-dropdown placement="bottom" @command="handleCommand">
           <el-avatar :size="35" src="../assets/cover.png"></el-avatar>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>主页</el-dropdown-item>
-            <el-dropdown-item>收藏</el-dropdown-item>
-            <el-dropdown-item>推荐</el-dropdown-item>
-            <el-dropdown-item>设置</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item command="a">主页</el-dropdown-item>
+            <el-dropdown-item command="b">收藏</el-dropdown-item>
+            <el-dropdown-item command="c">推荐</el-dropdown-item>
+            <el-dropdown-item divided command="d">设置</el-dropdown-item>
+            <el-dropdown-item command="e">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -55,6 +56,26 @@ export default {
       if(this.$route.path!=="/main"){
         this.$router.push("/main")
       }
+    },
+    handleCommand(command) {
+      if (command === 'a') {
+        this.$router.push("/personHomepage")
+      }
+    },
+    search() {
+      alert(this.input1)
+    },
+    allow() {
+      if (this.input1 !== null && this.input1 !== '') {
+        this.$refs.button.$el.style.cursor = 'pointer'
+      } else {
+        this.$refs.button.$el.style.cursor = 'not-allowed'
+      }
+    }
+  },
+  mounted() {
+    if (this.input1 === null || this.input1 === '') {
+      this.$refs.button.$el.style.cursor = 'not-allowed'
     }
   },
   created() {
@@ -164,9 +185,18 @@ export default {
   font-size: 12px;
 }
 
+.navi-search .el-select:hover .el-input__inner{
+  border: 1px solid transparent;
+}
+
 .navi-search .el-select .el-input__inner:focus{
   color: #2f3a91;
   background-color: #ffffff;
+  border: 1px solid transparent;
+}
+
+.navi-search .el-select .el-input.is-focus .el-input__inner {
+  border: 1px solid transparent;
 }
 
 .navi-search .navi-input {
@@ -187,6 +217,20 @@ export default {
 .navi-search .navi-input>.el-input__inner:focus{
   color: #2f3a91;
   background-color: #ffffff;
+}
+
+.navi-search .navi-input .el-button {
+  height: 40px;
+  position: relative;
+  left: 5px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0 20px 20px 0;
+  color: #bbbbbb;
+}
+
+.navi-search .navi-input .el-button:hover {
+  color: #2f3a91;
 }
 
 .navi-inner .photo {
