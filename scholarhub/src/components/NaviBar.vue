@@ -15,6 +15,7 @@
         <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input" @input="allow" @keyup.enter.native="search">
           <el-button slot="suffix" icon="el-icon-search" @click="search" ref="button"></el-button>
         </el-input>
+        
       </div>
       <div class="photo">
         <el-dropdown placement="bottom" @command="handleCommand">
