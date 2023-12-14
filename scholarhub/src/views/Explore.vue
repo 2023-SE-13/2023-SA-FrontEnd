@@ -11,12 +11,12 @@
                         <el-menu-item index="1">论文</el-menu-item>
                         <el-menu-item id="item2" index="2">专利</el-menu-item>
                     </el-menu>
-                    <div v-show="MenuIdx === '1'">
+                    <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
+                    <!-- <div v-show="MenuIdx === '1'">
                         <div class="result-unit" v-for="(count, index) in counts" :key="index">
                             <h2>论文标题</h2>
                             <div class="unit-author">
                                 <i class="el-icon-user-solid"><span>作者</span></i>
-                                <!-- <div>作者</div> -->
                             </div>
                             <div class="unit-source">
                                 出处
@@ -29,7 +29,7 @@
                     </div>
                     <div v-show="MenuIdx === '2'">
                         222
-                    </div>
+                    </div> -->
                 </div>
                 <div class="content2" v-show="ConIdx === '2'">
 
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import ExploreUnit from '@/components/ExploreUnit.vue'
 export default {
     data() {
         return {
@@ -53,6 +54,9 @@ export default {
             console.log(key, keyPath);
             this.MenuIdx = key;
         },
+    },
+    components: {
+        ExploreUnit
     }
 }
 </script>
