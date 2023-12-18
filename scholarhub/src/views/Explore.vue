@@ -11,7 +11,7 @@
                         <el-menu-item index="1">论文</el-menu-item>
                         <el-menu-item id="item2" index="2">专利</el-menu-item>
                     </el-menu>
-                    <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
+                   <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
                     <!-- <div v-show="MenuIdx === '1'">
                         <div class="result-unit" v-for="(count, index) in counts" :key="index">
                             <h2>论文标题</h2>

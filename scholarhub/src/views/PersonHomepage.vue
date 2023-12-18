@@ -19,8 +19,7 @@
         <el-menu-item index="1">我的成果</el-menu-item>
         <el-menu-item index="2">我的文库</el-menu-item>
         <el-menu-item index="3">我的收藏</el-menu-item>
-        <el-menu-item index="4">我的评论</el-menu-item>
-        <el-menu-item index="5">我的推荐</el-menu-item>
+        <el-menu-item v-show="isManager" index="4">待办审核</el-menu-item>
       </el-menu>
     </div>
     <div class="Bottom">
@@ -94,6 +93,7 @@ export default {
       Menu1Idx: '1',
       keywordsInput: "",
       isMasterpieceOnly: false,
+      isManager: false
     };
   },
   methods: {
