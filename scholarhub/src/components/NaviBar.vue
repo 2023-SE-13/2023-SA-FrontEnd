@@ -15,7 +15,7 @@
         <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input" @input="allow" @keyup.enter.native="search">
           <el-button slot="suffix" icon="el-icon-search" @click="search" ref="button"></el-button>
         </el-input>
-        
+
       </div>
       <div class="photo">
         <el-dropdown placement="bottom" @command="handleCommand">
@@ -59,7 +59,7 @@ export default {
       }
     },
     handleCommand(command) {
-      if (command === 'a') {
+      if (command === 'a' && this.$route.path !== '/personHomepage') {
         this.$router.push("/personHomepage")
       }
     },
@@ -96,14 +96,13 @@ export default {
   width: 100%;
   background-color: #2f3a91;
   height: 60px;
-  padding-left: 7%;
-  padding-right: 7%;
 }
 
 .navi-inner{
   width: 86%;
   height: 100%;
   position: relative;
+  left: 7%;
 }
 
 .navi-inner .logo{
