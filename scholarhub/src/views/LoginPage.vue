@@ -19,7 +19,7 @@
           <div class="navigation">
             <a href="/register" style="background-color: white;color: black; width: 25%;font-size: 15px;">注册账号</a>
             <span> | </span>
-            <a href="/password" style="background-color: white;color: black; width: 25%;font-size: 15px;">找回密码</a>
+            <a href="/" style="background-color: white;color: black; width: 25%;font-size: 15px;">返回首页</a>
           </div>
           <el-form-item>
             <el-button type="primary" @click="login()" class="button">登录</el-button>
