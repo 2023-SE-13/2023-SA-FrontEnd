@@ -84,7 +84,7 @@ export default {
     display: block;
     width: 100%;
     height: 435px;
-    background-color:aquamarine;
+    background-image: url("../assets/bg.webp");
     /* float: left; */
     position: relative;
 }
