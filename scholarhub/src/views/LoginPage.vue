@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {Login} from "@/api/api";
 export default {
   data() {
     return {
@@ -65,15 +66,15 @@ export default {
       form_data.append('username', this.loginForm.username)
       form_data.append('password', this.loginForm.password)
       //TODO: 发送登录请求
-      this.$axios.post('user/login', form_data).then(res => {
-        if (res.status === 200) {//TODO 此判断仅用于本地测试
-            this.$router.push("/")
+      Login(form_data).then(res => {
+        if (res.data.result === 0) {
+          this.$router.push("/")
         } else {
           this.$notify({
             title: '警告',
             message: '用户名或密码错误',
-            type: 'error'
-          })
+            type: 'warning'
+          });
         }
       })
     },

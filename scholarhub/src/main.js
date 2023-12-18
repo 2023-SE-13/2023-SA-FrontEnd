@@ -13,7 +13,7 @@ Vue.prototype.service = service
 
 Vue.use(ElementUI)
 
-axios.defaults.baseURL = 'https://mock.apifox.com/m1/3631387-0-default/api/'
+// axios.defaults.baseURL = 'https://mock.apifox.com/m1/3631387-0-default/api/'
 
 Vue.prototype.$axios = axios
 
