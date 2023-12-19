@@ -21,11 +21,11 @@
         <el-dropdown placement="bottom" @command="handleCommand">
           <el-avatar :size="35" src="../assets/cover.png"></el-avatar>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="a">主页</el-dropdown-item>
-            <el-dropdown-item command="b">收藏</el-dropdown-item>
-            <el-dropdown-item command="c">推荐</el-dropdown-item>
-            <el-dropdown-item divided command="d">设置</el-dropdown-item>
-            <el-dropdown-item command="e">退出</el-dropdown-item>
+            <el-dropdown-item command="a"><i class="el-icon-house"></i>主页</el-dropdown-item>
+            <el-dropdown-item command="b"><i class="el-icon-star-off"></i>收藏</el-dropdown-item>
+            <el-dropdown-item command="c"><i class="el-icon-thumb"></i>推荐</el-dropdown-item>
+            <el-dropdown-item divided command="d"><i class="el-icon-setting"></i>设置</el-dropdown-item>
+            <el-dropdown-item command="e"><i class="el-icon-switch-button"></i>退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -63,14 +63,23 @@ export default {
       }
     },
     gotoLogin() {
-      this.$router.push("/login")
+      //this.$router.push("/login")
+      this.isLogin = true
     },
     handleCommand(command) {
       if (command === 'a' && this.$route.path !== '/personHomepage') {
-        this.$router.push("/personHomepage")
+        this.$router.push("/php")
       }
       if (command === 'd' && this.$route.path !== '/settings') {
         this.$router.push("/settings")
+      }
+      if (command === 'e') {
+        if (this.$route.path !== '/main') {
+          this.$router.push("/main")
+          this.isLogin = false
+        } else {
+          this.isLogin = false
+        }
       }
     },
     search() {
