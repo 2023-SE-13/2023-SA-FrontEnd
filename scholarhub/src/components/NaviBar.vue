@@ -17,17 +17,20 @@
         </el-input>
 
       </div>
-      <div class="photo">
+      <div v-show="isLogin" class="photo">
         <el-dropdown placement="bottom" @command="handleCommand">
           <el-avatar :size="35" src="../assets/cover.png"></el-avatar>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="a">主页</el-dropdown-item>
-            <el-dropdown-item command="b">收藏</el-dropdown-item>
-            <el-dropdown-item command="c">推荐</el-dropdown-item>
-            <el-dropdown-item divided command="d">设置</el-dropdown-item>
-            <el-dropdown-item command="e">退出</el-dropdown-item>
+            <el-dropdown-item command="a"><i class="el-icon-house"></i>主页</el-dropdown-item>
+            <el-dropdown-item command="b"><i class="el-icon-star-off"></i>收藏</el-dropdown-item>
+            <el-dropdown-item command="c"><i class="el-icon-thumb"></i>推荐</el-dropdown-item>
+            <el-dropdown-item divided command="d"><i class="el-icon-setting"></i>设置</el-dropdown-item>
+            <el-dropdown-item command="e"><i class="el-icon-switch-button"></i>退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+      </div>
+      <div v-show="!isLogin" class="loginButton">
+        <el-button @click="gotoLogin">登录</el-button>
       </div>
     </div>
   </div>
@@ -45,7 +48,8 @@ export default {
         { content: "关于我们", link_to: "/about" }
       ],
       input1: '',
-      select: '标题'
+      select: '标题',
+      isLogin: false
     }
   },
   methods: {
@@ -58,9 +62,24 @@ export default {
         this.$router.push("/main")
       }
     },
+    gotoLogin() {
+      //this.$router.push("/login")
+      this.isLogin = true
+    },
     handleCommand(command) {
       if (command === 'a' && this.$route.path !== '/personHomepage') {
-        this.$router.push("/personHomepage")
+        this.$router.push("/php")
+      }
+      if (command === 'd' && this.$route.path !== '/settings') {
+        this.$router.push("/settings")
+      }
+      if (command === 'e') {
+        if (this.$route.path !== '/main') {
+          this.$router.push("/main")
+          this.isLogin = false
+        } else {
+          this.isLogin = false
+        }
       }
     },
     search() {
@@ -244,5 +263,27 @@ export default {
 .navi-inner .photo .el-avatar {
   position: relative;
   top: 12.5px;
+}
+
+.navi-inner .loginButton {
+  display: inline-block;
+  float: right;
+  position: relative;
+  height: 60px;
+  width: 70px;
+  top: 10px;
+}
+
+.navi-inner .loginButton .el-button {
+  background: transparent;
+  color: #ffffffcc;
+  border: 1px solid #ffffffcc;
+  border-radius: 4px;
+  position: center;
+}
+
+.navi-inner .loginButton .el-button:hover {
+  color: white;
+  border: 1px solid white;
 }
 </style>

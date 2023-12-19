@@ -85,7 +85,7 @@ export default {
       form_data.append('username', this.registerForm.username)
       form_data.append('password', this.registerForm.password)
       form_data.append('email', this.registerForm.email)
-      this.$axios.post('user/register', form_data).then(res => {
+      this.$axios.post('/api/user/register', form_data).then(res => {
         if (res.status === 200) {//TODO 此判断仅用于本地测试
           this.$router.push('/login')
         } else {
