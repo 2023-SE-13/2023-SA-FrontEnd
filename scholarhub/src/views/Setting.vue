@@ -19,11 +19,20 @@
     </div>
 
     <div class="cell">
-      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">个人认证</span>
+      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">实名认证</span>
       <span style="padding-left: 10%;margin-right: 60%;color: darkgrey">
             {{ isBound ? Name : '未实名' }}
           </span>
       <el-button class="binding-btn" v-if="!isBound" type="primary" round @click="gotoBinding">认证</el-button>
+    </div>
+    <el-divider></el-divider>
+    <div class="cell">
+      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">管理员认证</span>
+      <span style="padding-left: 8.5%;margin-right: 40%;color: darkgrey">
+            {{ 1 ? '已认证' : '' }}
+          </span>
+      <el-input v-if="!isAdmin" placeholder="" v-model="AdminCode" show-password style="width: 200px;"></el-input>
+      <el-button class="admin-btn" v-if="!isAdmin" type="primary" round @click="">认证</el-button>
     </div>
 
     <div class="cell account-settings">
@@ -37,10 +46,10 @@
     <div class="cell">
       <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定邮箱</span>
       <span style="margin-left: 10%;margin-right: 60%;color: darkgrey">
-            {{ isBound ? Email : '未绑定' }}
+            {{ emailBound ? Email : '未绑定' }}
           </span>
-      <el-button class="edit-email-btn" v-if="!isBound" type="primary" round @click="EditEmail = true">绑定</el-button>
-      <el-button class="edit-email-btn" v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
+      <el-button class="edit-email-btn" v-if="!emailBound" type="primary" round @click="EditEmail = true">绑定</el-button>
+      <el-button class="edit-email-btn" v-if="emailBound" type="danger" round @click="EditEmail = true">解绑</el-button>
     </div>
     <el-divider></el-divider>
 
@@ -149,7 +158,8 @@ export default {
           { required: true, message: '请输入新密码', trigger: 'blur' },
           //密码校验规则
         ]
-      }
+      },
+      AdminCode: ''
     };
   },
   methods: {
@@ -260,18 +270,23 @@ export default {
   background-color: #f5f5f5;
 }
 
-.edit-pwd-btn, .edit-email-btn, .binding-btn {
+.edit-pwd-btn, .edit-email-btn, .binding-btn, .admin-btn {
   position: absolute;
   right: 40px; /* 距离右侧的距离 */
   top: -10px;
 }
 
-.edit-email-btn, .binding-btn,.sendCode-btn {
-  background-color: #45519a; /* 鼠标悬浮时透明度变为80% */
+/* 按钮样式 */
+.edit-email-btn, .binding-btn, .sendCode-btn, .admin-btn {
+  background-color: #45519a;
+}
+
+.admin-btn {
+  top: 0px;
 }
 
 /* 按钮悬停时的样式 */
-.edit-email-btn:hover, .binding-btn:hover,.sendCode-btn:hover {
+.edit-email-btn:hover, .binding-btn:hover,.sendCode-btn:hover,.admin-btn:hover {
   background-color: #2f3a91;
 }
 
