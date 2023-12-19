@@ -131,7 +131,7 @@ export default {
 }
 .img-contain{
     position: absolute;
-    height: 100%;
+    height: 100%-40px;
     margin-top: 40px;
     width: 20%;
     left: 70%;
