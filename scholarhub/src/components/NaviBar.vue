@@ -67,7 +67,7 @@ export default {
       this.isLogin = true
     },
     handleCommand(command) {
-      if (command === 'a' && this.$route.path !== '/personHomepage') {
+      if (command === 'a' && this.$route.path !== '/php') {
         this.$router.push("/php")
       }
       if (command === 'd' && this.$route.path !== '/settings') {
