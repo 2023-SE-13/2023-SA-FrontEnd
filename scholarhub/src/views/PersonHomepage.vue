@@ -56,9 +56,12 @@
                 <el-dropdown-item>蚵仔煎</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+            <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
           </div>
           <div v-show="Menu1Idx === '2'">
-
+            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
+              <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
+            </el-input>
           </div>
         </div>
         <div class="BottomContent2" v-show="MidNavIdx === '2'">
@@ -68,9 +71,6 @@
 
         </div>
         <div class="BottomContent4" v-show="MidNavIdx === '4'">
-
-        </div>
-        <div class="BottomContent5" v-show="MidNavIdx === '5'">
 
         </div>
       </div>
@@ -143,13 +143,13 @@ export default {
 
 <style scoped>
 .navi {
-  position: fixed;
+  position: sticky;
   top: 0;
+  z-index: 1000;
 }
 
 .container {
   position: relative;
-  top: 60px;
   width: 100%;
   overflow-y: auto;
 }
@@ -260,7 +260,7 @@ export default {
 
 .Bottom {
   width: 100%;
-  height: 55vh;
+  height: 85vh;
   background-color: #f6f6f6;
 }
 
@@ -268,12 +268,12 @@ export default {
   margin: 0 7.5%;
   padding: 1%;
   width: 82.6%;
-  height: 92%;
+  height: 95%;
   background-color: white;
 }
 
 .BottomContent1 .el-menu1-demo {
-  height: 11%;
+  height: 8%;
   border-bottom: 1px solid #2f3a91;
   margin-bottom: 2%;
 }
@@ -285,7 +285,7 @@ export default {
   font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
   width: 9%;
   height: 100%;
-  line-height: 320%;
+  line-height: 360%;
   border: 1px solid #dcdfe6;
   border-right: none;
   border-bottom: none;
@@ -364,5 +364,30 @@ export default {
   font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serify;
   text-align: center;
   background-color: #eaebf4;
+}
+
+::v-deep.BottomContent1 .el-empty {
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+::v-deep.BottomContent1 .el-empty .el-empty__description p {
+  margin: 0;
+  font-size: 14px;
+  color: #8590a6;
+}
+
+.BottomContent4 {
+  margin: 0 7.5%;
+  padding: 1%;
+  width: 82.6%;
+  height: 95%;
+  background-color: white;
 }
 </style>
