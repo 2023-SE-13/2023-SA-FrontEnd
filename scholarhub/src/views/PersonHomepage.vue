@@ -3,7 +3,7 @@
     <div class="navi">
       <NaviBar />
     </div>
-    <div class="container">
+    <div class="phpContainer">
       <div class="Info">
         <img id="Photo" src="../assets/photo.png" alt="头像" width="10%" height="65%">
         <div id="PersonalInfo">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="MidNav">
-        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#e5f0fa"
+        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#e5f0fa"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
           <el-menu-item index="2">我的文库</el-menu-item>
@@ -62,6 +62,7 @@
             <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
               <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
             </el-input>
+            <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
           </div>
         </div>
         <div class="BottomContent2" v-show="MidNavIdx === '2'">
@@ -71,7 +72,14 @@
 
         </div>
         <div class="BottomContent4" v-show="MidNavIdx === '4'">
-
+          <div class="left4">
+            <el-menu class="el-menu4-demo" mode="vertical" default-active="1" @select="handleSelect4">
+              <el-menu-item index="1">待认证学者</el-menu-item>
+              <el-menu-item index="2">待认领成果</el-menu-item>
+            </el-menu>
+          </div>
+          <div class="right4_1" v-show="Menu4Idx === '1'"></div>
+          <div v-show="Menu4Idx === '2'"></div>
         </div>
       </div>
     </div>
@@ -100,8 +108,9 @@ export default {
     return {
       username: "username",
       institution: "institution",
-      MidNavIdx: '1',
+      MidNavIdx: '4',
       Menu1Idx: '1',
+      Menu4Idx: '1',
       keywordsInput: "",
       isMasterpieceOnly: false,
       isManager: true,
@@ -121,6 +130,10 @@ export default {
     handleSelect1(key, keyPath) {
       console.log(key, keyPath);
       this.Menu1Idx = key;
+    },
+    handleSelect4(key, keyPath) {
+      console.log(key, keyPath);
+      this.Menu4Idx = key;
     },
     search() {
       alert(this.keywordsInput)
@@ -148,7 +161,7 @@ export default {
   z-index: 1000;
 }
 
-.container {
+.phpContainer {
   position: relative;
   width: 100%;
   overflow-y: auto;
@@ -266,9 +279,9 @@ export default {
 
 .BottomContent1 {
   margin: 0 7.5%;
-  padding: 1%;
+  padding: 1% 1% 0;
   width: 82.6%;
-  height: 95%;
+  height: 98%;
   background-color: white;
 }
 
@@ -385,9 +398,46 @@ export default {
 
 .BottomContent4 {
   margin: 0 7.5%;
-  padding: 1%;
+  padding: 1% 1% 0;
   width: 82.6%;
-  height: 95%;
+  height: 98%;
   background-color: white;
+}
+
+.BottomContent4 .left4 {
+  width: 20%;
+  height: 100%;
+  float: left;
+  margin-right: 2%;
+}
+
+.BottomContent4 .left4 .el-menu4-demo{
+  border: 1px solid #ebebeb;
+  border-top: 5px solid #828ad8;
+  padding-top: 20px;
+  height: 80%;
+}
+
+.BottomContent4 .left4 .el-menu4-demo .el-menu-item {
+  height: 60px;
+  font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #121212;
+}
+
+.BottomContent4 .left4 .el-menu4-demo .el-menu-item:hover {
+  background-color: #e5f0fa;
+}
+
+.BottomContent4 .left4 .el-menu4-demo .el-menu-item.is-active {
+  background-color: #e5f0fa;
+}
+
+.BottomContent4 .right4_1 {
+  width: 78%;
+  height: 100%;
+  float: left;
+  background: #42b983;
 }
 </style>
