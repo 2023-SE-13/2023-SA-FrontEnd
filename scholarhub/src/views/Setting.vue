@@ -1,41 +1,63 @@
 <template>
 
-  <div>
-    <div class="title">
-      <span style="margin-right: 2%">账号信息</span><i class="el-icon-user-solid"></i>
+  <div class="container">
+  <div class="left-bar">
+      <el-divider></el-divider>
+      <div class="title-s"><span style="margin-right: 2%;">账号信息</span><i class="el-icon-user-solid"></i>
+      </div>
+    <el-divider></el-divider>
+  </div>
+
+  <div class="body-setting">
+    <div class="cell certification">
+    <el-divider></el-divider>
+    <div class="cell">
+      <span style="font-size: 18px;font-weight: bold;margin-left: 3%"><i class="el-icon-info" style="margin-right: 4px"></i>实名认证</span>
+      <span style="color: darkgrey; margin-left: 8%">平台部分功能使用需要先完成实名认证</span>
+    </div>
+      <el-divider></el-divider>
     </div>
 
-    <el-collapse v-model="activeName" accordion>
-      <el-collapse-item title="实名认证" name="1">
-        <div class="note">平台部分功能使用需要先完成实名认证</div>
-        <el-divider></el-divider>
-        <div class="cell">
-          <span style="font-size: 16px;font-weight: bold;margin-left: 3%">个人认证</span>
-          <span style="padding-left: 10%;margin-right: 60%;color: darkgrey">
+    <div class="cell">
+      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">实名认证</span>
+      <span style="padding-left: 10%;margin-right: 60%;color: darkgrey">
             {{ isBound ? Name : '未实名' }}
           </span>
-          <el-button class="" v-if="!isBound" type="primary" round @click="gotoBinding">去认证</el-button>
-        </div>
-      </el-collapse-item>
-
-      <el-collapse-item title="账户设置" name="2">
-        <el-divider></el-divider>
-        <div class="cell">
-          <span style="font-size: 16px;font-weight: bold;margin-left: 3%">修改密码</span>
-          <el-button class="edit-pwd-btn" type="danger" round @click="EditPwd = true" style="margin-left: 72.5%">修改</el-button>
-        </div>
-
-        <el-divider></el-divider>
-        <div class="cell">
-          <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定邮箱</span>
-          <span style="margin-left: 10%;margin-right: 60%;color: darkgrey">
-            {{ isBound ? Email : '未绑定' }}
+      <el-button class="binding-btn" v-if="!isBound" type="primary" round @click="gotoBinding">认证</el-button>
+    </div>
+    <el-divider></el-divider>
+    <div class="cell">
+      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">管理员认证</span>
+      <span style="padding-left: 8.5%;margin-right: 40%;color: darkgrey">
+            {{ 1 ? '已认证' : '' }}
           </span>
-          <el-button class="edit-email-btn" v-if="!isBound" type="primary" round @click="EditEmail = true">绑定</el-button>
-          <el-button class="edit-email-btn-btn" v-if="isBound" type="danger" round @click="EditEmail = true">解绑</el-button>
-        </div>
-      </el-collapse-item>
-    </el-collapse>
+      <el-input v-if="!isAdmin" placeholder="" v-model="AdminCode" show-password style="width: 200px;"></el-input>
+      <el-button class="admin-btn" v-if="!isAdmin" type="primary" round @click="">认证</el-button>
+    </div>
+
+    <div class="cell account-settings">
+    <el-divider></el-divider>
+    <div class="cell">
+      <span style="font-size: 18px;font-weight: bold;margin-left: 3%"><i class="el-icon-s-tools" style="margin-right: 4px"></i>账号设置</span>
+    </div>
+    <el-divider></el-divider>
+    </div>
+
+    <div class="cell">
+      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定邮箱</span>
+      <span style="margin-left: 10%;margin-right: 60%;color: darkgrey">
+            {{ emailBound ? Email : '未绑定' }}
+          </span>
+      <el-button class="edit-email-btn" v-if="!emailBound" type="primary" round @click="EditEmail = true">绑定</el-button>
+      <el-button class="edit-email-btn" v-if="emailBound" type="danger" round @click="EditEmail = true">解绑</el-button>
+    </div>
+    <el-divider></el-divider>
+
+    <div class="cell">
+      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">修改密码</span>
+      <el-button class="edit-pwd-btn" type="danger" round @click="EditPwd = true" style="margin-left: 72.5%">修改</el-button>
+    </div>
+    <el-divider></el-divider>
 
     <el-dialog
         title="绑定邮箱"
@@ -47,17 +69,27 @@
         <el-form-item label="绑定邮箱" prop="email">
           <el-input v-model="emailForm.email"></el-input>
         </el-form-item>
-        <el-form-item class="buttons">
-          <el-button @click="sendVerificationCode" :disabled="verificationSent">
+        <el-form-item>
+          <el-button class="sendCode-btn" @click="sendVerificationCode" :disabled="verificationSent">
             {{ verificationSent ? '已发送' : '发送验证码' }}
           </el-button>
         </el-form-item>
         <el-form-item label="验证码" prop="code">
-          <el-input v-model=emailForm.code></el-input>
+          <div class="verification-code">
+            <el-input
+                v-for="index in 6"
+                :key="index"
+                v-model="verificationCode[index - 1]"
+                :maxlength="1"
+                ref="verificationInputs"
+                style="width: 40px; margin-right: 5px; text-align: center;"
+                @input="handleVerificationInput(index)"
+            ></el-input>
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="EditEmail = false">取 消</el-button>
+        <el-button type="danger" @click="EditEmail = false">取 消</el-button>
         <el-button type="primary" @click="submitEmail">确 定</el-button>
       </span>
     </el-dialog>
@@ -76,21 +108,24 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="EditPwd = false">取 消</el-button>
+        <el-button type="danger" @click="EditPwd = false">取 消</el-button>
         <el-button type="primary" @click="saveNewPwd">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 
-
+  <div class="right-bar">
+    <div class="placeholder">
+    </div>
+  </div>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      verificationSent: false,
+      verificationCode: ['', '', '', ''],
       EditEmail: false,
       emailForm:{
         email: '',
@@ -100,13 +135,14 @@ export default {
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           {
+            //邮箱校验规则
             pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
             message: '请输入合法的邮箱',
             trigger: 'blur'
           }
         ],
         code: [
-          { required: true, message: '请输入6位验证码', trigger: 'blur' },
+          { required: true, message: ' ', trigger: 'blur' },
         ]
       },
       EditPwd: false,
@@ -120,8 +156,10 @@ export default {
         ],
         new_pwd: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
+          //密码校验规则
         ]
-      }
+      },
+      AdminCode: ''
     };
   },
   methods: {
@@ -139,8 +177,17 @@ export default {
 
     sendVerificationCode() {
       // 处理发送验证码的逻辑
-      // 可以调用接口发送验证码等操作
       this.verificationSent = true; // 标记验证码已发送
+    },
+    handleVerificationInput(index) {
+      const code = this.verificationCode[index - 1];
+      if (code.length === 1 && index < 6) {
+        // 移动焦点到下一个输入框
+        this.$refs.verificationInputs[index].focus();
+      } else if (code.length === 0 && index > 1) {
+        // 如果删除字符时，回退到前一个输入框
+        this.$refs.verificationInputs[index - 2].focus();
+      }
     },
 
     async submitEmail() {
@@ -167,42 +214,94 @@ export default {
 </script>
 
 <style>
-/* 标题 */
-.title {
-  padding: 15px;
-  font-size: 22px;
-  font-weight: bold;
+.container {
+  display: flex;
+  background-color: #f5f5f5;
 }
-/* 折叠面板格子 */
+
+.left-bar {
+  width: 180px;
+  height: 100vh; /* 设置边栏高度与视口高度一致 */
+  text-align: center;
+  margin-left: 170px;
+  border: 1px solid #ccc;
+  padding-top: 6px;
+  background-color: white;
+}
+
+/* 标题 */
+.title-s {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: right;
+  margin-right: 30px;
+}
+
+.body-setting{
+  width: 900px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  height: 100vh;
+  flex: 1;
+  background-color: white;
+}
+
+.right-bar {
+  width: 350px; /* 右侧边栏的宽度 */
+  height: 100vh;
+  border: 1px solid #ccc;
+  /* 样式 */
+}
+
+.placeholder {
+  padding: 20px;
+  text-align: center;
+}
+
+/* 单元格 */
 .cell {
   text-align: left;
+  position: relative;
+  margin: 30px 0 30px 0;
 }
 
-/* 折叠面板注释 */
-.note {
-  color: darkgrey;
-  margin-top: 3%;
-}
-
-.buttons {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* 修改折叠面板的标题样式 */
-.el-collapse .el-collapse-item__header {
+/* 实名认证和账号设置的背景颜色 */
+.certification, .account-settings {
   background-color: #f5f5f5;
-  color: #333;
-  border: 1px solid #ddd;
-  padding: 8px 8px 8px 15px;
-  margin: 0 5px 0 5px;
-  font-size: 16px;
-  font-weight: bold;
 }
 
-/* 修改折叠面板展开时的标题样式 */
-.el-collapse .el-collapse-item__header.is-active {
-  background-color: #eaeaea;
+.edit-pwd-btn, .edit-email-btn, .binding-btn, .admin-btn {
+  position: absolute;
+  right: 40px; /* 距离右侧的距离 */
+  top: -10px;
+}
+
+/* 按钮样式 */
+.edit-email-btn, .binding-btn, .sendCode-btn, .admin-btn {
+  background-color: #45519a;
+}
+
+.admin-btn {
+  top: 0px;
+}
+
+/* 按钮悬停时的样式 */
+.edit-email-btn:hover, .binding-btn:hover,.sendCode-btn:hover,.admin-btn:hover {
+  background-color: #2f3a91;
+}
+
+.sendCode-btn, .sendCode-btn:hover {
+  color: whitesmoke;
+  position: absolute;
+  right: 45px;
+}
+
+.verification-code {
+  display: flex;
+  position: absolute;
+  top: 48px;
+  left: 15px;
+  align-items: center;
 }
 
 </style>

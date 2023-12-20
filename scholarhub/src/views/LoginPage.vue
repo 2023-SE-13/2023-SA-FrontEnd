@@ -19,7 +19,7 @@
           <div class="navigation">
             <a href="/register" style="background-color: white;color: black; width: 25%;font-size: 15px;">注册账号</a>
             <span> | </span>
-            <a href="/password" style="background-color: white;color: black; width: 25%;font-size: 15px;">找回密码</a>
+            <a href="/" style="background-color: white;color: black; width: 25%;font-size: 15px;">返回首页</a>
           </div>
           <el-form-item>
             <el-button type="primary" @click="login()" class="button">登录</el-button>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {Login} from "@/api/api";
 export default {
   data() {
     return {
@@ -65,7 +66,18 @@ export default {
       form_data.append('username', this.loginForm.username)
       form_data.append('password', this.loginForm.password)
       //TODO: 发送登录请求
-    }
+      Login(form_data).then(res => {
+        if (res.data.result === 0) {
+          this.$router.push("/")
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '用户名或密码错误',
+            type: 'warning'
+          });
+        }
+      })
+    },
   }
 }
 </script>
@@ -86,7 +98,7 @@ export default {
 .main {
   width: 100vw;
   height: 100vh;
-  background-image: url(https://scholarin.cn/signin/static/hky_signin_page_bg.webp);
+  background-image: url("../assets/loginBG.png");
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,5 +166,9 @@ export default {
 
 .el-form-item {
   margin-bottom: 40px;
+}
+
+a {
+  text-decoration: none;
 }
 </style>

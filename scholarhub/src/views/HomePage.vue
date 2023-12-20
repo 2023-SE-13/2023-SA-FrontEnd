@@ -69,7 +69,7 @@ export default {
         },
         Jump() {
             this.dialogVisible = false;
-            router.push("/temp1")
+            router.push("/explore")
         },
         ResetProSearch(){
             this.input4 = ''
@@ -84,7 +84,7 @@ export default {
     display: block;
     width: 100%;
     height: 435px;
-    background-color:aquamarine;
+    background-image: url("../assets/bg.webp");
     /* float: left; */
     position: relative;
 }
