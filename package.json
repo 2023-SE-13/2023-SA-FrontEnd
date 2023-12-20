@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "downloadjs": "^1.4.7",
+    "mathjax-vue": "^1.0.1"
+  }
+}

@@ -7,7 +7,8 @@
           </div>
           <div class="sub-title">
             <span v-for="(author, index) in articleDetails.authors" :key="index">
-              <span class="_link" @click="toAuthor(author.author_id)">
+              <span class="_link" @click="toAuthor(author.author_id)">  
+                <!-- 1.得知道作者详情页的router怎么设置的修改方法 -->
                 {{ author.author_name }}
                 <sup v-if="articleDetails.author_affiliation && author.affiliation_order !== 0">{{ author.affiliation_order }}</sup>
               </span>
@@ -192,22 +193,22 @@
         <el-col :span="9">
           <div class="info-div">
             <el-row class="digit _bd_bottom">
-              <el-col :span="6" class="digit-num _primary">
+              <el-col :span="8" class="digit-num _primary">
                 {{ articleDetails.reference_count }}
                 <div class="digit-text">引用量</div>
               </el-col>
-              <el-col :span="6" class="digit-num _success">
+              <el-col :span="8" class="digit-num _success">
                 {{ articleDetails.citation_count }}
                 <div class="digit-text" >被引量</div>
               </el-col>
-              <el-col :span="6" class="digit-num _warning">
+              <el-col :span="8" class="digit-num _warning">
                 {{ toBigNum(articleDetails.collect_count) }}
                 <div class="digit-text">收藏数</div>
               </el-col>
-              <el-col :span="6" class="digit-num _danger">
+              <!-- <el-col :span="6" class="digit-num _danger">
                 {{ toBigNum(this.comments.length) }}
                 <div class="digit-text">评论数</div>
-              </el-col>
+              </el-col> -->
             </el-row>
             <el-row class="field _bd_bottom" v-if="articleDetails.fields">
               <div class="field-title">领域</div>
@@ -277,19 +278,19 @@
   
         myAnswer: '',
   
-        comments: [
-          {
-            id: 1,
-            like: 1,
-            is_like: false,
-            is_animating: false,
-            reply_count: 2,
-            time: "2021-11-23T23:09:56+08:00",
-            user_id: 2,
-            username: "syt",
-            content: "终于收到我需要的宝贝了，东西很好，价美物廉，谢谢掌柜的!说实在，这是我淘宝购物来让我最满意的一次购物。无论是掌柜的态度还是对物品，我都非常满意的。",
-          }
-        ],
+        // comments: [
+        //   {
+        //     id: 1,
+        //     like: 1,
+        //     is_like: false,
+        //     is_animating: false,
+        //     reply_count: 2,
+        //     time: "2021-11-23T23:09:56+08:00",
+        //     user_id: 2,
+        //     username: "syt",
+        //     content: "终于收到我需要的宝贝了，东西很好，价美物廉，谢谢掌柜的!说实在，这是我淘宝购物来让我最满意的一次购物。无论是掌柜的态度还是对物品，我都非常满意的。",
+        //   }
+        // ],
   
         articleDetails: {
           author_affiliation: [
@@ -460,9 +461,87 @@
           paper_title: "Large Elasticsearch cluster management",
           year: 2020,
         },
-        related_papers: [],
+        related_papers: [
+        {
+              authors: [
+                {
+                  author_id: "2772667878",
+                  author_name: "Sepp Hochreiter",
+                },
+                {
+                  author_id: "2772667878",
+                  author_name: "Jürgen Schmidhuber",
+                }
+              ],
+              citation_count: 1,
+              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+              journalName: "EPJ Web of Conferences",
+              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+              reference_count: 2,
+              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+              year: 2019
+            },
+            {
+              authors: [
+                {
+                  author_id: "2772667878",
+                  author_name: "Sepp Hochreiter",
+                },
+                {
+                  author_id: "2772667878",
+                  author_name: "Jürgen Schmidhuber",
+                }
+              ],
+              citation_count: 44135,
+              id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
+              journalName: "Neural Computation",
+              abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
+              reference_count: 42,
+              paper_title: "Long Short-Term Memory",
+              year: 1997
+            }
+        ],
   
-        citation_msg: [],
+        citation_msg: [
+        {
+              authors: [
+                {
+                  author_id: "2772667878",
+                  author_name: "Sepp Hochreiter",
+                },
+                {
+                  author_id: "2772667878",
+                  author_name: "Jürgen Schmidhuber",
+                }
+              ],
+              citation_count: 1,
+              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+              journalName: "EPJ Web of Conferences",
+              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+              reference_count: 2,
+              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+              year: 2019
+            },
+            {
+              authors: [
+                {
+                  author_id: "2772667878",
+                  author_name: "Sepp Hochreiter",
+                },
+                {
+                  author_id: "2772667878",
+                  author_name: "Jürgen Schmidhuber",
+                }
+              ],
+              citation_count: 44135,
+              id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
+              journalName: "Neural Computation",
+              abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
+              reference_count: 42,
+              paper_title: "Long Short-Term Memory",
+              year: 1997
+            }
+        ],
         cita_page_idx: 1,
         loadMoreDisable: true,
       }
@@ -483,56 +562,56 @@
         this.showQuote = false;
         this.showCollect = false;
       },
-      createComment(paper_id, content) {
-        const userInfo = user.getters.getUser(user.state());
-        if (!userInfo) {
-          this.$message.warning("请先登录！");
-          setTimeout(() => {
-            this.$router.push('/login');
-          }, 500);
-          return;
-        }
+      // createComment(paper_id, content) {
+      //   const userInfo = user.getters.getUser(user.state());
+      //   if (!userInfo) {
+      //     this.$message.warning("请先登录！");
+      //     setTimeout(() => {
+      //       this.$router.push('/login');
+      //     }, 500);
+      //     return;
+      //   }
   
-        if (content === '') {
-          this.$message.warning('无法发布空白评论！');
-          return;
-        }
+      //   if (content === '') {
+      //     this.$message.warning('无法发布空白评论！');
+      //     return;
+      //   }
   
-        this.$axios({
-          url: '/social/create/comment',
-          method: 'post',
-          data: qs.stringify({
-            user_id: userInfo.user.userId,
-            paper_id: paper_id,
-            content: content
-          })
-        })
-        .then(res => {
-          switch (res.data.status) {
-            case 200:
-              this.$message.success("回复成功！");
-              this.myAnswer = '';
-              this.comments = res.data.data.comments;
-              break;
-            case 400:
-              this.$message.error("用户登录信息已失效，请重新登录！");
-              this.$store.dispatch('clear');
-              setTimeout(() => {
-                this.$router.push('/login');
-              }, 1000);
-              break;
-            case 403:
-              this.$message.error("评论创建失败，请稍后重试！");
-              break;
-            case 404:
-              this.$message.error("系统未获取到您的用户信息，请联系管理员！");
-              break;
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        })
-      },
+      //   this.$axios({
+      //     url: '/social/create/comment',
+      //     method: 'post',
+      //     data: qs.stringify({
+      //       user_id: userInfo.user.userId,
+      //       paper_id: paper_id,
+      //       content: content
+      //     })
+      //   })
+      //   .then(res => {
+      //     switch (res.data.status) {
+      //       case 200:
+      //         this.$message.success("回复成功！");
+      //         this.myAnswer = '';
+      //         this.comments = res.data.data.comments;
+      //         break;
+      //       case 400:
+      //         this.$message.error("用户登录信息已失效，请重新登录！");
+      //         this.$store.dispatch('clear');
+      //         setTimeout(() => {
+      //           this.$router.push('/login');
+      //         }, 1000);
+      //         break;
+      //       case 403:
+      //         this.$message.error("评论创建失败，请稍后重试！");
+      //         break;
+      //       case 404:
+      //         this.$message.error("系统未获取到您的用户信息，请联系管理员！");
+      //         break;
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   })
+      // },
       toArticle: function(paper_id) {
         let routeUrl = this.$router.resolve({
           path: '/article',
