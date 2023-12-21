@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="right">
-                <el-button class="right-button">认领学者</el-button>
+                <el-button class="right-button" @click="showDialog">认领学者</el-button>
             </div>
         </div>
     </div>
@@ -22,6 +22,11 @@ export default {
     data() {
         return {
 
+        }
+    },
+    methods:{
+        showDialog(){
+            this.$emit('show-dialog')
         }
     }
 }
@@ -35,9 +40,13 @@ export default {
     margin-left: 1vw;
     margin-top: 2vh;
     padding: 10px;
-    border: 2px solid black;
+    border: 2px solid #d0d7de;
     border-radius: 10px;
-
+    box-shadow: 2px 2px rgba(208, 215, 222, 0.2);
+    transition: 0.5s;
+}
+.scholar-unit:hover{
+    box-shadow: 2px 2px rgba(208, 215, 222, 0.8);
 }
 
 .inner-container {

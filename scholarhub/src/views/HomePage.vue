@@ -2,12 +2,15 @@
     <div class="home-page">
         <div class="img-container">
             <div class="search-bar">
-
                 <el-input placeholder="发现你感兴趣的内容..." v-model="input3" class="input-with-select">
                     <el-select class="select" v-model="select" slot="prepend" placeholder="请选择">
                         <el-option label="标题" value="1"></el-option>
                         <el-option label="关键词" value="2"></el-option>
                         <el-option label="作者" value="3"></el-option>
+                    </el-select>
+                    <el-select class="select select-right" v-model="select2" slot="prepend" placeholder="请选择">
+                        <el-option label="精确" value="1"></el-option>
+                        <el-option label="模糊" value="2"></el-option>
                     </el-select>
                     <!-- <el-button slot="append" type="text">文字按钮</el-button> -->
                     <el-link slot="append" id="pro-search" type="primary" :underline="false"
@@ -20,7 +23,6 @@
         <div class="paper-selection">
             <PaperUnit v-for="index in 4" :key="index"></PaperUnit>
         </div>
-        {{ aboout }}
         <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
             <!-- <span>这是一段信息</span> -->
             <div>
@@ -55,6 +57,7 @@ export default {
             input5: '',
             input6: '',
             select: '',
+            select2:'',
             dialogVisible: false
         }
     },
@@ -108,6 +111,10 @@ export default {
 
 }
 
+
+.select-right{
+    margin-left: 20px;
+}
 /deep/.el-select {
     width: 130px;
     border-radius: null;

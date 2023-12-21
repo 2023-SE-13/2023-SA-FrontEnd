@@ -1,9 +1,6 @@
 <template>
     <div>
-        <!-- <el-menu default-active="1" class="el-menu1-demo" mode="horizontal" @select="handleSelect1">
-          <el-menu-item index="1">论文</el-menu-item>
-          <el-menu-item id="item2" index="2">专利</el-menu-item>
-        </el-menu> -->
+
         <div class="Navi">
             <div class="Ep-content">
                 <div class="content1" v-show="ConIdx === '1'">
@@ -15,36 +12,44 @@
                         <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
                     </div>
                     <div v-show="MenuIdx === '2'">
-                        <ScholarUnit v-for="index in 10" :key="index"></ScholarUnit>
+                        <ScholarUnit @show-dialog="showDialog" v-for="index in 10" :key="index"></ScholarUnit>
                     </div>
-                    <!-- <div v-show="MenuIdx === '1'">
-                        <div class="result-unit" v-for="(count, index) in counts" :key="index">
-                            <h2>论文标题</h2>
-                            <div class="unit-author">
-                                <i class="el-icon-user-solid"><span>作者</span></i>
-                            </div>
-                            <div class="unit-source">
-                                出处
-                            </div>
-                            <div class="unit-preview">
-                                引言
-                            </div>
-                            <div class="unit-keywords">关键词</div>
-                        </div>
-                    </div>
-                    <div v-show="MenuIdx === '2'">
-                        222
-                    </div> -->
                 </div>
-                <!-- <div class="content2" v-show="ConIdx === '2'">
-
-                </div> -->
             </div>
+            <!-- 编辑表单 -->
+            <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
+                <el-form :label-position='left' label-width="80px" :model="form" @submit="" ref="formRef">
+                    <el-form-item label="证明资料">
+                        <!-- <input class="dialog-input" type="file" name="" id="" accept="image/*" ref="fileInput"> -->
+                        <picture-input ref="pictureInput" @change="test" width="600" height="600" margin="16"
+                            accept="image/jpeg,image/png" size="10" :removable="true" :customStrings="{
+                                upload: '<h1>Bummer!</h1>',
+                                drag: 'Drag a 😺 GIF or GTFO'
+                            }">
+                        </picture-input>
+                    </el-form-item>
+
+                    <el-form-item label="个人姓名" prop="personalName">
+                        <el-input v-model="form.personalName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="个人描述" prop="personalDescri">
+                        <el-input type="textarea" placeholder="请输入内容" v-model="form.personalDescri" maxlength="50"
+                            show-word-limit>
+                        </el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <!-- <el-button @click="isShowDialog = false" class="ftbtn">取 消</el-button> -->
+                    <el-button type="primary" @click="submitApply()" class="ftbtn">确认提交</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
 
 <script>
+
+import PictureInput from 'vue-picture-input'
 import ExploreUnit from '@/components/ExploreUnit.vue'
 import ScholarUnit from '@/components/ScholarUnit.vue';
 export default {
@@ -52,7 +57,14 @@ export default {
         return {
             ConIdx: '1',
             MenuIdx: '1',
-            counts: 10
+            counts: 10,
+            isShowDialog: false,
+            form: {
+                personalPhoto: null,
+                personalName: '',
+                personalDescri: ''
+            },
+
         }
     },
     methods: {
@@ -60,14 +72,56 @@ export default {
             console.log(key, keyPath);
             this.MenuIdx = key;
         },
+        showDialog() {
+            this.isShowDialog = true
+            console.log(this.isShowDialog)
+        },
+        submitApply() {
+            console.log(this.form)
+
+            this.isShowDialog = false
+            // this.$refs.formRef.resetFields()
+        },
+        test() {
+            console.log('test')
+        },
+        onChange() {
+            console.log('New picture selected!')
+            if (this.$refs.pictureInput.image) {
+                console.log('Picture loaded.')
+                console.log(this.$refs.pictureInput.image)
+            } else {
+                console.log('FileReader API not supported: use the <form>, Luke!')
+            }
+        },
+        handleSetImage(dataURL) {
+            console.log(dataURL)
+        }
     },
     components: {
         ExploreUnit,
-        ScholarUnit
+        ScholarUnit,
+        PictureInput
+    },
+    mounted() {
+        this.$nextTick(() => {
+            // 在组件完全加载后，绑定事件
+            this.$refs.pictureInput.$on('change', this.test());
+        });
     }
 }
 </script>
 <style scoped>
+.dialog-input {
+    width: 50px;
+    height: 50px;
+    border: none;
+}
+
+.ftbtn {
+    background-color: #2f3a91;
+}
+
 .result-unit {
     position: relative;
     /* border: 1px solid #ccc; */
@@ -156,4 +210,5 @@ export default {
 .content1 .el-menu1-demo .el-menu-item.is-active {
     background-color: #2f3a91;
     color: white;
-}</style>
+}
+</style>
