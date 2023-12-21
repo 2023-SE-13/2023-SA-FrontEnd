@@ -29,20 +29,27 @@ export default {
 </script>
 <style>
 .paper-unit {
-    width: 280px;
+    border-radius: 5px;
+    width: 277.5px;
+    /* padding: 15px; */
     height: 380px;
-    background-color: rgb(249, 253, 255);
+    /* background-color: rgb(249, 253, 255); */
     /* padding: 10px; */
     display: inline-block;
     margin: 30px 15px;
     font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-    box-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 2px 2px rgba(0, 0, 0, 0.3); */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .paper-unit:hover {}
 
 .paper-img {
     width: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     height: 45%;
     position: relative;
     /* background-color: bisque; */
@@ -82,30 +89,38 @@ export default {
     -webkit-box-orient: vertical;
     overflow: hidden;
     -webkit-line-clamp: 2; /* 控制显示的行数 */
+    font: 18px Inter, Roboto, pingfang SC;
     font-weight: 700;
     text-align: left; /* 设置文本靠左对齐 */
+    margin: 10px 5px;
+    color: #181818;
 }
 
 .paper-abstract {
+    color: #4b5b76;
     padding-top: 5px;
+    margin: 10px 5px;
     width: 100%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
     -webkit-line-clamp: 4; /* 控制显示的行数 */
     font-weight: 400;
+    font: 15px Inter, Roboto, pingfang SC;
     text-align: left; /* 设置文本靠左对齐 */
 }
 
 .paper-author {
     padding-top: 5px;
+    margin: 0px 5px 8px;
     width: 100%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
     -webkit-line-clamp: 1; /* 控制显示的行数 */
+    font: 13px Inter, Roboto, pingfang SC;
     font-weight: 100;
     text-align: left; /* 设置文本靠左对齐 */
-    color:rgb(149, 149, 149)
+    color:#999999;
 }
 </style>
