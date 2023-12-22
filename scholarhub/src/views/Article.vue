@@ -3,39 +3,51 @@
       <el-row>
         <el-col class="title-block" :span="12">
           <div class="title-text">
-            {{ articleDetails.paper_title }}
+            {{ articleDetails._source.title }}
           </div>
           <div class="sub-title">
-            <span v-for="(author, index) in articleDetails.authors" :key="index">
-              <span class="_link" @click="toAuthor(author.author_id)">  
-                <!-- 1.得知道作者详情页的router怎么设置的修改方法 -->
-                {{ author.author_name }}
-                <sup v-if="articleDetails.author_affiliation && author.affiliation_order !== 0">{{ author.affiliation_order }}</sup>
-              </span>
-              <span v-if="articleDetails.authors.length > index + 1">,&nbsp;</span>
+            <span v-for="(authorship, index) in articleDetails._source.authorships" :key="index">
+          <span class="_link" @click="toAuthor(authorship.author.id)">
+            {{ authorship.author.display_name }}
+            <sup v-if="authorship.institutions && authorship.institutions.length > 0">
+              {{ authorship.institutions[0].display_name }}
+            </sup>
+          </span>
+          <span v-if="articleDetails._source.authorships.length > index + 1">,&nbsp;</span>
+        </span>
+
+        </div>
+        <div v-if="articleDetails._source.authorships.some(a => a.institutions && a.institutions.length > 0)">
+        <div class="sub-title">
+          <span v-for="(authorship, index) in articleDetails._source.authorships" :key="index">
+            <span v-if="authorship.institutions && authorship.institutions.length > 0">
+              <sup>{{ index+1 }}</sup>
+              {{ authorship.institutions[0].display_name }}
             </span>
-          </div>
-          <div class="sub-title" v-if="articleDetails.author_affiliation">
-            <span v-for="(ins, index) in articleDetails.author_affiliation" :key="index">
-              <span>
-                <sup>{{ index+1 }}</sup>
-                {{ ins }}
-              </span>
-              <span v-if="articleDetails.author_affiliation.length > index + 1">,&nbsp;</span>
-            </span>
-          </div>
-          <div class="sub-title">
-            <span class="date" v-if="articleDetails.year">{{ articleDetails.year }}</span>
-            <span class="journal" v-if="articleDetails.journal_id!==''">
-              &nbsp;{{ articleDetails.journal.name }}
-              <span v-if="articleDetails.volume"> | Volume: {{ articleDetails.volume }}</span>
-              <span v-if="articleDetails.first_page">, pp {{ articleDetails.first_page }}</span>
-              <span v-if="articleDetails.last_page">-{{ articleDetails.last_page }}</span>
-            </span>
-          </div>
-          <div class="sub-title" v-if="articleDetails.doi">
-            <span class="_info">DOI: <span class="_link" @click="toDOI(articleDetails.doi)">{{ articleDetails.doi }}</span></span>
-          </div>
+            <span v-if="index < articleDetails._source.authorships.length - 1 && authorship.institutions && authorship.institutions.length > 0">,&nbsp;</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="sub-title">
+        <!-- 显示出版年份 -->
+        <span class="date" v-if="articleDetails._source.publication_year">
+          {{ articleDetails._source.publication_year }}
+        </span>
+        <!-- 显示期刊信息 -->
+        <span class="journal" v-if="articleDetails._source.primary_location.source.display_name">
+          &nbsp;{{ articleDetails._source.primary_location.source.display_name }}
+          <!-- 其他出版信息，根据您的数据结构可能需要调整 -->
+          <span v-if="articleDetails._source.primary_location.source.volume"> | Volume: {{ articleDetails._source.primary_location.source.volume }}</span>
+          <span v-if="articleDetails._source.primary_location.source.first_page">, pp {{ articleDetails._source.primary_location.source.first_page }}</span>
+          <span v-if="articleDetails._source.primary_location.source.last_page">-{{ articleDetails._source.primary_location.source.last_page }}</span>
+        </span>
+      </div>
+      <div class="sub-title" v-if="articleDetails._source.doi">
+        <!-- 显示 DOI -->
+        <span class="_info">DOI: <span class="_link" @click="toDOI(articleDetails._source.doi)">{{ articleDetails._source.doi }}</span></span>
+      </div>
+
           <div class="title-button">
             <el-tooltip class="item" effect="light" content="下载" placement="bottom">
               <el-button type="primary" icon="el-icon-download" circle @click="download"></el-button>
@@ -66,28 +78,29 @@
         <el-col :span="15">
           <div class="abstract-div">
             <div class="abstract-title">摘要</div>
-            <div v-if="articleDetails.abstract && articleDetails.abstract.length>0">
-              <div class="abstract-content _content" v-if="articleDetails.abstract.length<spanLength || isSpan">
-                {{ articleDetails.abstract }}
-                <span v-if="isSpan && articleDetails.abstract.length>=spanLength" class="_link" @click="isSpan=!isSpan"> 折叠</span>
+              <div v-if="articleDetails._source.abstract && articleDetails._source.abstract.length>0">
+                <div class="abstract-content _content" v-if="articleDetails._source.abstract.length<spanLength || isSpan">
+                  {{ articleDetails._source.abstract }}
+                  <span v-if="isSpan && articleDetails._source.abstract.length>=spanLength" class="_link" @click="isSpan=!isSpan"> 折叠</span>
+                </div>
+                <div class="abstract-content _content" v-else>
+                  {{ articleDetails._source.abstract.substring(0, 570) }}...
+                  <span v-if="!isSpan" class="_link" @click="isSpan=!isSpan"> 展开</span>
+                </div>
               </div>
-              <div class="abstract-content _content" v-else>
-                {{ articleDetails.abstract.substring(0, 570) }}...
-                <span v-if="!isSpan" class="_link" @click="isSpan=!isSpan"> 展开</span>
+              <div v-else>
+                <div class="abstract-content _content" style="color: #909eb4; font-size: 14px">暂无摘要信息</div>
               </div>
-            </div>
-            <div v-else>
-              <div class="abstract-content _content" style="color: #909eb4; font-size: 14px">暂无摘要信息</div>
-            </div>
+
           </div>
   
           <div class="detail-div">
             <el-tabs v-model="activeDetail" type="card">
               <el-tab-pane label="参考文献" name="first">
                 <div class="reference-info">
-                  <span>共 {{ articleDetails.reference_count }} 条</span>
+                  <span>共 {{ articleDetails._source.referenced_works_count }} 条</span>
                 </div>
-                <div class="reference-info" v-if="articleDetails.reference_count>0">
+                <div class="reference-info" v-if="articleDetails._source.referenced_works_count>0">
                   <span>由于版权限制，此处可能仅展示部分相关论文</span>
                 </div>
                 <div class="reference-article">
@@ -114,9 +127,9 @@
               </el-tab-pane>
               <el-tab-pane label="引证文献" name="second">
                 <div class="reference-info">
-                  <span>共 {{ articleDetails.citation_count }} 条</span>
+                  <span>共 {{ articleDetails._source.cited_by_count }} 条</span>
                 </div>
-                <div class="reference-info" v-if="articleDetails.citation_count>0">
+                <div class="reference-info" v-if="articleDetails._source.cited_by_count>0">
                   <span>由于版权限制，此处可能仅展示部分相关论文</span>
                 </div>
                 <div class="reference-article">
@@ -142,50 +155,7 @@
                 </div>
                 <scroll-loader :loader-method="getCitationMsg" :loader-disable="loadMoreDisable"></scroll-loader>
               </el-tab-pane>
-              <!-- <el-tab-pane label="文章评论" name="third">
-                <div class="reference-info" v-if="comments===null||comments.length===0">
-                  <span>暂无评论</span>
-                </div>
-                <div class="comment-card" v-else>
-                  <el-card shadow="hover" class="comment-card-body"
-                           v-for="(comment, index) in comments" v-bind:key="index">
-                    <el-row class="comment-info">
-                      <el-col :span="18" class="comment-author">
-                        <span class="_link" @click="toAuthor(-1)">{{ comment.username }}</span>
-                        <span class="comment-date _info">
-                          &nbsp;&nbsp;&nbsp;&nbsp;{{ comment.like }} 点赞&nbsp;&nbsp;·&nbsp;&nbsp;{{ comment.reply_count }} 回复&nbsp;&nbsp;·&nbsp;&nbsp;{{ $dateFormat(comment.time, "yyyy/MM/dd") }}
-                        </span>
-                      </el-col>
-                      <el-col :span="5">
-                        <span style="font-size: 14px; float: right" class="_info">&ensp;&ensp;赞&ensp;</span>
-                        <span style="font-size: 14px; float: right" class="_link _bd_right" @click="toComment(comment.id)">查看详情&ensp;&ensp;</span>
-                      </el-col>
-                      <el-col :span="1">
-                        <div v-bind:class="{'dislike' : !comment.is_like, 'like' : comment.is_like, 'is_animating' : isAnimating}" @click="likeClick(comment)"></div>
-                      </el-col>
-                    </el-row>
-                    <el-row class="comment-content _content">
-                      {{ comment.content }}
-                    </el-row>
-                  </el-card>
-                </div>
-  
-                <div class="AnswerIt">
-                  <el-input
-                    type="textarea"
-                    maxlength="500"
-                    show-word-limit
-                    :autosize="{ minRows: 3, maxRows: 6}"
-                    placeholder="请输入你的回答"
-                    v-model="myAnswer"
-                  >
-                  </el-input>
-                  <div style="width: 100%; text-align: right">
-                    <el-button type="primary" style="margin-top: 10px;" @click="createComment(articleDetails.paper_id,myAnswer)">发布</el-button>
-                  </div>
-                </div>
-  
-              </el-tab-pane> -->
+             <!-- 删除了文章评论的位置 -->
             </el-tabs>
           </div>
         </el-col>
@@ -194,11 +164,11 @@
           <div class="info-div">
             <el-row class="digit _bd_bottom">
               <el-col :span="8" class="digit-num _primary">
-                {{ articleDetails.reference_count }}
+                {{ articleDetails._source.referenced_works_count }}
                 <div class="digit-text">引用量</div>
               </el-col>
               <el-col :span="8" class="digit-num _success">
-                {{ articleDetails.citation_count }}
+                {{ articleDetails._source.cited_by_count }}
                 <div class="digit-text" >被引量</div>
               </el-col>
               <el-col :span="8" class="digit-num _warning">
@@ -210,9 +180,9 @@
                 <div class="digit-text">评论数</div>
               </el-col> -->
             </el-row>
-            <el-row class="field _bd_bottom" v-if="articleDetails.fields">
+            <el-row class="field _bd_bottom" v-if="articleDetails._type">
               <div class="field-title">领域</div>
-              <div class="field-content" v-for="(field, index) in articleDetails.fields" :key="index">
+              <div class="field-content" v-for="(field, index) in articleDetails._type" :key="index">
                 -&ensp;<span class="_link" @click="toField(field.name)">{{ field.name }}</span>
               </div>
             </el-row>
@@ -250,6 +220,7 @@
   
   <script>
 //   import user from "../../store/user";
+  import { get_paper } from '@/api/api';
   import qs from "qs";
   import CiteDialog from "../components/CiteDialog";
   import CollectDialog from "../components/CollectDialog";
@@ -257,6 +228,7 @@
   export default {
     name: "Article",
     components: {CiteDialog, CollectDialog},
+    props:['paper_id'],
     data() {
       return {
         // 引用
@@ -278,272 +250,429 @@
   
         myAnswer: '',
   
-        // comments: [
-        //   {
-        //     id: 1,
-        //     like: 1,
-        //     is_like: false,
-        //     is_animating: false,
-        //     reply_count: 2,
-        //     time: "2021-11-23T23:09:56+08:00",
-        //     user_id: 2,
-        //     username: "syt",
-        //     content: "终于收到我需要的宝贝了，东西很好，价美物廉，谢谢掌柜的!说实在，这是我淘宝购物来让我最满意的一次购物。无论是掌柜的态度还是对物品，我都非常满意的。",
-        //   }
-        // ],
+        articleDetails:{
+          "_index": "works",
+          "_type": "_doc",
+          "_id": "lsfpi4wBDP9OYkIT32zS",
+          "_version": 1,
+          "_score": 1,
+          "_source": {
+              "wid": "https://openalex.org/W3128502970",
+              "doi": "https://doi.org/10.3390/rs13030534",
+              "title": "Sub-Auroral, Mid-Latitude, and Low-Latitude Troughs during Severe Geomagnetic Storms",
+              "display_name": "Sub-Auroral, Mid-Latitude, and Low-Latitude Troughs during Severe Geomagnetic Storms",
+              "publication_year": 2021,
+              "publication_date": "2021-02-02",
+              "language": "en",
+              "primary_location": {
+                  "source": {
+                      "id": "https://openalex.org/S43295729",
+                      "issn_l": "2072-4292",
+                      "issn": [
+                          "2072-4292"
+                      ],
+                      "display_name": "Remote Sensing",
+                      "publisher": "Multidisciplinary Digital Publishing Institute",
+                      "host_organization": "https://openalex.org/P4310310987",
+                      "host_organization_name": "Multidisciplinary Digital Publishing Institute",
+                      "host_organization_lineage": [
+                          "https://openalex.org/P4310310987"
+                      ],
+                      "host_organization_lineage_names": [
+                          "Multidisciplinary Digital Publishing Institute"
+                      ],
+                      "is_oa": true,
+                      "is_in_doaj": true,
+                      "host_institution_lineage": [],
+                      "host_institution_lineage_names": [],
+                      "publisher_lineage": [
+                          "https://openalex.org/P4310310987"
+                      ],
+                      "publisher_lineage_names": [
+                          "Multidisciplinary Digital Publishing Institute"
+                      ],
+                      "publisher_id": "https://openalex.org/P4310310987",
+                      "type": "journal"
+                  },
+                  "pdf_url": "https://www.mdpi.com/2072-4292/13/3/534/pdf?version=1612341605",
+                  "landing_page_url": "https://doi.org/10.3390/rs13030534",
+                  "is_oa": true,
+                  "version": "publishedVersion",
+                  "license": "cc-by",
+                  "doi": "https://doi.org/10.3390/rs13030534",
+                  "is_accepted": true,
+                  "is_published": true
+              },
+              "type": "article",
+              "authorships": [
+                  {
+                      "author_position": "first",
+                      "author": {
+                          "id": "https://openalex.org/A5078348831",
+                          "display_name": "A. T. Karpachev",
+                          "orcid": "https://orcid.org/0000-0002-8831-6880"
+                      },
+                      "institutions": [
+                          {
+                              "id": "https://openalex.org/I4210093250",
+                              "display_name": "Institute of Terrestrial Magnetism Ionosphere and Radio Wave Propagation",
+                              "ror": "https://ror.org/00k9x6n46",
+                              "country_code": "RU",
+                              "type": "facility",
+                              "lineage": [
+                                  "https://openalex.org/I4210093250",
+                                  "https://openalex.org/I4210096333"
+                              ]
+                          }
+                      ],
+                      "countries": [
+                          "RU"
+                      ],
+                      "is_corresponding": true,
+                      "raw_author_name": "Alexander Karpachev",
+                      "raw_affiliation_strings": [
+                          "Pushkov Institute of Terrestrial Magnetism, Ionosphere, and Radiowave Propagation, (IZMIRAN), 4, Kaluzhskoe Hwy, Troitsk, 108840 Moscow, Russia"
+                      ],
+                      "raw_affiliation_string": "Pushkov Institute of Terrestrial Magnetism, Ionosphere, and Radiowave Propagation, (IZMIRAN), 4, Kaluzhskoe Hwy, Troitsk, 108840 Moscow, Russia"
+                  }
+              ],
+              "countries_distinct_count": 1,
+              "institutions_distinct_count": 1,
+              "cited_by_count": 4,
+              "keywords": [
+                  {
+                      "keyword": "geomagnetic storms",
+                      "score": 0.7757
+                  },
+                  {
+                      "keyword": "sub-auroral",
+                      "score": 0.25
+                  },
+                  {
+                      "keyword": "mid-latitude",
+                      "score": 0.25
+                  },
+                  {
+                      "keyword": "low-latitude",
+                      "score": 0.25
+                  }
+              ],
+              "referenced_works_count": 35,
+              "referenced_works": [
+                  "https://openalex.org/W1586986498",
+                  "https://openalex.org/W1662127126",
+                  "https://openalex.org/W1965206835",
+                  "https://openalex.org/W1966096191",
+                  "https://openalex.org/W1967154545",
+                  "https://openalex.org/W1975154262",
+                  "https://openalex.org/W1990731655",
+                  "https://openalex.org/W1990918471",
+                  "https://openalex.org/W1996664581",
+                  "https://openalex.org/W1998496929",
+                  "https://openalex.org/W2007210982",
+                  "https://openalex.org/W2015713590",
+                  "https://openalex.org/W2030910343",
+                  "https://openalex.org/W2047476732",
+                  "https://openalex.org/W2050088418",
+                  "https://openalex.org/W2051677814",
+                  "https://openalex.org/W2053069651",
+                  "https://openalex.org/W2055690023",
+                  "https://openalex.org/W2057859652",
+                  "https://openalex.org/W2058639632",
+                  "https://openalex.org/W2063250014",
+                  "https://openalex.org/W2067408522",
+                  "https://openalex.org/W2071577963",
+                  "https://openalex.org/W2077361553",
+                  "https://openalex.org/W2084870187",
+                  "https://openalex.org/W2091228866",
+                  "https://openalex.org/W2092803199",
+                  "https://openalex.org/W2108216570",
+                  "https://openalex.org/W2151098846",
+                  "https://openalex.org/W2162865699",
+                  "https://openalex.org/W2773245711",
+                  "https://openalex.org/W2894843655",
+                  "https://openalex.org/W2899851350",
+                  "https://openalex.org/W2980289011",
+                  "https://openalex.org/W3114886778"
+              ],
+              "related_works": [
+                  "https://openalex.org/W1990138009",
+                  "https://openalex.org/W2375250768",
+                  "https://openalex.org/W4205183638",
+                  "https://openalex.org/W1995190890",
+                  "https://openalex.org/W3175383600",
+                  "https://openalex.org/W3128502970",
+                  "https://openalex.org/W4250883010",
+                  "https://openalex.org/W4200211789",
+                  "https://openalex.org/W2492491595",
+                  "https://openalex.org/W4200002181"
+              ],
+              "counts_by_year": [
+                  {
+                      "year": 2023,
+                      "cited_by_count": 2
+                  },
+                  {
+                      "year": 2022,
+                      "cited_by_count": 2
+                  }
+              ],
+              "updated_date": "2023-11-02T02:19:39.258533",
+              "created_date": "2021-02-15"
+          }
+      }
+      //   articleDetails: {
+      //     author_affiliation: [
+      //       "University of Warsaw",
+      //       "Facebook",
+      //       "Salesforce.com",
+      //       "University of Washington",
+      //       "Nvidia",
+      //       "Mario Negri Institute for Pharmacological Research",
+      //       "University of Oxford",
+      //       "ETH Zurich",
+      //       "Stanford University",
+      //       "Twitter",
+      //       "Tsinghua University"
+      //     ],
+      //     authors: [
+      //       {
+      //         affiliation_id: "4654613",
+      //         affiliation_name: "",
+      //         affiliation_order: 1,
+      //         author_id: "2411226248",
+      //         author_name: "Adam Paszke",
+      //         order: "1"
+      //       },
+      //       {
+      //         affiliation_id: "4654613",
+      //         affiliation_name: "",
+      //         affiliation_order: 1,
+      //         author_id: "2411226248",
+      //         author_name: "Adam Paszke",
+      //         order: "2"
+      //       },
+      //       {
+      //         affiliation_id: "4654613",
+      //         affiliation_name: "",
+      //         affiliation_order: 1,
+      //         author_id: "2411226248",
+      //         author_name: "Adam Paszke",
+      //         order: "3"
+      //       },
+      //     ],
+      //     fields: [
+      //       {
+      //         fields_id: "123123",
+      //         name: "Computer Vision"
+      //       }
+      //     ],
+      //     citation_count: 8,
+      //     collect_count: 16,
+      //     doi: "10.1051/epjconf/202024507021",
+      //     paper_id: "9782951d43920382d2f1229601d018ca87df4dcb",
+      //     journal: "EPJ Web of Conferences",
+      //     publisher: "Elsevier BV",
+      //     conference: "",
+      //     abstract: "The Centralised Elasticsearch Service at CERN runs the infrastructure to provide Elasticsearch clusters for more than 100 different use cases.This contribution presents how the infrastructure is managed, covering the resource distribution, instance creation, cluster monitoring and user support. The contribution will present the components that have been identified as critical in order to share resources and minimise the amount of clusters and machines needed to run the service. In particular, all the automation for the instance configuration, including index template management, backups and visualisation settings, will be explained in detail.",
+      //     pdfs: [
+      //       "https://www.pap.es/files/1116-877-pdf/990.pdf"
+      //     ],
+      //     urls: [
+      //       "https://dialnet.unirioja.es/servlet/articulo?codigo=2946216",
+      //       "https://www.redalyc.org/articulo.oa?id=366638709014",
+      //       "https://medes.com/publication/46160",
+      //       "http://www.pap.es/files/1116-877-pdf/990.pdf",
+      //       "http://www.redalyc.org/pdf/3666/366638709014.pdf"
+      //     ],
+      //     citation_msg: [
+      //       {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 1,
+      //         id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+      //         journalName: "EPJ Web of Conferences",
+      //         abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+      //         reference_count: 2,
+      //         paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+      //         year: 2019
+      //       },
+      //     ],
+      //     related_papers: [
+      //       {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 1,
+      //         id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+      //         journalName: "EPJ Web of Conferences",
+      //         abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+      //         reference_count: 2,
+      //         paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+      //         year: 2019
+      //       },
+      //       {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 1,
+      //         id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+      //         journalName: "EPJ Web of Conferences",
+      //         abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+      //         reference_count: 2,
+      //         paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+      //         year: 2019
+      //       },
+      //     ],
+      //     reference_msg: [
+      //       {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 1,
+      //         id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+      //         journalName: "EPJ Web of Conferences",
+      //         abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+      //         reference_count: 2,
+      //         paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+      //         year: 2019
+      //       },
+      //       {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 44135,
+      //         id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
+      //         journalName: "Neural Computation",
+      //         abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
+      //         reference_count: 42,
+      //         paper_title: "Long Short-Term Memory",
+      //         year: 1997
+      //       }
+      //     ],
+      //     reference_count: 2,
+      //     paper_title: "Large Elasticsearch cluster management",
+      //     year: 2020,
+      //   },
+      //   related_papers: [
+      //   {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 1,
+      //         id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+      //         journalName: "EPJ Web of Conferences",
+      //         abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+      //         reference_count: 2,
+      //         paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+      //         year: 2019
+      //       },
+      //       {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 44135,
+      //         id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
+      //         journalName: "Neural Computation",
+      //         abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
+      //         reference_count: 42,
+      //         paper_title: "Long Short-Term Memory",
+      //         year: 1997
+      //       }
+      //   ],
   
-        articleDetails: {
-          author_affiliation: [
-            "University of Warsaw",
-            "Facebook",
-            "Salesforce.com",
-            "University of Washington",
-            "Nvidia",
-            "Mario Negri Institute for Pharmacological Research",
-            "University of Oxford",
-            "ETH Zurich",
-            "Stanford University",
-            "Twitter",
-            "Tsinghua University"
-          ],
-          authors: [
-            {
-              affiliation_id: "4654613",
-              affiliation_name: "",
-              affiliation_order: 1,
-              author_id: "2411226248",
-              author_name: "Adam Paszke",
-              order: "1"
-            },
-            {
-              affiliation_id: "4654613",
-              affiliation_name: "",
-              affiliation_order: 1,
-              author_id: "2411226248",
-              author_name: "Adam Paszke",
-              order: "2"
-            },
-            {
-              affiliation_id: "4654613",
-              affiliation_name: "",
-              affiliation_order: 1,
-              author_id: "2411226248",
-              author_name: "Adam Paszke",
-              order: "3"
-            },
-          ],
-          fields: [
-            {
-              fields_id: "123123",
-              name: "Computer Vision"
-            }
-          ],
-          citation_count: 8,
-          collect_count: 16,
-          doi: "10.1051/epjconf/202024507021",
-          paper_id: "9782951d43920382d2f1229601d018ca87df4dcb",
-          journal: "EPJ Web of Conferences",
-          publisher: "Elsevier BV",
-          conference: "",
-          abstract: "The Centralised Elasticsearch Service at CERN runs the infrastructure to provide Elasticsearch clusters for more than 100 different use cases.This contribution presents how the infrastructure is managed, covering the resource distribution, instance creation, cluster monitoring and user support. The contribution will present the components that have been identified as critical in order to share resources and minimise the amount of clusters and machines needed to run the service. In particular, all the automation for the instance configuration, including index template management, backups and visualisation settings, will be explained in detail.",
-          pdfs: [
-            "https://www.pap.es/files/1116-877-pdf/990.pdf"
-          ],
-          urls: [
-            "https://dialnet.unirioja.es/servlet/articulo?codigo=2946216",
-            "https://www.redalyc.org/articulo.oa?id=366638709014",
-            "https://medes.com/publication/46160",
-            "http://www.pap.es/files/1116-877-pdf/990.pdf",
-            "http://www.redalyc.org/pdf/3666/366638709014.pdf"
-          ],
-          citation_msg: [
-            {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 1,
-              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
-              journalName: "EPJ Web of Conferences",
-              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
-              reference_count: 2,
-              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
-              year: 2019
-            },
-          ],
-          related_papers: [
-            {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 1,
-              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
-              journalName: "EPJ Web of Conferences",
-              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
-              reference_count: 2,
-              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
-              year: 2019
-            },
-            {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 1,
-              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
-              journalName: "EPJ Web of Conferences",
-              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
-              reference_count: 2,
-              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
-              year: 2019
-            },
-          ],
-          reference_msg: [
-            {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 1,
-              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
-              journalName: "EPJ Web of Conferences",
-              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
-              reference_count: 2,
-              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
-              year: 2019
-            },
-            {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 44135,
-              id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
-              journalName: "Neural Computation",
-              abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
-              reference_count: 42,
-              paper_title: "Long Short-Term Memory",
-              year: 1997
-            }
-          ],
-          reference_count: 2,
-          paper_title: "Large Elasticsearch cluster management",
-          year: 2020,
-        },
-        related_papers: [
-        {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 1,
-              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
-              journalName: "EPJ Web of Conferences",
-              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
-              reference_count: 2,
-              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
-              year: 2019
-            },
-            {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 44135,
-              id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
-              journalName: "Neural Computation",
-              abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
-              reference_count: 42,
-              paper_title: "Long Short-Term Memory",
-              year: 1997
-            }
-        ],
-  
-        citation_msg: [
-        {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 1,
-              id: "d884573116a4363256d52575a4dd642f3b5b6f24",
-              journalName: "EPJ Web of Conferences",
-              abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
-              reference_count: 2,
-              paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
-              year: 2019
-            },
-            {
-              authors: [
-                {
-                  author_id: "2772667878",
-                  author_name: "Sepp Hochreiter",
-                },
-                {
-                  author_id: "2772667878",
-                  author_name: "Jürgen Schmidhuber",
-                }
-              ],
-              citation_count: 44135,
-              id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
-              journalName: "Neural Computation",
-              abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
-              reference_count: 42,
-              paper_title: "Long Short-Term Memory",
-              year: 1997
-            }
-        ],
-        cita_page_idx: 1,
-        loadMoreDisable: true,
+      //   citation_msg: [
+      //   {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 1,
+      //         id: "d884573116a4363256d52575a4dd642f3b5b6f24",
+      //         journalName: "EPJ Web of Conferences",
+      //         abstract: "In early 2016 CERN IT created a new project to consolidate and centralise Elas-ticsearch instances across the site, with the aim to offer a production quality new IT services to experiments and departments. We present the solutions we adapted for securing the system using open source only tools, which allows us to consolidate up to 20 different use cases on a single Elasticsearch cluster.",
+      //         reference_count: 2,
+      //         paper_title: "Securing and sharing Elasticsearch resources with Read-onlyREST",
+      //         year: 2019
+      //       },
+      //       {
+      //         authors: [
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Sepp Hochreiter",
+      //           },
+      //           {
+      //             author_id: "2772667878",
+      //             author_name: "Jürgen Schmidhuber",
+      //           }
+      //         ],
+      //         citation_count: 44135,
+      //         id: "44d2abe2175df8153f465f6c39b68b76a0d40ab9",
+      //         journalName: "Neural Computation",
+      //         abstract: "Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.",
+      //         reference_count: 42,
+      //         paper_title: "Long Short-Term Memory",
+      //         year: 1997
+      //       }
+      //   ],
+      //   cita_page_idx: 1,
+      //   loadMoreDisable: true,
       }
     },
     watch: {
@@ -762,14 +891,18 @@
           console.log(err);
         })
       },
+
       getArticleDetail() {
-        const _formData = new FormData();
-        _formData.append("id", this.$route.query.v);
-        return this.$axios({
-          method: 'post',
-          url: '/es/get/paper',
-          data: _formData
-        })
+        get_paper(this.paper_id).then(res => {
+          if (res.data.status === 'success') {
+                console.log("get_paper")
+                this.articleDetails = res.data;
+          }else{
+            console.log("error")
+          }
+              }
+       )  
+        
       },
       getCitationMsg() {
         if (this.citation_msg.length >= this.articleDetails.citation_count) {
@@ -800,26 +933,40 @@
           console.log(err);
         })
       },
-      getComments() {
-        let userId;
-        const userInfo = user.getters.getUser(user.state());
-        if (!userInfo) userId = 0;
-        else userId = userInfo.user.userId;
+      // getComments() {
+      //   let userId;
+      //   const userInfo = user.getters.getUser(user.state());
+      //   if (!userInfo) userId = 0;
+      //   else userId = userInfo.user.userId;
   
-        return this.$axios({
-          method: 'post',
-          url: '/social/get/comments',
-          data: qs.stringify({
-            paper_id: this.$route.query.v,
-            user_id: userId
-          })
-        })
-      },
+      //   return this.$axios({
+      //     method: 'post',
+      //     url: '/social/get/comments',
+      //     data: qs.stringify({
+      //       paper_id: this.$route.query.v,
+      //       user_id: userId
+      //     })
+      //   })
+      // },
+      
+      goDocument(node, data) {
+            console.log(data)
+            console.log(node)
+            getNode(node.data.id).then(res => {
+                if (res.data.status === 'success') {
+                    if(res.data.data.node_type === 'Doc'){
+                        console.log("go document")
+                        this.$router.push({ name: 'document' }, () => { this.$router.push(`/edit/${res.data.data.doc_id}`) })
+                    }  
+                }
+            })
+        },
+
       getArticle() {
         let self = this;
         let _loadingIns = this.$loading({fullscreen: true, text: '拼命加载中'});
-        this.$axios.all([this.getArticleDetail(), this.getComments()])
-        .then(this.$axios.spread(function (articleDetail, allComments) {
+        this.$axios.all([this.getArticleDetail()])
+        .then(this.$axios.spread(function (articleDetail) {
           _loadingIns.close();
   
           // Get Article Detail
@@ -841,17 +988,17 @@
               break;
           }
   
-          switch (allComments.data.status) {
-            case 200:
-              self.comments = allComments.data.data.comments;
-              break;
-            case 403:
-              self.comments = [];
-              break;
-            default:
-              self.$message.error("评论获取失败！");
-              break;
-          }
+          // switch (allComments.data.status) {
+          //   case 200:
+          //     self.comments = allComments.data.data.comments;
+          //     break;
+          //   case 403:
+          //     self.comments = [];
+          //     break;
+          //   default:
+          //     self.$message.error("评论获取失败！");
+          //     break;
+          // }
         }))
         .catch(err => {
           console.log(err);
@@ -859,7 +1006,8 @@
       },
     },
     created() {
-    //   this.getArticle();
+      // this.paper_id = 'lLzei4wBDP9OYkITWq6v';
+      // this.getArticle();
     //   this.getCitationMsg();
     //   this.getRelatedPapers();
     },

@@ -4,15 +4,19 @@
           <el-menu-item index="1">论文</el-menu-item>
           <el-menu-item id="item2" index="2">专利</el-menu-item>
         </el-menu> -->
+
         <div class="Navi">
             <div class="Ep-content">
-                <div class="content1" v-show="ConIdx === '1'">
-                    <el-menu default-active="1" class="el-menu1-demo" mode="horizontal" @select="handleSelect1">
-                        <el-menu-item index="1">论文</el-menu-item>
-                        <el-menu-item id="item2" index="2">专利</el-menu-item>
-                    </el-menu>
-                   <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
-                    <!-- <div v-show="MenuIdx === '1'">
+                <select-box class="select-box"></select-box>
+                <!-- 原有内容 -->
+                <div class="content-right">
+                    <div class="content1" v-show="ConIdx === '1'">
+                        <el-menu default-active="1" class="el-menu1-demo" mode="horizontal" @select="handleSelect1">
+                            <el-menu-item index="1">论文</el-menu-item>
+                            <el-menu-item id="item2" index="2">专利</el-menu-item>
+                        </el-menu>
+                        <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
+                        <!-- <div v-show="MenuIdx === '1'">
                         <div class="result-unit" v-for="(count, index) in counts" :key="index">
                             <h2>论文标题</h2>
                             <div class="unit-author">
@@ -30,9 +34,9 @@
                     <div v-show="MenuIdx === '2'">
                         222
                     </div> -->
-                </div>
-                <div class="content2" v-show="ConIdx === '2'">
-
+                    </div>
+                    <div class="content2" v-show="ConIdx === '2'">
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,6 +44,7 @@
 </template>
 
 <script>
+import SelectBox from '@/components//SelectBox.vue';
 import ExploreUnit from '@/components/ExploreUnit.vue'
 export default {
     data() {
@@ -56,33 +61,51 @@ export default {
         },
     },
     components: {
-        ExploreUnit
+        ExploreUnit,
+        SelectBox
     }
 }
 </script>
 <style scoped>
+.select-box {
+    float: left;
+    width: 27%;
+    /* 筛选框的其他样式 */
+}
+
+.content-right {
+    float: right;
+    width: 73%;
+    /* 右侧内容的样式 */
+}
+
 .result-unit {
     position: relative;
     /* border: 1px solid #ccc; */
     padding: 5px;
 }
-.result-unit h2{
+
+.result-unit h2 {
     display: block;
     margin: 10px;
 }
-.result-unit .unit-author{
-    margin-bottom: 10px;
-}
-.result-unit .unit-source{
-    margin-bottom: 10px;
-}
-.result-unit .unit-preview{
+
+.result-unit .unit-author {
     margin-bottom: 10px;
 }
 
-.result-unit .unit-keywords{
+.result-unit .unit-source {
     margin-bottom: 10px;
 }
+
+.result-unit .unit-preview {
+    margin-bottom: 10px;
+}
+
+.result-unit .unit-keywords {
+    margin-bottom: 10px;
+}
+
 .result-unit::after {
     content: '';
     position: absolute;
@@ -144,5 +167,4 @@ export default {
 .content1 .el-menu1-demo .el-menu-item.is-active {
     background-color: #2f3a91;
     color: white;
-}
-</style>
+}</style>
