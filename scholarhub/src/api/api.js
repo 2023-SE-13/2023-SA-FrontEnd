@@ -45,10 +45,7 @@ export function SendCode(data, token) {
     return service({
         method: 'post',
         url: '/user/send_code',
-        data,
-        headers: {
-            'Authorization': `Token ${token}`
-        }
+        data
     })
 }
 // 确认验证码
@@ -56,10 +53,7 @@ export function VerifyCode(data, token) {
     return service({
         method: 'post',
         url: '/user/verify_code',
-        data,
-        headers: {
-            'Authorization': `Token ${token}`
-        }
+        data
     })
 }
 

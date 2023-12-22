@@ -9,7 +9,7 @@
           <el-form-item prop="username">
             <span class="smallword">账号</span>
             <el-input style="width: 65%;" type="text" v-model="loginForm.username" autocomplete="off"
-                      prefix-icon="el-icon-user" placeholder="邮箱/手机号/用户名"></el-input>
+                      prefix-icon="el-icon-user" placeholder="用户名"></el-input>
           </el-form-item>
           <el-form-item prop="password">
             <span class="smallword">密码</span>
@@ -22,7 +22,7 @@
             <a href="/" style="background-color: white;color: black; width: 25%;font-size: 15px;">返回首页</a>
           </div>
           <el-form-item>
-            <el-button type="primary" @click="login()" class="button">登录</el-button>
+            <el-button id="LoginButton" type="primary" @click="login()" class="button">登录</el-button>
           </el-form-item>
         </el-form>
       </div>
