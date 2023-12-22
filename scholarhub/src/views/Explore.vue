@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="explore_left">
+          <SelectBox />
+        </div>
         <div class="Navi">
             <div class="Ep-content">
                 <div class="content1" v-show="ConIdx === '1'">
@@ -50,6 +53,7 @@
 <script>
 import ExploreUnit from '@/components/ExploreUnit.vue'
 import ScholarUnit from '@/components/ScholarUnit.vue';
+import SelectBox from "@/components/SelectBox.vue";
 export default {
     data() {
         return {
@@ -97,12 +101,19 @@ export default {
         }
     },
     components: {
-        ExploreUnit,
-        ScholarUnit
+      ExploreUnit,
+      ScholarUnit,
+      SelectBox
     }
 }
 </script>
 <style scoped>
+.explore_left {
+    width: 20%;
+    height: 100%;
+    float: left;
+}
+
 .result-unit {
     position: relative;
     /* border: 1px solid #ccc; */
@@ -144,14 +155,14 @@ export default {
 }
 
 .Navi {
-    width: 100%;
+    width: 80%;
     min-height: 55vh;
-    background-color: #f6f6f6;
-
+    float: left;
+    background-color: #f3f5f8;
 }
 
 .Ep-content {
-    margin: 0 7.5%;
+    /*margin: 0 7.5%;*/
     padding: 1%;
     width: 82.6%;
     /* height: 92%; */

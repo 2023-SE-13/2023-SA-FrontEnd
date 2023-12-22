@@ -5,12 +5,23 @@
     </div>
     <div class="phpContainer">
       <div class="Info">
-        <img id="Photo" src="../assets/photo.png" alt="头像" width="10%" height="65%">
+        <el-upload
+            class="avatar_upload"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+          <img v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像" width="100%" height="100%">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
         <div id="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
             用户名：{{ username }}
             <span>
             <i class="el-icon-edit" @click="modify" v-show="isSelf">详细资料</i>
+            <el-dialog>
+
+            </el-dialog>
             <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
               <i class="el-icon-plus">关注</i>
             </el-button>
@@ -93,19 +104,21 @@
                     <el-descriptions title="用户信息" :column="3" border>
                       <el-descriptions-item>
                         <template slot="label">
-                          <i class="el-icon-user">用户名</i>
+                          <i class="el-icon-user"></i>
+                          <span style="margin-left: 3px">用户名</span>
                         </template>
                         {{ scope.row.name }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
-                          <i class="el-icon-mobile-phone">手机号</i>
+                          <i class="el-icon-message"></i>
+                          <span style="margin-left: 3px">邮箱</span>
                         </template>
-                        18100000000
+                        1060592547@qq.com
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
-                          <i class="el-icon-location-outline">居住地</i>
+                          <i class="el-icon-postcard">居住地</i>
                         </template>
                         苏州市
                       </el-descriptions-item>
@@ -117,7 +130,8 @@
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
-                          <i class="el-icon-office-building">联系地址</i>
+                          <i class="el-icon-office-building"></i>
+                          <span style="margin-left: 3px">机构</span>
                         </template>
                         江苏省苏州市吴中区吴中大道 1188 号
                       </el-descriptions-item>
@@ -129,7 +143,41 @@
                 </template>
               </el-table-column>
               <el-table-column prop="detail" label="详情" width="240">
-                <el-button>button</el-button>
+                <template slot-scope="scope">
+                  <el-button class="detail-button" @click="dialogVisible = true">点击查看</el-button>
+                  <el-dialog title="认证学者申请" :visible.sync="dialogVisible" :append-to-body="true">
+                    <el-descriptions :column="1" border>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-user"></i>
+                          用户名
+                        </template>
+                        {{ scope.row.name }}
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-mobile-phone"></i>
+                          真实姓名
+                        </template>
+                        杨硕
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-location-outline"></i>
+                          描述
+                        </template>
+                        xxxxxxxxxxxxxxxxx
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-tickets"></i>
+                          备注
+                        </template>
+                        <el-tag size="small">学校</el-tag>
+                      </el-descriptions-item>
+                    </el-descriptions>
+                  </el-dialog>
+                </template>
               </el-table-column>
               <el-table-column prop="operator" label="处理操作">
                 <el-button>同意</el-button>
@@ -167,6 +215,7 @@ export default {
     return {
       username: "username",
       institution: "institution",
+      imageUrl: '',
       MidNavIdx: '4',
       Menu1Idx: '1',
       Menu4Idx: '1',
@@ -181,12 +230,28 @@ export default {
           date: '2023-12-22',
           name: 'young'
         }
-      ]
+      ],
+      dialogVisible: false
     };
   },
   methods: {
     modify() {
       this.$router.push("/authentication");
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
@@ -238,7 +303,9 @@ export default {
   background: #e5f0fa;
 }
 
-.Info #Photo {
+.Info .avatar_upload {
+  width: 10%;
+  height: 65%;
   float: left;
   position: relative;
   top: 16%;
@@ -503,5 +570,18 @@ export default {
   width: 78%;
   height: 100%;
   float: left;
+}
+
+.BottomContent4 .right4_1 .detail-button {
+  width: 80px;
+  font-size: 14px;
+  background: #e5f0fa;
+  opacity: 0.8;
+  padding: 12px;
+}
+
+.BottomContent4 .right4_1 .detail-button:hover {
+  background: #e5f0fa;
+  opacity: 1;
 }
 </style>
