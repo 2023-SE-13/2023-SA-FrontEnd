@@ -80,6 +80,10 @@ const routes = [
     name:'注册',
     component:()=>import('@/views/RegisterPage')
   },
+  {
+    path: '*',
+    redirect: '/main'
+  }
 ]
 
 const router = new VueRouter({
