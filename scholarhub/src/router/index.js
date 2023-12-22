@@ -60,7 +60,7 @@ const routes = [
     ]
   },
   {
-    path:'/php',
+    path:'/php/:id',
     name:'个人主页',
     component:()=>import('@/views/PersonHomepage')
   },

@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div class="Navi">
             <div class="Ep-content">
                 <div class="content1" v-show="ConIdx === '1'">
