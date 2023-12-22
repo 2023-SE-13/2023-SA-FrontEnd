@@ -1,35 +1,19 @@
 <template>
     <div>
-
         <div class="Navi">
             <div class="Ep-content">
                 <div class="content1" v-show="ConIdx === '1'">
                     <el-menu default-active="1" class="el-menu1-demo" mode="horizontal" @select="handleSelect1">
                         <el-menu-item index="1">论文</el-menu-item>
-                        <el-menu-item id="item2" index="2">专利</el-menu-item>
+                        <el-menu-item id="item2" index="2">学者</el-menu-item>
                     </el-menu>
-                   <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
-                    <!-- <div v-show="MenuIdx === '1'">
-                        <div class="result-unit" v-for="(count, index) in counts" :key="index">
-                            <h2>论文标题</h2>
-                            <div class="unit-author">
-                                <i class="el-icon-user-solid"><span>作者</span></i>
-                            </div>
-                            <div class="unit-source">
-                                出处
-                            </div>
-                            <div class="unit-preview">
-                                引言
-                            </div>
-                            <div class="unit-keywords">关键词</div>
-                        </div>
+
+                    <div v-show="MenuIdx === '1'">
+                        <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
                     </div>
                     <div v-show="MenuIdx === '2'">
-                        222
-                    </div> -->
-                </div>
-                <div class="content2" v-show="ConIdx === '2'">
-
+                        <ScholarUnit v-for="index in 10" :key="index" @show-dialog="showDialog"> </ScholarUnit>
+                    </div>
                 </div>
             </div>
             <!-- 编辑表单 -->
@@ -113,7 +97,8 @@ export default {
         }
     },
     components: {
-        ExploreUnit
+        ExploreUnit,
+        ScholarUnit
     }
 }
 </script>
@@ -206,4 +191,5 @@ export default {
 .content1 .el-menu1-demo .el-menu-item.is-active {
     background-color: #2f3a91;
     color: white;
-}</style>
+}
+</style>
