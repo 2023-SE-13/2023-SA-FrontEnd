@@ -2,25 +2,29 @@
     <div class="home-page">
         <div class="img-container">
             <div class="search-bar">
-
-                <el-input placeholder="发现你感兴趣的内容..." v-model="input3" class="input-with-select">
+                <el-input placeholder="发现你感兴趣的内容..." @input="allow" v-model="input3" class="input-with-select">
                     <el-select class="select" v-model="select" slot="prepend" placeholder="请选择">
                         <el-option label="标题" value="1"></el-option>
                         <el-option label="关键词" value="2"></el-option>
                         <el-option label="作者" value="3"></el-option>
+                        <el-option label="学者" value="4"></el-option>
+                    </el-select>
+                    <el-select class="select select-right" v-model="select2" slot="prepend" placeholder="请选择">
+                        <el-option label="精确" value="1"></el-option>
+                        <el-option label="模糊" value="2"></el-option>
                     </el-select>
                     <!-- <el-button slot="append" type="text">文字按钮</el-button> -->
                     <el-link slot="append" id="pro-search" type="primary" :underline="false"
                         @click="dialogVisible = true">高级检索</el-link>
                     <!-- <el-button id="pro-search" slot="append" icon="el-icon-search">高级检索</el-button> -->
-                    <el-button slot="append" id="search-button" icon="el-icon-search">检索</el-button>
+                    <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search"
+                        ref="button" :disabled="NotAllowSearch">检索</el-button>
                 </el-input>
             </div>
         </div>
         <div class="paper-selection">
             <PaperUnit v-for="index in 4" :key="index"></PaperUnit>
         </div>
-        {{ aboout }}
         <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
             <!-- <span>这是一段信息</span> -->
             <div>
@@ -35,7 +39,8 @@
                 </el-input>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button class="pro-but" style="background-color: rgba(47, 58, 145, .8) !important;" type="primary" @click="Jump()">确 定</el-button>
+                <el-button class="pro-but" style="background-color: rgba(47, 58, 145, .8) !important;" type="primary"
+                    @click="Jump()">确 定</el-button>
                 <el-button class="pro-but" @click="ResetProSearch()">重置条件</el-button>
             </span>
         </el-dialog>
@@ -44,10 +49,11 @@
 <script>
 import PaperUnit from "@/components/PaperUnit.vue"
 import router from "@/router";
+import { FuzzySearch } from "@/api/api";
 export default {
     data() {
         return {
-            aboout: "首页",
+            // aboout: "首页",
             input1: '',
             input2: '',
             input3: '',
@@ -55,11 +61,29 @@ export default {
             input5: '',
             input6: '',
             select: '',
-            dialogVisible: false
+            select2: '',
+            dialogVisible: false,
+            searchField: {
+                search_field: '',
+                search_content: '',
+                sort_by: 'publication_date',
+                sort_order: ''
+            },
+            NotAllowSearch:true
         }
     },
     components: { PaperUnit }
     , methods: {
+        resetAll() {
+            this.input1 = '',
+                this.input2 = '',
+                this.input3 = '',
+                this.input4 = '',
+                this.input5 = '',
+                this.input6 = '',
+                this.select = '',
+                this.select2 = ''
+        },
         handleClose(done) {
             this.$confirm('确认关闭？')
                 .then(_ => {
@@ -67,14 +91,50 @@ export default {
                 })
                 .catch(_ => { });
         },
+        allow() {
+            if (this.select !== null && this.select !== '' && this.select2 !== null && this.select2 !== '' && this.input3 !== null && this.input3 !== '') {
+                this.$refs.button.$el.style.cursor = 'pointer'
+                this.NotAllowSearch = false
+            } else {
+                this.$refs.button.$el.style.cursor = 'not-allowed'
+                this.NotAllowSearch = true
+            }
+        },
         Jump() {
             this.dialogVisible = false;
             router.push("/explore")
         },
-        ResetProSearch(){
+        ResetProSearch() {
             this.input4 = ''
             this.input5 = ''
             this.input6 = ''
+        },
+        Search() {
+            console.log(this.select)
+            console.log(this.select2)
+            switch (this.select) {
+                case '1':
+                    this.searchField.search_field = 'title'
+                    break
+                case '2':
+                    this.searchField.search_field = 'keywords'
+                    break
+                case '3':
+                    this.searchField.search_field = 'authorships.author.display_name'
+                    break
+            }
+            this.searchField.sort_by = ''
+            this.searchField.sort_order = 'desc'
+            this.searchField.search_content = this.input3
+            console.log(this.searchField)
+            FuzzySearch(this.searchField).then(res=>{
+                console.log(res)
+            })
+        }
+    },
+    mounted() {
+        if (this.select === null || this.select === '' || this.select2=== null || this.select2 === '' || this.input3 === null || this.input3 === '') {
+            this.$refs.button.$el.style.cursor = 'not-allowed'
         }
     }
 }
@@ -106,6 +166,11 @@ export default {
     width: 1000px;
     height: 50px;
 
+}
+
+
+.select-right {
+    margin-left: 20px;
 }
 
 /deep/.el-select {
@@ -199,7 +264,7 @@ export default {
     margin-left: 10px;
 }
 
-.pro-input /deep/.el-input__inner:hover{
+.pro-input /deep/.el-input__inner:hover {
     border-color: rgba(47, 58, 145, .8) !important;
 }
 
@@ -209,7 +274,8 @@ export default {
     border-radius: 5px;
     /* margin-right: 10px; */
 }
-.pro-but{
+
+.pro-but {
     width: 115px;
 }
 </style>

@@ -9,7 +9,7 @@
           <el-form-item prop="username">
             <div style="width:20%;"><span class="smallword">账号</span></div>
             <el-input style="width: 65%;" type="text" v-model="registerForm.username" autocomplete="off"
-                      prefix-icon="el-icon-user" placeholder="邮箱/手机号/用户名"></el-input>
+                      prefix-icon="el-icon-user" placeholder="用户名"></el-input>
           </el-form-item>
           <el-form-item prop="password">
             <div style="width:20%"><span class="smallword">密码</span></div>
@@ -26,6 +26,12 @@
             <el-input style="width: 65%;" type="text" v-model="registerForm.email"
                       autocomplete="off" prefix-icon="el-icon-message" placeholder="请输入邮箱"></el-input>
           </el-form-item>
+          <el-form-item prop="code">
+            <div style="width:20%"><span class="smallword">验证码</span></div>
+            <el-input style="width: 45%; margin-right: 5px" type="text" v-model="registerForm.code"
+                      autocomplete="off" placeholder="请输入验证码"></el-input>
+            <el-button id="Code" :loading=this.loading @click="send()">发送验证码</el-button>
+          </el-form-item>
           <div class="navigation">
             <a @click="toLogin()" style="background-color: white;color: black; width: 25%;font-size: 15px;">返回登录</a>
             <span> | </span>
@@ -41,19 +47,82 @@
 </template>
 
 <script>
+import {Register} from "@/api/api";
+import {SendCode} from "@/api/api";
+
 export default {
   data() {
     return {
+      loading: false,
       registerForm: {
         username: '',
         password: '',
         password2: '',
-        email: ''
+        email: '',
+        code: ''
       }
     }
   },
 
   methods: {
+    send(){
+      let formdata = new FormData();
+      if (typeof this.registerForm.email == "undefined" || this.registerForm.email == null || this.registerForm.email === "") {
+        this.$notify({
+          title: '警告',
+          message: '邮箱不能为空',
+          type: 'warning'
+        });
+        return;
+      }
+      if (typeof this.registerForm.username == "undefined" || this.registerForm.username == null || this.registerForm.username === "") {
+        this.$notify({
+          title: '警告',
+          message: '用户名不能为空',
+          type: 'warning'
+        });
+        return;
+      }
+      //正则表达式判断邮箱格式
+      let emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+      if (!emailReg.test(this.registerForm.email)) {
+        this.$notify({
+          title: '警告',
+          message: '邮箱格式不正确',
+          type: 'warning'
+        });
+        return;
+      }
+      formdata.append('email', this.registerForm.email)
+      formdata.append('username', this.registerForm.username)
+      SendCode(formdata).then(res => {
+        if(res.data.result === 0){
+          this.$notify({
+            title: '提示',
+            message: '验证码已发送',
+            type: 'success'
+          });
+        } else {
+          this.$notify({
+            title: '警告',
+            message: res.data.report,
+            type: 'warning'
+          });
+        }
+      })
+      this.loading = true
+      var count = 60
+      var timer = setInterval(() => {
+        if (count > 0) {
+          count--
+          document.getElementById("Code").innerText = count + '秒后重发'
+        } else {
+          clearInterval(timer)
+          document.getElementById("Code").innerText = '发送验证码'
+          this.loading = false
+        }
+      }, 1000)
+    },
     register() {
       if (typeof this.registerForm.username == "undefined" || this.registerForm.username == null || this.registerForm.username === "") {
         //TODO: 弹出提示框
@@ -81,21 +150,39 @@ export default {
         });
         return;
       }
+      if (typeof this.registerForm.email == "undefined" || this.registerForm.email == null || this.registerForm.email === "") {
+        this.$notify({
+          title: '警告',
+          message: '邮箱不能为空',
+          type: 'warning'
+        });
+        return;
+      }
+      if (typeof this.registerForm.code == "undefined" || this.registerForm.code == null || this.registerForm.code === "") {
+        this.$notify({
+          title: '警告',
+          message: '验证码不能为空',
+          type: 'warning'
+        });
+        return;
+      }
       let form_data = new FormData()
       form_data.append('username', this.registerForm.username)
       form_data.append('password', this.registerForm.password)
       form_data.append('email', this.registerForm.email)
-      this.$axios.post('/api/user/register', form_data).then(res => {
-        if (res.status === 200) {//TODO 此判断仅用于本地测试
-          this.$router.push('/login')
-        } else {
-          this.$notify({
-            title: '大失败！',
-            message: "注册失败了",
-            type: 'error'
-          });
-        }
-      })
+      form_data.append('code', this.registerForm.code)
+      Register(form_data).then(res => {
+            if(res.data.result === 0){
+              this.$router.push('/login')
+            } else {
+              this.$notify({
+                title: '警告',
+                message: res.data.message,
+                type: 'warning'
+              });
+            }
+          }
+      )
     },
     toLogin() {
       this.$router.push('/login')
@@ -128,7 +215,7 @@ export default {
 
 .register {
   width: 440px;
-  height: 600px;
+  height: 700px;
   background-color: white;
   align-items: center;
   border-radius: 10px;

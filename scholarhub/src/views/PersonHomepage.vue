@@ -3,14 +3,14 @@
     <div class="navi">
       <NaviBar />
     </div>
-    <div class="container">
+    <div class="phpContainer">
       <div class="Info">
         <img id="Photo" src="../assets/photo.png" alt="头像" width="10%" height="65%">
         <div id="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
             用户名：{{ username }}
             <span>
-            <i class="el-icon-edit" @click="modify" v-show="isSelf">编辑资料</i>
+            <i class="el-icon-edit" @click="modify" v-show="isSelf">详细资料</i>
             <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
               <i class="el-icon-plus">关注</i>
             </el-button>
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="MidNav">
-        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#e5f0fa"
+        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
           <el-menu-item index="2">我的文库</el-menu-item>
@@ -62,6 +62,7 @@
             <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
               <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
             </el-input>
+            <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
           </div>
         </div>
         <div class="BottomContent2" v-show="MidNavIdx === '2'">
@@ -71,7 +72,73 @@
 
         </div>
         <div class="BottomContent4" v-show="MidNavIdx === '4'">
-
+          <div class="left4">
+            <el-menu class="el-menu4-demo" mode="vertical" default-active="1" @select="handleSelect4">
+              <el-menu-item index="1">待认证学者</el-menu-item>
+              <el-menu-item index="2">待认领成果</el-menu-item>
+              <el-menu-item index="3">待处理申诉</el-menu-item>
+            </el-menu>
+          </div>
+          <div class="right4_1" v-show="Menu4Idx === '1'">
+            <el-table :data="scholar_certification">
+              <el-table-column prop="date" label="申请时间" width="240">
+                <template slot-scope="scope">
+                  <i class="el-icon-time"></i>
+                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="申请用户" width="240">
+                <template slot-scope="scope">
+                  <el-popover placement="top" trigger="hover">
+                    <el-descriptions title="用户信息" :column="3" border>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-user">用户名</i>
+                        </template>
+                        {{ scope.row.name }}
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-mobile-phone">手机号</i>
+                        </template>
+                        18100000000
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-location-outline">居住地</i>
+                        </template>
+                        苏州市
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-tickets">备注</i>
+                        </template>
+                        <el-tag size="small">学校</el-tag>
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-office-building">联系地址</i>
+                        </template>
+                        江苏省苏州市吴中区吴中大道 1188 号
+                      </el-descriptions-item>
+                    </el-descriptions>
+                    <div slot="reference">
+                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column prop="detail" label="详情" width="240">
+                <el-button>button</el-button>
+              </el-table-column>
+              <el-table-column prop="operator" label="处理操作">
+                <el-button>同意</el-button>
+                <el-button>拒绝</el-button>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="right4_2" v-show="Menu4Idx === '2'"></div>
+          <div class="right4_3" v-show="Menu4Idx === '3'"></div>
         </div>
       </div>
     </div>
@@ -93,21 +160,28 @@ export default {
     NaviBar,
   },
   mounted() {
-    this.username = "younsur";
+    this.username = "younsur" + this.$route.params.id.toString();
     this.institution = "清华大学";
   },
   data() {
     return {
       username: "username",
       institution: "institution",
-      MidNavIdx: '1',
+      MidNavIdx: '4',
       Menu1Idx: '1',
+      Menu4Idx: '1',
       keywordsInput: "",
       isMasterpieceOnly: false,
       isManager: true,
       isSelf: true,
       isInterested: false,
-      isCancel: false
+      isCancel: false,
+      scholar_certification: [
+        {
+          date: '2023-12-22',
+          name: 'young'
+        }
+      ]
     };
   },
   methods: {
@@ -121,6 +195,10 @@ export default {
     handleSelect1(key, keyPath) {
       console.log(key, keyPath);
       this.Menu1Idx = key;
+    },
+    handleSelect4(key, keyPath) {
+      console.log(key, keyPath);
+      this.Menu4Idx = key;
     },
     search() {
       alert(this.keywordsInput)
@@ -148,7 +226,7 @@ export default {
   z-index: 1000;
 }
 
-.container {
+.phpContainer {
   position: relative;
   width: 100%;
   overflow-y: auto;
@@ -157,7 +235,7 @@ export default {
 .Info {
   width: 100%;
   height: 28vh;
-  background: #d7ecff;
+  background: #e5f0fa;
 }
 
 .Info #Photo {
@@ -266,9 +344,9 @@ export default {
 
 .BottomContent1 {
   margin: 0 7.5%;
-  padding: 1%;
+  padding: 1% 1% 0;
   width: 82.6%;
-  height: 95%;
+  height: 98%;
   background-color: white;
 }
 
@@ -385,9 +463,45 @@ export default {
 
 .BottomContent4 {
   margin: 0 7.5%;
-  padding: 1%;
+  padding: 1% 1% 0;
   width: 82.6%;
-  height: 95%;
+  height: 98%;
   background-color: white;
+}
+
+.BottomContent4 .left4 {
+  width: 20%;
+  height: 100%;
+  float: left;
+  margin-right: 2%;
+}
+
+.BottomContent4 .left4 .el-menu4-demo{
+  border: 1px solid #ebebeb;
+  border-top: 5px solid #828ad8;
+  padding-top: 20px;
+  height: 80%;
+}
+
+.BottomContent4 .left4 .el-menu4-demo .el-menu-item {
+  height: 60px;
+  font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #121212;
+}
+
+.BottomContent4 .left4 .el-menu4-demo .el-menu-item:hover {
+  background-color: #e5f0fa;
+}
+
+.BottomContent4 .left4 .el-menu4-demo .el-menu-item.is-active {
+  background-color: #e5f0fa;
+}
+
+.BottomContent4 .right4_1 {
+  width: 78%;
+  height: 100%;
+  float: left;
 }
 </style>

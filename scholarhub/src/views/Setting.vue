@@ -1,5 +1,4 @@
 <template>
-
   <div class="container">
   <div class="left-bar">
       <el-divider></el-divider>

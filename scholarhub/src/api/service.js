@@ -1,19 +1,19 @@
 import axios from "axios";
 
 const service = axios.create({
-    baseURL:'/api',
-    timeout:3000
+    baseURL: '/api',
+    timeout: 3000
 })
 
-service.interceptors.request.use((config)=>{
+service.interceptors.request.use((config) => {
     return config
-},(error)=>{
+}, (error) => {
     return Promise.reject(error)
 })
 
-service.interceptors.response.use((response) =>{
+service.interceptors.response.use((response) => {
     return response
-},(error)=>{
+}, (error) => {
     return Promise.reject(error)
 })
 

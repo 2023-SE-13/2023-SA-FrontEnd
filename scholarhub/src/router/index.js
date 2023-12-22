@@ -60,7 +60,7 @@ const routes = [
     ]
   },
   {
-    path:'/php',
+    path:'/php/:id',
     name:'个人主页',
     component:()=>import('@/views/PersonHomepage')
   },
@@ -80,6 +80,10 @@ const routes = [
     name:'注册',
     component:()=>import('@/views/RegisterPage')
   },
+  {
+    path: '*',
+    redirect: '/main'
+  }
 ]
 
 const router = new VueRouter({
