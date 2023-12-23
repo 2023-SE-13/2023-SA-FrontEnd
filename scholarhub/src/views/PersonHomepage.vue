@@ -38,16 +38,16 @@
                   <el-button type="warning" size="small" @click="modify_clear">清空</el-button>
                 </template>
                 <el-descriptions-item label="用户名">
-                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
+                  <el-input v-model="username" placeholder="请输用户名" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="真实姓名">
-                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
+                  <el-input v-model="name" placeholder="请输入真实姓名" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="机构">
-                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
+                  <el-input v-model="institution" placeholder="请输入机构" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="邮箱">
-                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
+                  <el-input v-model="email" placeholder="请输入邮箱" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
               </el-descriptions>
             </el-dialog>
@@ -243,7 +243,9 @@ export default {
   data() {
     return {
       username: "username",
+      name: "name",
       institution: "institution",
+      email: "email",
       imageUrl: '',
       MidNavIdx: '4',
       Menu1Idx: '1',
@@ -277,14 +279,14 @@ export default {
     },
     modify_confirm() {
       this.infoDialogTitle = true;
-      this.inputDisabled = false;
+      this.inputDisabled = true;
     },
     modify_cancel() {
       this.infoDialogTitle = true;
-      this.inputDisabled = false;
+      this.inputDisabled = true;
     },
     modify_clear() {
-      this.infoDialog = false;
+      this.input = '';
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
