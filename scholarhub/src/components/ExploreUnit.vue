@@ -8,8 +8,8 @@
           <!-- 作者 -->
           <div class="unit-author">
               <i class="el-icon-user-solid">
-                &nbsp;
-                  <span v-for="name in this.paperData._source.authorships" >{{ name.author.display_name }} ,</span>
+                  &nbsp;
+                  <span v-for="name in this.paperData._source.authorships" :key="name.author.display_name">{{ name.author.display_name }}&nbsp;,&nbsp;&nbsp;</span>
               </i>
           </div>
           <!-- 来源期刊 -->
@@ -19,9 +19,9 @@
             {{ this.paperData._source.abstract }}
           </div>
           <div class="unit-keywords">
-          <!-- POPs Primary and secondary sources Primary and secondary emissions
+          POPs Primary and secondary sources Primary and secondary emissions
           Primary and secondary distribution patterns Primary and secondary
-          fractionations -->
+          fractionations
           </div>
       </div>
   </div>
@@ -36,13 +36,14 @@ export default {
   },
   data() {
       return {
-        id: 'https://openalex.org/W2783557622'
+        id: 'https://openalex.org/W2783557622',
+        isOverflow: true,
       };
   },
   methods: {
     gotoArticle() {
       this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
-    }
+    },
   }
 };
 </script>
@@ -50,7 +51,8 @@ export default {
 .explore-unit {
   background-color: rgb(221, 236, 255);
   width: 95%;
-  height: 200px;
+  min-height: 140px;
+  max-height: 240px;
   /* padding: 10px; */
   display: block;
   margin: 5px 15px;
@@ -58,6 +60,7 @@ export default {
   font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   box-shadow: 2px 2px rgba(0, 0, 0, 0.3);
 }
+
 .unit-title {
   font-size: 18px;
   color: #2f3a91;
@@ -71,24 +74,47 @@ export default {
 .unit-author {
   display: flex;
   flex-direction: column;
-  /* line-height: 1.7; */
-  overflow: hidden;
 }
 
 .unit-author i {
   overflow: hidden;
-  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1; /* 控制显示的行数 */
+  -webkit-line-clamp: 2; /* 控制显示的行数 */
   white-space: normal;
   line-height: 1.2;
   width: 90%;
   text-align: left;
   margin-left: 20px;
+  font-weight: 700;
 }
 
+.unit-author i span {
+  -webkit-line-clamp: 1; /* 控制显示的行数 */
+}
 
+.unit-author i span:hover {
+  /* text-decoration: underline; */
+  border-bottom: 1px dashed; /* 虚线下划线 */
+}
+
+.unit-keywords {
+  margin-top: 10px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 控制显示的行数 */
+  white-space: normal;
+  line-height: 1.2;
+  width: 90%;
+  text-align: left;
+  margin-left: 20px;
+  font-weight: 400;
+}
+
+.unit-keywords:hover {
+  color: #7e7979;
+}
 
 .unit-source {
   color:rgba(128, 124, 124, 0.999);
