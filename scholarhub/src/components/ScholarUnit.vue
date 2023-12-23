@@ -2,16 +2,16 @@
     <div class="scholar-unit">
         <div class="inner-container">
             <div class="left">
-                <el-avatar class="avatar" :size="55" src="../assets/cover.png"></el-avatar>
+                <el-avatar class="avatar" :size="55" src="../assets/photo.png"></el-avatar>
                 <div class="left-inner">
-                    <h3>Tom Hanx</h3>
-                    <span >Finnish Environment Institute</span>
-                    <i class="el-icon-document">5</i>
-                    <i class="el-icon-collection">4</i>
+                    <h3>{{this.authorData._source.display_name}}</h3>
+                    <span >{{ institute }}</span>
+                    <i class="el-icon-document">{{ this.authorData._source.works_count }}</i>
+                    <i class="el-icon-collection">{{ this.authorData._source.cited_by_count }}</i>
                 </div>
             </div>
             <div class="right">
-                <el-button class="right-button" @click="showDialog">认领学者</el-button>
+                <el-button class="right-button" @click="showDialog">详情</el-button>
             </div>
         </div>
     </div>
@@ -21,12 +21,24 @@
 export default {
     data() {
         return {
-
+            institute:'unknown'
         }
     },
     methods:{
         showDialog(){
             this.$emit('show-dialog')
+        }
+    },
+    props:{
+        authorData:{
+
+        }
+    },
+    created(){
+        console.log(this.authorData)
+        const instituteValue = this.authorData._source.last_known_institution
+        if(instituteValue!==undefined){
+            this.institute = instituteValue.display_name
         }
     }
 }
@@ -72,6 +84,7 @@ export default {
 .left-inner span{
     display: inline-block;
     max-width: 100px;
+    min-width: 100px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -81,6 +94,7 @@ export default {
      font-size: x-small;
      margin-top: 20px;
      vertical-align: bottom;
+     text-align: left;
 }
 .left-inner h3{
     color: #0969da;

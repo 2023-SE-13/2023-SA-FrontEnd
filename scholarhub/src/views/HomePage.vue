@@ -146,7 +146,7 @@ export default {
             //     })
             // }
             this.$router.push({
-                path: '/explore/' + this.searchField
+                path: '/explore/' + btoa(encodeURIComponent(JSON.stringify(this.searchField)))
             })
         }
     },
