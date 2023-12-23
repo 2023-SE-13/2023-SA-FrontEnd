@@ -1,51 +1,61 @@
 <template>
     <div>
-        <div class="explore_left">
-          <SelectBox />
-        </div>
-        <div class="Navi">
-            <div class="Ep-content">
-                <div class="content1" v-show="ConIdx === '1'">
-                    <el-menu default-active="1" class="el-menu1-demo" mode="horizontal" @select="handleSelect1">
-                        <el-menu-item index="1">论文</el-menu-item>
-                        <el-menu-item id="item2" index="2">学者</el-menu-item>
-                    </el-menu>
-
-                    <div v-show="MenuIdx === '1'">
-                        <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
-                    </div>
-                    <div v-show="MenuIdx === '2'">
-                        <ScholarUnit v-for="index in 10" :key="index" @show-dialog="showDialog"> </ScholarUnit>
-                    </div>
+        <div class="work" v-show="isWork">
+          <div class="work_left">
+            <SelectBox />
+          </div>
+          <div class="work_right">
+            <div class="work_right_content">
+              <div class="content1">
+                <el-menu default-active="1" class="el-menu1-demo" mode="horizontal">
+                  <el-menu-item index="1">论文</el-menu-item>
+                </el-menu>
+                <div>
+                  <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
                 </div>
+              </div>
             </div>
-            <!-- 编辑表单 -->
-            <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
-                <el-form :label-position='left' label-width="80px" :model="form" @submit="" ref="formRef">
+          </div>
+        </div>
+        <div class="scholar" v-show="!isWork">
+          <div class="scholar_center">
+            <div class="scholar_center_content">
+              <div class="content2">
+                <el-menu default-active="1" class="el-menu2-demo" mode="horizontal">
+                  <el-menu-item index="1">学者</el-menu-item>
+                </el-menu>
+                <div>
+                  <ScholarUnit v-for="index in 10" :key="index" @show-dialog="showDialog"> </ScholarUnit>
+                </div>
+                <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
+                  <el-form :label-position='left' label-width="80px" :model="form" @submit="" ref="formRef">
                     <el-form-item label="证明资料">
-                        <!-- <input class="dialog-input" type="file" name="" id="" accept="image/*" ref="fileInput"> -->
-                        <picture-input ref="pictureInput" @change="test" width="600" height="600" margin="16"
-                            accept="image/jpeg,image/png" size="10" :removable="true" :customStrings="{
+                      <!-- <input class="dialog-input" type="file" name="" id="" accept="image/*" ref="fileInput"> -->
+                      <picture-input ref="pictureInput" @change="test" width="600" height="600" margin="16"
+                                     accept="image/jpeg,image/png" size="10" :removable="true" :customStrings="{
                                 upload: '<h1>Bummer!</h1>',
                                 drag: 'Drag a 😺 GIF or GTFO'
                             }">
-                        </picture-input>
+                      </picture-input>
                     </el-form-item>
 
                     <el-form-item label="个人姓名" prop="personalName">
-                        <el-input v-model="form.personalName"></el-input>
+                      <el-input v-model="form.personalName"></el-input>
                     </el-form-item>
                     <el-form-item label="个人描述" prop="personalDescri">
-                        <el-input type="textarea" placeholder="请输入内容" v-model="form.personalDescri" maxlength="50"
-                            show-word-limit>
-                        </el-input>
+                      <el-input type="textarea" placeholder="请输入内容" v-model="form.personalDescri" maxlength="50"
+                                show-word-limit>
+                      </el-input>
                     </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
+                  </el-form>
+                  <span slot="footer" class="dialog-footer">
                     <!-- <el-button @click="isShowDialog = false" class="ftbtn">取 消</el-button> -->
                     <el-button type="primary" @click="submitApply()" class="ftbtn">确认提交</el-button>
                 </span>
-            </el-dialog>
+                </el-dialog>
+              </div>
+            </div>
+          </div>
         </div>
     </div>
 </template>
@@ -57,6 +67,7 @@ import SelectBox from "@/components/SelectBox.vue";
 export default {
     data() {
         return {
+            isWork: false,
             ConIdx: '1',
             MenuIdx: '1',
             counts: 10,
@@ -70,10 +81,6 @@ export default {
         }
     },
     methods: {
-        handleSelect1(key, keyPath) {
-            console.log(key, keyPath);
-            this.MenuIdx = key;
-        },
         showDialog() {
             this.isShowDialog = true
             console.log(this.isShowDialog)
@@ -108,12 +115,6 @@ export default {
 }
 </script>
 <style scoped>
-.explore_left {
-    width: 20%;
-    height: 100%;
-    float: left;
-}
-
 .result-unit {
     position: relative;
     /* border: 1px solid #ccc; */
@@ -154,53 +155,88 @@ export default {
     display: block;
 }
 
-.Navi {
+.work .work_left {
+  width: 20%;
+  height: 100%;
+  float: left;
+}
+
+.work .work_right {
     width: 80%;
     min-height: 55vh;
     float: left;
     background-color: #f3f5f8;
 }
 
-.Ep-content {
-    /*margin: 0 7.5%;*/
-    padding: 1%;
-    width: 82.6%;
-    /* height: 92%; */
-    min-height: 55vh;
-    background-color: white;
+.work .work_right .work_right_content{
+  /*margin: 0 7.5%;*/
+  padding: 1%;
+  width: 82.6%;
+  /* height: 92%; */
+  min-height: 55vh;
+  background-color: white;
 }
 
-.content1 .el-menu1-demo {
-    height: 11%;
-    border-bottom: 1px solid #2f3a91;
-    margin-bottom: 2%;
+.work_right_content .content1 .el-menu1-demo {
+  height: 11%;
+  border-bottom: 1px solid #2f3a91;
+  margin-bottom: 2%;
 }
 
-.content1 .el-menu1-demo .el-menu-item {
-    color: #121212;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
-    width: 12%;
-    height: 100%;
-    line-height: 320%;
-    border: 1px solid #dcdfe6;
-    border-right: none;
-    border-bottom: none;
+.work_right_content .content1 .el-menu1-demo .el-menu-item {
+  color: #121212;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
+  width: 12%;
+  height: 100%;
+  line-height: 320%;
+  border: 1px solid #dcdfe6;
+  border-bottom: none;
 }
 
-.content1 .el-menu1-demo #item2 {
-    border: 1px solid #dcdfe6;
-    border-bottom: none;
+.work_right_content .content1 .el-menu1-demo .el-menu-item.is-active {
+  background-color: #2f3a91;
+  color: white;
 }
 
-.content1 .el-menu1-demo .el-menu-item:hover {
-    background-color: #2f3a91;
-    color: white;
+.scholar .scholar_center {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f3f5f8;
 }
 
-.content1 .el-menu1-demo .el-menu-item.is-active {
-    background-color: #2f3a91;
-    color: white;
+.scholar .scholar_center .scholar_center_content {
+  padding: 1%;
+  width: 82.6%;
+  margin-left: 7.5%;
+  /* height: 92%; */
+  min-height: 100vh;
+  position: center;
+  background-color: white;
 }
+
+.scholar_center_content .content2 .el-menu2-demo {
+  height: 11%;
+  border-bottom: 1px solid #2f3a91;
+  margin-bottom: 2%;
+}
+
+.scholar_center_content .content2 .el-menu2-demo .el-menu-item {
+  color: #121212;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
+  width: 12%;
+  height: 100%;
+  line-height: 320%;
+  border: 1px solid #dcdfe6;
+  border-bottom: none;
+}
+
+.scholar_center_content .content2 .el-menu2-demo .el-menu-item.is-active {
+  background-color: #2f3a91;
+  color: white;
+}
+
 </style>
