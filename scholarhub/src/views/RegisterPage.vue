@@ -53,6 +53,7 @@ import {SendCode} from "@/api/api";
 export default {
   data() {
     return {
+      timer: null,
       loading: false,
       registerForm: {
         username: '',
@@ -83,16 +84,6 @@ export default {
         });
         return;
       }
-      //正则表达式判断邮箱格式
-      let emailReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-      if (!emailReg.test(this.registerForm.email)) {
-        this.$notify({
-          title: '警告',
-          message: '邮箱格式不正确',
-          type: 'warning'
-        });
-        return;
-      }
       formdata.append('email', this.registerForm.email)
       formdata.append('username', this.registerForm.username)
       SendCode(formdata).then(res => {
@@ -112,7 +103,7 @@ export default {
       })
       this.loading = true
       var count = 60
-      var timer = setInterval(() => {
+      this.timer = setInterval(() => {
         if (count > 0) {
           count--
           document.getElementById("Code").innerText = count + '秒后重发'
@@ -173,6 +164,7 @@ export default {
       form_data.append('code', this.registerForm.code)
       Register(form_data).then(res => {
             if(res.data.result === 0){
+              clearInterval(this.timer)
               this.$router.push('/login')
             } else {
               this.$notify({

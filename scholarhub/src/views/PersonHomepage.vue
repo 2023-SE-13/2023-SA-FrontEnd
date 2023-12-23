@@ -11,8 +11,8 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-          <img v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像" width="100%" height="100%">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="160px" height="160px">
+          <span v-if="this.is_black" style="position: absolute;bottom: 40px; left: 20px;color:white;-moz-user-select: none;-ms-user-select: none;-webkit-user-select: none;user-select: none">修改头像</span>
         </el-upload>
         <div class="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
@@ -38,16 +38,16 @@
                   <el-button type="warning" size="small" @click="modify_clear">清空</el-button>
                 </template>
                 <el-descriptions-item label="用户名">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="username" placeholder="请输用户名" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="真实姓名">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="name" placeholder="请输入真实姓名" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="机构">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="institution" placeholder="请输入机构" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="邮箱">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="email" placeholder="请输入邮箱" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
               </el-descriptions>
             </el-dialog>
@@ -242,8 +242,11 @@ export default {
   },
   data() {
     return {
+      is_black: false,
       username: "username",
+      name: "name",
       institution: "institution",
+      email: "email",
       imageUrl: '',
       MidNavIdx: '4',
       Menu1Idx: '1',
@@ -262,7 +265,8 @@ export default {
       ],
       infoDialog: false,
       infoDialogTitle: true,
-      dialogVisible: false
+      dialogVisible: false,
+      inputDisabled: true,
     };
   },
   methods: {
@@ -272,15 +276,18 @@ export default {
     },
     modify_info() {
       this.infoDialogTitle = false;
+      this.inputDisabled = false;
     },
     modify_confirm() {
       this.infoDialogTitle = true;
+      this.inputDisabled = true;
     },
     modify_cancel() {
       this.infoDialogTitle = true;
+      this.inputDisabled = true;
     },
     modify_clear() {
-      this.infoDialog = false;
+      this.input = '';
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -323,7 +330,7 @@ export default {
     },
     cancel_interest() {
       this.isInterested = false;
-    }
+    },
   }
 }
 </script>
@@ -354,6 +361,7 @@ export default {
   position: relative;
   top: 16%;
   left: 10%;
+  border-radius: 4px;
 }
 
 .Info .PersonalInfo {
@@ -632,4 +640,6 @@ export default {
   background: #e5f0fa;
   opacity: 1;
 }
+
+
 </style>

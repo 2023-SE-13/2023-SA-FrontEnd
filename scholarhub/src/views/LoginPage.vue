@@ -68,6 +68,7 @@ export default {
       //TODO: 发送登录请求
       Login(form_data).then(res => {
         if (res.data.result === 0) {
+          this.$store.commit('setToken', res.data.token)
           this.$router.push("/")
         } else {
           this.$notify({

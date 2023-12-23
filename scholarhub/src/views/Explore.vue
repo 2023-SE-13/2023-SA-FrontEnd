@@ -10,8 +10,15 @@
                         <el-menu default-active="1" class="el-menu1-demo" mode="horizontal">
                             <el-menu-item index="1">论文</el-menu-item>
                         </el-menu>
-                        <div>
-                            <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
+                        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" style="overflow: scroll">
+                            <el-backtop :bottom="70" :right="70" style="z-index: 1000">
+                              <div style="height: 100%; width: 100%; background-color: #f3f5f7;box-shadow: 6px 0 6px rgba(0,0,0, .12); text-align: center; line-height: 40px;color: #0969da;">
+                                UP
+                              </div>
+                            </el-backtop>
+                            <ExploreUnit v-for="(paperData, index) in paperDatas.slice(begin0, end0)" :key="index" :paper-data="paperData"></ExploreUnit>
+                            <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...</p>
+                            <p v-if="noMore" style="margin: 15px; font-size: 18px"><i class="el-icon-warning-outline"></i>没有更多了</p>
                         </div>
                     </div>
                 </div>
@@ -24,7 +31,12 @@
                         <el-menu default-active="1" class="el-menu2-demo" mode="horizontal">
                             <el-menu-item index="1">学者</el-menu-item>
                         </el-menu>
-                        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" style="overflow: auto">
+                        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" style="overflow: scroll">
+                            <el-backtop :bottom="70" :right="70" style="z-index: 1000">
+                              <div style="height: 100%; width: 100%; background-color: #f3f5f7;box-shadow: 6px 0 6px rgba(0,0,0, .12); text-align: center; line-height: 40px;color: #0969da;">
+                                UP
+                              </div>
+                            </el-backtop>
                             <ScholarUnit v-for="(authorData, index) in authorDatas.slice(begin, end)" :key="index" :author-data="authorData"
                                 @show-dialog="showDialog"> </ScholarUnit>
                             <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...</p>
@@ -77,6 +89,8 @@ export default {
             MenuIdx: '1',
             counts: 6,
             begin: 0,
+            begin0: 0,
+            end0: 4,
             end: 7,
             isShowDialog: false,
             form: {
@@ -90,17 +104,16 @@ export default {
                 sort_by: "",
                 sort_order: ""
             },
-            authorDatas: {
-
-            },
-            paperDatas: {
-
-            },
+            authorDatas: [],
+            paperDatas: [],
             loading: false
         }
     },
     computed: {
       noMore () {
+        if (this.isWork) {
+          return this.end0 >= 50
+        }
         return this.end >= 50
       },
       disabled () {
@@ -136,9 +149,13 @@ export default {
         load() {
           this.loading = true
           setTimeout(() => {
-            this.end += 5;
+            if (this.isWork) {
+              this.end0 += 2
+            } else {
+              this.end += 5
+            }
             this.loading = false
-          }, 1000)
+          }, 1500)
         },
     },
     mounted() {
@@ -147,7 +164,6 @@ export default {
     created() {
         // console.log(this.$route.params)
         console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.data))))
-
         const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.data)))
         this.searchField.search_field = tempSearch.search_field
         this.searchField.sort_order = tempSearch.sort_order
@@ -173,10 +189,12 @@ export default {
             if (this.isExact === 'exact') {
                 ExactSearch(this.searchField).then(res => {
                     console.log(res)
+                    this.paperDatas = res.data.hits
                 })
             } else {
                 FuzzySearch(this.searchField).then(res => {
                     console.log(res)
+                    this.paperDatas = res.data.hits
                 })
             }
         }
@@ -238,7 +256,7 @@ export default {
 
 .work .work_right {
     width: 80%;
-    min-height: 55vh;
+    min-height: 105vh;
     float: left;
     background-color: #f3f5f8;
 }
@@ -248,7 +266,7 @@ export default {
     padding: 1%;
     width: 82.6%;
     /* height: 92%; */
-    min-height: 55vh;
+    min-height: 105vh;
     background-color: white;
 }
 

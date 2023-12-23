@@ -1,5 +1,5 @@
 <template>
-    <div class="paper-unit">
+    <div class="paper-unit" @click="getPaper">
         <!-- <img class="paper-img"  src="../assets/logo.png" alt="加载失败"> -->
         <div class="paper-img"> <img src="" alt="图片加载失败" class="fallback-img"></div>
         <div class="paper-title">{{ paper.title }}</div>
@@ -8,6 +8,7 @@
     </div>
 </template>
 <script>
+import { GetPaper } from "@/api/api"
 export default {
     name: "PaperUnit",
     props: {
@@ -23,8 +24,17 @@ export default {
         }
     },
     data() {
-        return {}
+        return {
+            paper_id: '',
+        }
     },
+    methods: {
+        getPaper() {
+            GetPaper(this.paper_id).then(res=>{
+                
+            })
+        }
+    }
 }
 </script>
 <style>
