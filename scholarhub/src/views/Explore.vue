@@ -24,9 +24,11 @@
                         <el-menu default-active="1" class="el-menu2-demo" mode="horizontal">
                             <el-menu-item index="1">学者</el-menu-item>
                         </el-menu>
-                        <div>
+                        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" style="overflow: auto">
                             <ScholarUnit v-for="authorData in authorDatas" :key="index" :author-data="authorData"
                                 @show-dialog="showDialog"> </ScholarUnit>
+                            <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...</p>
+                            <p v-if="noMore" style="margin: 15px; font-size: 18px"><i class="el-icon-warning-outline"></i>没有更多了</p>
                         </div>
                         <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
                             <el-form :label-position='left' label-width="80px" :model="form" @submit="" ref="formRef">
@@ -73,7 +75,7 @@ export default {
             isExact: '',
             ConIdx: '1',
             MenuIdx: '1',
-            counts: 10,
+            counts: 6,
             isShowDialog: false,
             form: {
                 personalPhoto: null,
@@ -86,13 +88,24 @@ export default {
                 sort_by: "",
                 sort_order: ""
             },
-            authorDatas: {
+            authorDatas:[
+              {
 
-            },
+              }
+            ],
             paperDatas: {
 
-            }
+            },
+            loading: false
         }
+    },
+    computed: {
+      noMore () {
+        return this.authorDatas.length >= 20
+      },
+      disabled () {
+        return this.loading || this.noMore
+      }
     },
     methods: {
         showDialog() {
@@ -119,7 +132,14 @@ export default {
         },
         handleSetImage(dataURL) {
             console.log(dataURL)
-        }
+        },
+        load() {
+          this.loading = true
+          setTimeout(() => {
+            this.authorDatas.length += 2;
+            this.loading = false
+          }, 1000)
+        },
     },
     mounted() {
 
@@ -127,7 +147,7 @@ export default {
     created() {
         // console.log(this.$route.params)
         console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.data))))
-        
+
         const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.data)))
         this.searchField.search_field = tempSearch.search_field
         this.searchField.sort_order = tempSearch.sort_order
@@ -255,42 +275,42 @@ export default {
     color: white;
 }
 
-.scholar .scholar_center {
-    width: 100%;
-    min-height: 100vh;
-    background-color: #f3f5f8;
+scholar .scholar_center {
+  width: 100%;
+  min-height: 60vh;
+  background-color: #f3f5f8;
 }
 
 .scholar .scholar_center .scholar_center_content {
-    padding: 1%;
-    width: 82.6%;
-    margin-left: 7.5%;
-    /* height: 92%; */
-    min-height: 100vh;
-    position: center;
-    background-color: white;
+  padding: 1%;
+  width: 82.6%;
+  margin-left: 7.5%;
+  /* height: 92%; */
+  min-height: 60vh;
+  position: center;
+  background-color: white;
 }
 
 .scholar_center_content .content2 .el-menu2-demo {
-    height: 11%;
-    border-bottom: 1px solid #2f3a91;
-    margin-bottom: 2%;
+  height: 11%;
+  border-bottom: 1px solid #2f3a91;
+  margin-bottom: 2%;
 }
 
 .scholar_center_content .content2 .el-menu2-demo .el-menu-item {
-    color: #121212;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
-    width: 12%;
-    height: 100%;
-    line-height: 320%;
-    border: 1px solid #dcdfe6;
-    border-bottom: none;
+  color: #121212;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
+  width: 12%;
+  height: 100%;
+  line-height: 320%;
+  border: 1px solid #dcdfe6;
+  border-bottom: none;
 }
 
 .scholar_center_content .content2 .el-menu2-demo .el-menu-item.is-active {
-    background-color: #2f3a91;
-    color: white;
+  background-color: #2f3a91;
+  color: white;
 }
 </style>

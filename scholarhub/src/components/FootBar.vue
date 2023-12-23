@@ -65,14 +65,13 @@ export default {
     background-color: #2f3a91;
     position: relative;
     bottom: 0;
-    margin-top: 50px;
     color: #cbcee3;
 }
 
 .left {
     position: absolute;
     width: 20%;
-    height: 100%-40px;
+    height: calc(100% - 40px);
     left: 10%;
     /* background-color: aqua; */
     text-align: left;
@@ -101,7 +100,7 @@ export default {
 .mid {
     position: absolute;
     width: 20%;
-    height: 100%-40px;
+    height: calc(100% - 40px);
     left: 30%;
     /* background-color: red; */
     text-align: left;
@@ -117,7 +116,7 @@ export default {
 .right {
     position: absolute;
     width: 20%;
-    height: 100%-40px;
+    height: calc(100% - 40px);
     left: 50%;
     /* background-color: purple; */
     text-align: left;
@@ -131,7 +130,7 @@ export default {
 }
 .img-contain{
     position: absolute;
-    height: 100%-40px;
+    height: calc(100% - 40px);
     margin-top: 40px;
     width: 20%;
     left: 70%;

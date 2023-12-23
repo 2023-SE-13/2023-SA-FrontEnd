@@ -45,12 +45,11 @@ export default {
 </script>
 <style scoped>
 .scholar-unit {
-    width: 580px;
+    width: 1100px;
     height: 55px;
     /* background-color: aquamarine; */
-    float: left;
     margin-left: 1vw;
-    margin-top: 2vh;
+    margin-top: 15px;
     padding: 10px;
     border: 2px solid #d0d7de;
     border-radius: 10px;
@@ -132,6 +131,9 @@ export default {
     align-items: center;
     padding: 0;
     font-weight: 600;
+    position: relative;
+    top: 12px;
+    right: 10px;
 }
 .avatar {
     float: left;
