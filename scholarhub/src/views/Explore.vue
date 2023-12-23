@@ -262,7 +262,8 @@ export default {
     width: 80%;
     min-height: 105vh;
     float: left;
-    background-color: #f3f5f8;
+    margin-top: 10px;
+  //background-color: #f3f5f8;
 }
 
 .work .work_right .work_right_content {
