@@ -16,7 +16,7 @@
                                 UP
                               </div>
                             </el-backtop>
-                            <ExploreUnit v-for="(paperData, index) in paperDatas" :key="index" :paper-data="paperData"></ExploreUnit>
+                            <ExploreUnit v-for="(paperData, index) in paperDatas.slice(begin0, end0)" :key="index" :paper-data="paperData"></ExploreUnit>
                             <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...</p>
                             <p v-if="noMore" style="margin: 15px; font-size: 18px"><i class="el-icon-warning-outline"></i>没有更多了</p>
                         </div>
@@ -89,7 +89,8 @@ export default {
             MenuIdx: '1',
             counts: 6,
             begin: 0,
-            end0: 7,
+            begin0: 0,
+            end0: 4,
             end: 7,
             isShowDialog: false,
             form: {
@@ -149,7 +150,7 @@ export default {
           this.loading = true
           setTimeout(() => {
             if (this.isWork) {
-              this.end0 += 5
+              this.end0 += 2
             } else {
               this.end += 5
             }
