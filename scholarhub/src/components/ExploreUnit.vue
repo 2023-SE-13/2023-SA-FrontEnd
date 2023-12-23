@@ -58,11 +58,22 @@ export default {
   margin: 12px 15px;
   padding: 10px;
   font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  box-shadow: 2px 2px rgba(0, 1, 1, 0.3);
+  box-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
 }
 
 .explore-unit:hover {
-  box-shadow: 6px 6px rgba(0, 1, 1, 0.3);
+  background-color: rgb(221, 236, 255);
+  width: 95%;
+  min-height: 140px;
+  max-height: 240px;
+  /* padding: 10px; */
+  display: block;
+  margin: 5px 15px;
+  padding: 10px;
+  font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
 }
 
 .unit-title {

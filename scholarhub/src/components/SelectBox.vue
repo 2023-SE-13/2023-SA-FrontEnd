@@ -4,36 +4,32 @@
             <el-col :span="30">
                 <div class="grid-content bg-purple" style="margin-right:50px">
                     <el-row>
-                        <el-col :span="2" style="margin-top:50px;">
-                            <div id="chooseBar">
-                                <div :class="searchBarFixed == true ? 'isFixed' : ''">
-                                    <div style="height:48px"></div>
-                                    <div @click="makeSure()"
-                                        style="padding:1px; font-size:14px; border-radius:4px; background-color:#409EFF; border:1px solid #2d94d4; cursor: pointer">
-                                        <span style="color:white;">确</span><br><span style="color:white;">定</span>
-                                    </div>
-                                    <div @click="cancel()"
-                                        style="padding:1px; font-size:14px; border-radius:4px; background-color:white; border:1px solid #2d94d4; color: #606266; cursor: pointer">
-                                        <span>取</span><br><span>消</span>
-                                    </div>
-                                </div>
+
+                        <el-col :span="9" style="width:90%;margin-left: 3px;margin-top: 60px">
+<!--                            <span-->
+<!--                                style="display:flex; margin-bottom:24px; margin-top:10px; font-size:16px; color: #A0A0A0">筛选</span>-->
+                          <div :class="searchBarFixed == true ? 'isFixed' : ''">
+                            <div class="square-buttons">
+                              <div class="square-button" @click="makeSure()"><i class="el-icon-search"></i></div>
+                              <div class="square-button" @click="cancel()"><i class="el-icon-close"></i></div>
                             </div>
-                        </el-col>
-                        <el-col :span="9" style="width:90%">
-                            <span
-                                style="display:flex; margin-bottom:24px; margin-top:10px; font-size:16px; color: #A0A0A0">筛选</span>
-                            <el-card class="box-card" id="sideBars" ref="ele">
+                          </div>
+
+                          <el-card class="box-card" id="sideBars" ref="ele">
                                 <div class="publish-year sub-block" v-if="mode !== 'advance'">
-                                    <div class="check-box-title">
-                                        <span style="color: #303133">发表年份</span>
+                                    <div class="check-box-title" style="margin-bottom: 10px;">
+                                        <span style="color: #303133;">发表年份</span>
                                     </div>
                                     <div style="text-align: left; font-size: 13px">
                                         <span>范围：</span>
-                                        <span style="color: #0274B3; margin-top:2px" class="year-input">
-                                            <el-input size="mini" v-model="year[0]"></el-input>
+                                      <div style="margin-top: 5px">
+                                        <span style="color: #0274B3;" class="year-input">
+                                            <el-input size="mini" v-model="year[0]" style="width: 90%;margin-right: 10px;margin-left: 5px"></el-input>
                                             &nbsp;~&nbsp;
-                                            <el-input size="mini" v-model="year[1]"></el-input>
+                                            <el-input size="mini" v-model="year[1]" style="width: 90%;margin-left: 4px"></el-input>
                                         </span>
+                                      </div>
+
                                     </div>
 
                                 </div>
@@ -41,7 +37,7 @@
                                 <el-divider v-if="mode !== 'advance'"></el-divider>
 
                                 <div class="publish-type sub-block">
-                                    <div class="check-box-title">
+                                    <div class="check-box-title" style="margin-bottom: 5px;">
                                         <span>类型</span>
                                     </div>
                                     <el-checkbox-group v-for="(o, index) in aggregation.doctype" :key="index"
@@ -57,7 +53,7 @@
                                 <el-divider></el-divider>
 
                                 <div class="publish-journal sub-block">
-                                    <div class="check-box-title">
+                                    <div class="check-box-title" style="margin-bottom: 10px;">
                                         <span>期刊</span>
                                     </div>
                                     <el-checkbox-group v-for="(o, index) in aggregation.journal" :key="index"
@@ -73,7 +69,7 @@
                                 <el-divider></el-divider>
 
                                 <div class="publish-journal sub-block">
-                                    <div class="check-box-title">
+                                    <div class="check-box-title" style="margin-bottom: 10px;">
                                         <span>会议</span>
                                     </div>
                                     <el-checkbox-group v-for="(o, index) in aggregation.conference" :key="index"
@@ -89,7 +85,7 @@
                                 <el-divider></el-divider>
 
                                 <div class="publish-type sub-block">
-                                    <div class="check-box-title">
+                                    <div class="check-box-title" style="margin-bottom: 10px;">
                                         <span>出版商</span>
                                     </div>
                                     <el-checkbox-group v-for="(o, index) in aggregation.publisher" :key="index"
@@ -105,6 +101,22 @@
                                 </div>
                             </el-card>
                         </el-col>
+
+                      <el-col :span="2" style="margin-top:50px;">
+                        <div id="chooseBar">
+                          <div :class="searchBarFixed == true ? 'isFixed' : ''">
+                            <div style="height:48px"></div>
+<!--                            <div @click="makeSure()"-->
+<!--                                 style="padding:1px; font-size:14px; border-radius:4px; background-color:#409EFF; border:1px solid #2d94d4; cursor: pointer">-->
+<!--                              <span style="color:white;">确</span><br><span style="color:white;">定</span>-->
+<!--                            </div>-->
+<!--                            <div @click="cancel()"-->
+<!--                                 style="padding:1px; font-size:14px; border-radius:4px; background-color:white; border:1px solid #2d94d4; color: #606266; cursor: pointer">-->
+<!--                              <span>取</span><br><span>消</span>-->
+<!--                            </div>-->
+                          </div>
+                        </div>
+                      </el-col>
                     </el-row>
                 </div>
             </el-col>
@@ -426,4 +438,35 @@ export default {
     top: 0;
     z-index: 999;
 }
+
+.square-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.square-button {
+  width: 40px;
+  height: 40px;
+  background-color: #2f3a91;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 120%;
+  margin-right: 2px;
+}
+.square-button:last-child {
+  margin-right: 0;
+}
+
+.square-button i {
+  font-weight: bold;
+}
+
+.square-button:hover {
+  //transform: scale(1.05); /* 鼠标悬停时放大按钮 */
+}
+
+
 </style>

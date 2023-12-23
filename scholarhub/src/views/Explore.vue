@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="work" v-show="isWork">
-            <div class="work_left">
+            <div class="work_left" id="mySelectBar">
                 <SelectBox />
             </div>
             <div class="work_right">
@@ -12,8 +12,8 @@
                         </el-menu>
                         <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" style="overflow: scroll">
                             <el-backtop :bottom="70" :right="70" style="z-index: 1000">
-                              <div style="height: 100%; width: 100%; background-color: #f3f5f7;box-shadow: 6px 0 6px rgba(0,0,0, .12); text-align: center; line-height: 40px;color: #0969da;">
-                                UP
+                              <div style="height: 100%; width: 100%; background-color: white;box-shadow: 6px 0 6px rgba(0,0,0, .12); text-align: center; line-height: 40px;color: #0969da;">
+                                <i class="el-icon-arrow-up"></i>
                               </div>
                             </el-backtop>
                             <ExploreUnit v-for="(paperData, index) in paperDatas.slice(begin0, end0)" :key="index" :paper-data="paperData"></ExploreUnit>
@@ -254,6 +254,10 @@ export default {
     float: left;
 }
 
+.work_left {
+  margin-top: -20px;
+}
+
 .work .work_right {
     width: 80%;
     min-height: 105vh;
@@ -305,7 +309,7 @@ scholar .scholar_center {
   margin-left: 7.5%;
   /* height: 92%; */
   min-height: 60vh;
-  position: center;
+  //position: center;
   background-color: white;
 }
 
