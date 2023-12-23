@@ -16,32 +16,15 @@
       <el-form-item label="您的机构" prop="organization">
         <el-input v-model="formData.organization" class="input-box"></el-input>
       </el-form-item>
-      <el-form-item label="您的邮箱" prop="email">
-        <el-input v-model="formData.email" class="input-box"></el-input>
+      <el-form-item label="身份证号" prop="email">
+        <el-input v-model="formData.id" class="input-box"></el-input>
       </el-form-item>
-      <el-form-item label="验证码" prop="verificationCode">
-        <div class="verification-code">
-          <el-input
-              v-for="index in 6"
-              :key="index"
-              v-model="formData.verificationCode[index - 1]"
-              :maxlength="1"
-              ref="verificationInputs"
-              style="width: 40px; margin-right: 5px; text-align: center;"
-              @input="handleVerificationInput(index)"
-          ></el-input>
-        </div>
-        <el-button class="custom-btn" @click="sendVerificationCode" :disabled="verificationSent">
-          {{ verificationSent ? '已发送' : '发送验证码' }}
-        </el-button>
-
-        <div>
-          <el-tooltip placement="bottom">
-            <div slot="content">请您提交申请后耐心等待审核，审核通<br/>过后，可使用成果、文库等功能。</div>
-            <el-button class="submit-btn" type="primary" @click="submitForm">提交</el-button>
-          </el-tooltip>
+      <div>
+        <el-tooltip placement="bottom">
+          <div slot="content">请您提交申请后耐心等待审核，审核通<br/>过后，可使用成果、文库等功能。</div>
+          <el-button class="submit-btn" type="primary" @click="submitForm">提交</el-button>
+        </el-tooltip>
       </div>
-      </el-form-item>
     </el-form>
   </div>
   </div>
@@ -54,17 +37,15 @@ export default {
       formData: {
         realName: '',
         organization: '',
-        email: '',
+        id: '',
         verificationCode: ['', '', '', '', '', '']
       },
       formRules: {
         realName: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
         organization: [{ required: true, message: '请输入机构名称', trigger: 'blur' }],
         email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入合法的邮箱地址', trigger: ['blur', 'change'] }
-        ],
-        verificationCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+          { required: true, message: '请输入身份证号', trigger: 'blur' },
+        ]
       },
       verificationSent: false // 是否已发送验证码
     };
@@ -120,25 +101,6 @@ export default {
   font-weight: bold;
   margin-bottom: 50px;
 }
-/* 自定义按钮样式 */
-.custom-btn {
-  background-color: #ff9900;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 13px 20px;
-  font-size: 16px;
-  margin-left: 280px;
-}
-
-.custom-btn:hover {
-  background-color: #f6b549;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 13px 20px;
-  font-size: 16px;
-}
 
 .submit-btn {
   background-color: #2f3a91;
@@ -149,7 +111,6 @@ export default {
   font-size: 16px;
   margin-top: 40px; /* 设置间距 */
   width: 250px;
-  margin-right: 110px;
   letter-spacing: 8px
 }
 .submit-btn:hover {
@@ -159,7 +120,6 @@ export default {
   border-radius: 4px;
   padding: 13px 20px;
   font-size: 16px;
-  margin-top: 40px; /* 设置间距 */
   width: 250px;
 }
 

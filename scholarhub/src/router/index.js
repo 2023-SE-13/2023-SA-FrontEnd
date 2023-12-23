@@ -66,8 +66,8 @@ const routes = [
   },
   // 文献详情模块
   {
-    path:'/article',
-    name:'个人主页',
+    path:'/article/:paper_id',
+    name:'论文详情',
     component:()=>import('@/views/Article')
   },
   {
