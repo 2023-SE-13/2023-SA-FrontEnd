@@ -17,7 +17,17 @@
           </span>
 
         </div>
-        <div v-if="articleDetails._source.authorships.some(a => a.institutions && a.institutions.length > 0)">
+        <div v-if="uniqueInstitutions.length > 0">
+          <div class="sub-title">
+            <span v-for="(institution, index) in uniqueInstitutions" :key="index">
+              <sup>{{ index + 1 }}</sup>
+              {{ institution }}
+              <span v-if="index < uniqueInstitutions.length - 1">,&nbsp;</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- <div v-if="articleDetails._source.authorships.some(a => a.institutions && a.institutions.length > 0)">
           <div class="sub-title">
             <span v-for="(authorship, index) in articleDetails._source.authorships" :key="index">
               <span v-if="authorship.institutions && authorship.institutions.length > 0">
@@ -28,7 +38,7 @@
                 v-if="index < articleDetails._source.authorships.length - 1 && authorship.institutions && authorship.institutions.length > 0">,&nbsp;</span>
             </span>
           </div>
-        </div>
+        </div> -->
 
         <div class="sub-title">
           <!-- 显示出版年份 -->
@@ -36,8 +46,8 @@
             {{ articleDetails._source.publication_year }}
           </span>
           <!-- 显示期刊信息 -->
-          <span class="journal" v-if="articleDetails._source.primary_location.source.display_name">
-            &nbsp;{{ articleDetails._source.primary_location.source.display_name }}
+          <span class="journal" v-if="articleDetails._source.primary_location.publisher">
+            &nbsp;{{ articleDetails._source.primary_location.publisher }}
             <!-- 其他出版信息，根据您的数据结构可能需要调整 -->
             <span v-if="articleDetails._source.primary_location.source.volume"> | Volume: {{
               articleDetails._source.primary_location.source.volume }}</span>
@@ -89,14 +99,14 @@
       <el-col :span="15">
         <div class="abstract-div">
           <div class="abstract-title">摘要</div>
-          <div v-if="articleDetails._source.abstract && articleDetails._source.abstract.length > 0">
-            <div class="abstract-content _content" v-if="articleDetails._source.abstract.length < spanLength || isSpan">
-              {{ articleDetails._source.abstract }}
-              <span v-if="isSpan && articleDetails._source.abstract.length >= spanLength" class="_link"
+          <div v-if="articleDetails._source.abstract_inverted_index && articleDetails._source.abstract_inverted_index.length > 0">
+            <div class="abstract-content _content" v-if="articleDetails._source.abstract_inverted_index.length < spanLength || isSpan">
+              {{ articleDetails._source.abstract_inverted_index }}
+              <span v-if="isSpan && articleDetails._source.abstract_inverted_index.length >= spanLength" class="_link"
                 @click="isSpan = !isSpan"> 折叠</span>
             </div>
             <div class="abstract-content _content" v-else>
-              {{ articleDetails._source.abstract.substring(0, 570) }}...
+              {{ articleDetails._source.abstract_inverted_index.substring(0, 570) }}...
               <span v-if="!isSpan" class="_link" @click="isSpan = !isSpan"> 展开</span>
             </div>
           </div>
@@ -116,27 +126,27 @@
                 <span>由于版权限制，此处可能仅展示部分相关论文</span>
               </div>
               <div class="reference-article">
-                <!-- <div class="reference-article-block" v-for="(article, index) in articleDetails.reference_msg"
+                <div class="reference-article-block" v-for="(article, index) in articleDetails._source.reference_works"
                   :key="index">
-                  <div @click="toArticle(article.paper_id)">
+                  <div @click="toArticle(article.id)">
                     <el-row>
                       <el-col :span="2" style="text-align: right; font-size: 15px">[{{ index + 1
                       }}]&nbsp;&nbsp;&nbsp;</el-col>
                       <el-col :span="22">
                         <div class="reference-title">
-                          <span>{{ article.paper_title }}</span>
+                          <span>{{ article.title }}</span>
                         </div>
                         <div class="reference-author _info">
-                          <span v-for="(author, index2) in article.authors" :key="index2">
-                            <span v-if="index2 < 5">{{ author.author_name }}</span>
-                            <span v-if="index2 < 5 && article.authors.length > index2 + 1">,&nbsp;</span>
+                          <span v-for="(author, index2) in article.authorships" :key="index2">
+                            <span v-if="index2 < 5">{{ author.author.display_name }}</span>
+                            <span v-if="index2 < 5 && article.authorships.length > index2 + 1">,&nbsp;</span>
                           </span>
-                          <span v-if="article.authors.length > 5">.etc</span>
+                          <span v-if="article.authorships.length > 5">.etc</span>
                         </div>
                       </el-col>
                     </el-row>
                   </div>
-                </div> -->
+                </div>
               </div>
             </el-tab-pane>
             <el-tab-pane label="引证文献" name="second">
@@ -147,26 +157,26 @@
                 <span>由于版权限制，此处可能仅展示部分相关论文</span>
               </div>
               <div class="reference-article">
-                <!-- <div class="reference-article-block" v-for="(article, index) in citation_msg" :key="index">
-                  <div @click="toArticle(article.paper_id)">
+                <div class="reference-article-block" v-for="(article, index) in articleDetails._source.related_works" :key="index">
+                  <div @click="toArticle(article.id)">
                     <el-row>
                       <el-col :span="2" style="text-align: right; font-size: 15px">[{{ index + 1
                       }}]&nbsp;&nbsp;&nbsp;</el-col>
                       <el-col :span="22">
                         <div class="reference-title">
-                          <span>{{ article.paper_title }}</span>
+                          <span>{{ article.title }}</span>
                         </div>
                         <div class="reference-author _info">
-                          <span v-for="(author, index2) in article.authors" :key="index2">
-                            <span v-if="index2 < 5">{{ author.author_name }}</span>
-                            <span v-if="index2 < 5 && article.authors.length > index2 + 1">,&nbsp;</span>
+                          <span v-for="(author, index2) in article.authorships" :key="index2">
+                            <span v-if="index2 < 5">{{ author.author.display_name }}</span>
+                            <span v-if="index2 < 5 && article.authorships.length > index2 + 1">,&nbsp;</span>
                           </span>
-                          <span v-if="article.authors.length > 5">.etc</span>
+                          <span v-if="article.authorships.length > 5">.etc</span>
                         </div>
                       </el-col>
                     </el-row>
                   </div>
-                </div> -->
+                </div>
               </div>
               <!-- <scroll-loader :loader-method="getCitationMsg" :loader-disable="loadMoreDisable"></scroll-loader> -->
             </el-tab-pane>
@@ -223,9 +233,9 @@
         </div>
       </el-col>
     </el-row>
-
+<!-- 
     <CollectDialog :curPaper="articleDetails" :showCollect="showCollect" @collectSuccess="collectSuccess"
-      @closeChildDialog="closeChildDialog"></CollectDialog>
+      @closeChildDialog="closeChildDialog"></CollectDialog> -->
 
     <CiteDialog :paper_id="articleDetails._id" :showQuote="showQuote" @closeChildDialog="closeChildDialog">
     </CiteDialog>
@@ -269,208 +279,382 @@ export default {
 
       myAnswer: '',
 
+      reference_msg: [
+
+      ],
       articleDetails: {
         "_index": "works",
         "_type": "_doc",
-        "_id": "lsfpi4wBDP9OYkIT32zS",
-        "_version": 1,
-        "_score": 1,
+        "_id": "https://openalex.org/W2783557622",
+        "_score": 1.0,
         "_source": {
-          "wid": "https://openalex.org/W3128502970",
-          "doi": "https://doi.org/10.3390/rs13030534",
-          "title": "Sub-Auroral, Mid-Latitude, and Low-Latitude Troughs during Severe Geomagnetic Storms",
-          "display_name": "Sub-Auroral, Mid-Latitude, and Low-Latitude Troughs during Severe Geomagnetic Storms",
-          "publication_year": 2021,
-          "publication_date": "2021-02-02",
+          "wid": "https://openalex.org/W2783557622",
+          "doi": "https://doi.org/10.1109/wsc.2017.8248216",
+          "title": "Automatic and dynamic grounding method based on sensor data for agent-based simulation",
+          "display_name": "Automatic and dynamic grounding method based on sensor data for agent-based simulation",
+          "publication_year": 2017,
+          "publication_date": "2017-12-01",
           "language": "en",
           "primary_location": {
             "source": {
-              "id": "https://openalex.org/S43295729",
-              "issn_l": "2072-4292",
-              "issn": [
-                "2072-4292"
-              ],
-              "display_name": "Remote Sensing",
-              "publisher": "Multidisciplinary Digital Publishing Institute",
-              "host_organization": "https://openalex.org/P4310310987",
-              "host_organization_name": "Multidisciplinary Digital Publishing Institute",
-              "host_organization_lineage": [
-                "https://openalex.org/P4310310987"
-              ],
-              "host_organization_lineage_names": [
-                "Multidisciplinary Digital Publishing Institute"
-              ],
-              "is_oa": true,
-              "is_in_doaj": true,
+              "id": "https://openalex.org/S4363607803",
+              "issn_l": null,
+              "issn": null,
+              "display_name": "2017 Winter Simulation Conference (WSC)",
+              "publisher": null,
+              "host_organization": null,
+              "host_organization_name": null,
+              "host_organization_lineage": [],
+              "host_organization_lineage_names": [],
+              "is_oa": false,
+              "is_in_doaj": false,
               "host_institution_lineage": [],
               "host_institution_lineage_names": [],
-              "publisher_lineage": [
-                "https://openalex.org/P4310310987"
-              ],
-              "publisher_lineage_names": [
-                "Multidisciplinary Digital Publishing Institute"
-              ],
-              "publisher_id": "https://openalex.org/P4310310987",
-              "type": "journal"
+              "publisher_lineage": [],
+              "publisher_lineage_names": [],
+              "publisher_id": null,
+              "type": "conference"
             },
-            "pdf_url": "https://www.mdpi.com/2072-4292/13/3/534/pdf?version=1612341605",
-            "landing_page_url": "https://doi.org/10.3390/rs13030534",
-            "is_oa": true,
-            "version": "publishedVersion",
-            "license": "cc-by",
-            "doi": "https://doi.org/10.3390/rs13030534",
-            "is_accepted": true,
-            "is_published": true
+            "pdf_url": null,
+            "landing_page_url": "https://doi.org/10.1109/wsc.2017.8248216",
+            "is_oa": false,
+            "version": null,
+            "license": null,
+            "doi": "https://doi.org/10.1109/wsc.2017.8248216",
+            "is_accepted": false,
+            "is_published": false
           },
           "type": "article",
           "authorships": [
             {
               "author_position": "first",
               "author": {
-                "id": "https://openalex.org/A5078348831",
-                "display_name": "A. T. Karpachev",
-                "orcid": "https://orcid.org/0000-0002-8831-6880"
+                "id": "https://openalex.org/A5072872439",
+                "display_name": "Shoji Yamane",
+                "orcid": null
               },
               "institutions": [
                 {
-                  "id": "https://openalex.org/I4210093250",
-                  "display_name": "Institute of Terrestrial Magnetism Ionosphere and Radio Wave Propagation",
-                  "ror": "https://ror.org/00k9x6n46",
-                  "country_code": "RU",
-                  "type": "facility",
+                  "id": "https://openalex.org/I2252096349",
+                  "display_name": "Fujitsu (Japan)",
+                  "ror": "https://ror.org/038e2g226",
+                  "country_code": "JP",
+                  "type": "company",
                   "lineage": [
-                    "https://openalex.org/I4210093250",
-                    "https://openalex.org/I4210096333"
+                    "https://openalex.org/I2252096349"
                   ]
                 }
               ],
               "countries": [
-                "RU"
+                "JP"
               ],
-              "is_corresponding": true,
-              "raw_author_name": "Alexander Karpachev",
+              "is_corresponding": false,
+              "raw_author_name": "Shohei Yamane",
               "raw_affiliation_strings": [
-                "Pushkov Institute of Terrestrial Magnetism, Ionosphere, and Radiowave Propagation, (IZMIRAN), 4, Kaluzhskoe Hwy, Troitsk, 108840 Moscow, Russia"
+                "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
               ],
-              "raw_affiliation_string": "Pushkov Institute of Terrestrial Magnetism, Ionosphere, and Radiowave Propagation, (IZMIRAN), 4, Kaluzhskoe Hwy, Troitsk, 108840 Moscow, Russia"
+              "raw_affiliation_string": "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5062457983",
+                "display_name": "Kotaro Ohori",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I2252096349",
+                  "display_name": "Fujitsu (Japan)",
+                  "ror": "https://ror.org/038e2g226",
+                  "country_code": "JP",
+                  "type": "company",
+                  "lineage": [
+                    "https://openalex.org/I2252096349"
+                  ]
+                }
+              ],
+              "countries": [
+                "JP"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Kotaro Ohori",
+              "raw_affiliation_strings": [
+                "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+              ],
+              "raw_affiliation_string": "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5032770298",
+                "display_name": "Hiroaki Yamada",
+                "orcid": "https://orcid.org/0000-0002-1963-958X"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I2252096349",
+                  "display_name": "Fujitsu (Japan)",
+                  "ror": "https://ror.org/038e2g226",
+                  "country_code": "JP",
+                  "type": "company",
+                  "lineage": [
+                    "https://openalex.org/I2252096349"
+                  ]
+                }
+              ],
+              "countries": [
+                "JP"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Hiroaki Yamada",
+              "raw_affiliation_strings": [
+                "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+              ],
+              "raw_affiliation_string": "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+            },
+            {
+              "author_position": "middle",
+              "author": {
+                "id": "https://openalex.org/A5073098982",
+                "display_name": "Hiroaki Yoshida",
+                "orcid": "https://orcid.org/0000-0002-5370-7451"
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I2252096349",
+                  "display_name": "Fujitsu (Japan)",
+                  "ror": "https://ror.org/038e2g226",
+                  "country_code": "JP",
+                  "type": "company",
+                  "lineage": [
+                    "https://openalex.org/I2252096349"
+                  ]
+                }
+              ],
+              "countries": [
+                "JP"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Hiroaki Yoshida",
+              "raw_affiliation_strings": [
+                "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+              ],
+              "raw_affiliation_string": "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+            },
+            {
+              "author_position": "last",
+              "author": {
+                "id": "https://openalex.org/A5037020693",
+                "display_name": "Hirokazu Anai",
+                "orcid": null
+              },
+              "institutions": [
+                {
+                  "id": "https://openalex.org/I2252096349",
+                  "display_name": "Fujitsu (Japan)",
+                  "ror": "https://ror.org/038e2g226",
+                  "country_code": "JP",
+                  "type": "company",
+                  "lineage": [
+                    "https://openalex.org/I2252096349"
+                  ]
+                }
+              ],
+              "countries": [
+                "JP"
+              ],
+              "is_corresponding": false,
+              "raw_author_name": "Hirokazu Anai",
+              "raw_affiliation_strings": [
+                "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
+              ],
+              "raw_affiliation_string": "Fujitsu Laboratories Ltd., 1-1 kamikodanaka 4-chome, Nakahara-ku, Kawasaki 211-8588, Japan#TAB#"
             }
           ],
           "countries_distinct_count": 1,
           "institutions_distinct_count": 1,
-          "cited_by_count": 4,
+          "cited_by_count": 0,
           "keywords": [
             {
-              "keyword": "geomagnetic storms",
-              "score": 0.7757
+              "keyword": "dynamic grounding method",
+              "score": 0.7064
             },
             {
-              "keyword": "sub-auroral",
-              "score": 0.25
+              "keyword": "simulation",
+              "score": 0.3805
             },
             {
-              "keyword": "mid-latitude",
-              "score": 0.25
+              "keyword": "sensor data",
+              "score": 0.2986
             },
             {
-              "keyword": "low-latitude",
+              "keyword": "agent-based",
               "score": 0.25
             }
           ],
-          "referenced_works_count": 35,
-          "referenced_works": [
-            "https://openalex.org/W1586986498",
-            "https://openalex.org/W1662127126",
-            "https://openalex.org/W1965206835",
-            "https://openalex.org/W1966096191",
-            "https://openalex.org/W1967154545",
-            "https://openalex.org/W1975154262",
-            "https://openalex.org/W1990731655",
-            "https://openalex.org/W1990918471",
-            "https://openalex.org/W1996664581",
-            "https://openalex.org/W1998496929",
-            "https://openalex.org/W2007210982",
-            "https://openalex.org/W2015713590",
-            "https://openalex.org/W2030910343",
-            "https://openalex.org/W2047476732",
-            "https://openalex.org/W2050088418",
-            "https://openalex.org/W2051677814",
-            "https://openalex.org/W2053069651",
-            "https://openalex.org/W2055690023",
-            "https://openalex.org/W2057859652",
-            "https://openalex.org/W2058639632",
-            "https://openalex.org/W2063250014",
-            "https://openalex.org/W2067408522",
-            "https://openalex.org/W2071577963",
-            "https://openalex.org/W2077361553",
-            "https://openalex.org/W2084870187",
-            "https://openalex.org/W2091228866",
-            "https://openalex.org/W2092803199",
-            "https://openalex.org/W2108216570",
-            "https://openalex.org/W2151098846",
-            "https://openalex.org/W2162865699",
-            "https://openalex.org/W2773245711",
-            "https://openalex.org/W2894843655",
-            "https://openalex.org/W2899851350",
-            "https://openalex.org/W2980289011",
-            "https://openalex.org/W3114886778"
-          ],
+          "referenced_works_count": 2,
+          "referenced_works": [],
           "related_works": [
-            "https://openalex.org/W1990138009",
-            "https://openalex.org/W2375250768",
-            "https://openalex.org/W4205183638",
-            "https://openalex.org/W1995190890",
-            "https://openalex.org/W3175383600",
-            "https://openalex.org/W3128502970",
-            "https://openalex.org/W4250883010",
-            "https://openalex.org/W4200211789",
-            "https://openalex.org/W2492491595",
-            "https://openalex.org/W4200002181"
-          ],
-          "counts_by_year": [
             {
-              "year": 2023,
-              "cited_by_count": 2
+              "id": "https://openalex.org/W599874015",
+              "title": "Introduction of an Expert System Based Traffic Signal Analysis Tool",
+              "authorships": [
+                {
+                  "author": {
+                    "display_name": "Xiaoliang Zhao"
+                  }
+                },
+                {
+                  "author": {
+                    "display_name": "Chung-Jen Hsu"
+                  }
+                },
+                {
+                  "author": {
+                    "display_name": "Roger Xu"
+                  }
+                },
+                {
+                  "author": {
+                    "display_name": "Peter Huang"
+                  }
+                }
+              ]
             },
             {
-              "year": 2022,
-              "cited_by_count": 2
+              "id": "https://openalex.org/W2990213399",
+              "title": "Online Self-learning for Smart HVAC Control",
+              "authorships": [
+                {
+                  "author": {
+                    "display_name": "Tien Sheng Chao"
+                  }
+                },
+                {
+                  "author": {
+                    "display_name": "Mạnh Hùng Nguyễn"
+                  }
+                },
+                {
+                  "author": {
+                    "display_name": "Ching-Chun Huang"
+                  }
+                },
+                {
+                  "author": {
+                    "display_name": "Chao-Jui Liang"
+                  }
+                },
+                {
+                  "author": {
+                    "display_name": "Chen-Wu Chung"
+                  }
+                }
+              ]
             }
           ],
-          "updated_date": "2023-11-02T02:19:39.258533",
-          "created_date": "2021-02-15",
-          "abstract_inverted_index": {
-            "You": [
-              0
-            ],
-            "are": [
-              1
-            ],
-            "the": [
-              2
-            ],
-            "best": [
-              3
-            ]
-          },
+          "counts_by_year": [],
+          "updated_date": "2023-10-25T13:20:40.000004",
+          "created_date": "2018-01-26",
+          "abstract_inverted_index": "Agent-based simulation(ABS) is a promising way to reproduce congestion situations in large-scale facilities and to evaluate the effectiveness of various types of policies for congestion avoidance based on individual behavioral model. Real-world grounding for determining model parameters plays important role to build valid ABS for a specific facility. However, to use ABS continuously for daily decision, parameters should be updated because user characteristics of the facility changes daily or longer term. This study provides a novel grounding method that can automatically and dynamically estimate the parameters of a human behavioral model based on sensor data at a certain interval. To evaluate the method, we conduct simulation experiments using an agent based model to analyze congestion situation in a building. The result with the method can perform congestion prediction with higher accuracy as compared with a conventional method.",
           "concepts": [
             {
-              "id": "https://openalex.org/C163239763",
-              "wikidata": "https://www.wikidata.org/wiki/Q5153637",
-              "display_name": "Common value auction",
-              "level": 2,
-              "score": 0.82923234
+              "id": "https://openalex.org/C41008148",
+              "wikidata": "https://www.wikidata.org/wiki/Q21198",
+              "display_name": "Computer science",
+              "level": 0,
+              "score": 0.74466324
             },
             {
-              "id": "https://openalex.org/C186027771",
-              "wikidata": "https://www.wikidata.org/wiki/Q4008379",
-              "display_name": "Valuation (finance)",
+              "id": "https://openalex.org/C2778067643",
+              "wikidata": "https://www.wikidata.org/wiki/Q166507",
+              "display_name": "Interval (graph theory)",
               "level": 2,
-              "score": 0.7643951
+              "score": 0.62060183
+            },
+            {
+              "id": "https://openalex.org/C2778755073",
+              "wikidata": "https://www.wikidata.org/wiki/Q10858537",
+              "display_name": "Scale (ratio)",
+              "level": 2,
+              "score": 0.47131544
+            },
+            {
+              "id": "https://openalex.org/C168993435",
+              "wikidata": "https://www.wikidata.org/wiki/Q6501125",
+              "display_name": "Ground",
+              "level": 2,
+              "score": 0.449399
+            },
+            {
+              "id": "https://openalex.org/C44154836",
+              "wikidata": "https://www.wikidata.org/wiki/Q45045",
+              "display_name": "Simulation",
+              "level": 1,
+              "score": 0.41367862
+            },
+            {
+              "id": "https://openalex.org/C79403827",
+              "wikidata": "https://www.wikidata.org/wiki/Q3988",
+              "display_name": "Real-time computing",
+              "level": 1,
+              "score": 0.34744674
+            },
+            {
+              "id": "https://openalex.org/C124101348",
+              "wikidata": "https://www.wikidata.org/wiki/Q172491",
+              "display_name": "Data mining",
+              "level": 1,
+              "score": 0.32218498
+            },
+            {
+              "id": "https://openalex.org/C127413603",
+              "wikidata": "https://www.wikidata.org/wiki/Q11023",
+              "display_name": "Engineering",
+              "level": 0,
+              "score": 0.19532892
+            },
+            {
+              "id": "https://openalex.org/C121332964",
+              "wikidata": "https://www.wikidata.org/wiki/Q413",
+              "display_name": "Physics",
+              "level": 0,
+              "score": 0.0
+            },
+            {
+              "id": "https://openalex.org/C33923547",
+              "wikidata": "https://www.wikidata.org/wiki/Q395",
+              "display_name": "Mathematics",
+              "level": 0,
+              "score": 0.0
+            },
+            {
+              "id": "https://openalex.org/C62520636",
+              "wikidata": "https://www.wikidata.org/wiki/Q944",
+              "display_name": "Quantum mechanics",
+              "level": 1,
+              "score": 0.0
+            },
+            {
+              "id": "https://openalex.org/C114614502",
+              "wikidata": "https://www.wikidata.org/wiki/Q76592",
+              "display_name": "Combinatorics",
+              "level": 1,
+              "score": 0.0
+            },
+            {
+              "id": "https://openalex.org/C119599485",
+              "wikidata": "https://www.wikidata.org/wiki/Q43035",
+              "display_name": "Electrical engineering",
+              "level": 1,
+              "score": 0.0
             }
           ],
           "collected_num": 0
         }
       }
+
     }
   },
   watch: {
@@ -482,8 +666,8 @@ export default {
     getAuthorPositionNumber(position) {
       const positions = {
         first: 1,
-        second: 2,
-        third: 3,
+        middle: 2,
+        last: 3,
         // 以此类推，你可以根据需要添加更多的映射
       };
       return positions[position] || position;
@@ -503,10 +687,13 @@ export default {
       //   path: '/article',
       //   query: { v: paper_id }
       // });
-      this.$router.push({ name: '论文详情' }, () => { this.$router.push(`/article/${paper_id}`) })
+      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(paper_id))));
+      location.reload();
+      // this.$router.push({ name: '论文详情' }, () => { this.$router.push(`/article/${paper_id}`) })
       // window.open(routeUrl.href, "_self");
     },
     toAuthor: function (id) {
+      this.$router.push("/php/" + id);
       // let routeUrl = this.$router.resolve({
       //   path: '/schPortal',
       //   query: { v: id }
@@ -530,48 +717,7 @@ export default {
       }
       return num
     },
-    // likeClick: function (commentIns) {
-    //   const userInfo = user.getters.getUser(user.state());
-    //   if (!userInfo) {
-    //     this.$message.warning("请先登录！");
-    //     setTimeout(() => {
-    //       this.$router.push('/login');
-    //     }, 500);
-    //     return;
-    //   }
 
-    //   if (!commentIns.is_like)
-    //     this.likeHandler(commentIns, 'comment');
-    //   else
-    //     this.likeHandler(commentIns, 'cancel');
-    // },
-    // likeHandler: function (commentIns, tag) {
-    //   const userInfo = user.getters.getUser(user.state());
-    //   this.$axios({
-    //     url: '/social/like/' + tag,
-    //     method: 'post',
-    //     data: qs.stringify({
-    //       user_id: userInfo.user.userId,
-    //       comment_id: commentIns.id,
-    //     })
-    //   })
-    //     .then(res => {
-    //       switch (res.data.status) {
-    //         case 200:
-    //           commentIns.is_animating = tag === 'comment';
-    //           setTimeout(() => {
-    //             commentIns.is_like = !commentIns.is_like;
-    //           }, 800);
-    //           break;
-    //         case 403:
-    //           this.$message.error("评论不存在，请刷新重试！");
-    //           break;
-    //       }
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     })
-    // },
     share(message) {
       let aux = document.createElement("input");
       aux.setAttribute("value", window.location.href);
@@ -588,8 +734,8 @@ export default {
 
     //认领学术成果
     claimAcademic() {
-      ApplyWork(this.msg.paper_id, token).then(res => {
-        if (res.data.status === 'success') {
+      ApplyWork(this.msg.paper_id, localStorage.getItem('token')).then(res => {
+        if (res.status === 'success') {
           this.$message.success("已发送认领学术成果申请");
         } else {
           this.$message.error("认领学术成果失败");
@@ -608,8 +754,8 @@ export default {
     openCollect() {
       this.msg.paper_id = this.articleDetails._id;
       this.msg.paper_name = this.articleDetails._score.display_name;
-      FavoritePaper(this.msg, token).then(res => {
-        if (res.data.status === 'success') {
+      FavoritePaper(this.msg, localStorage.getItem('token')).then(res => {
+        if (res.status === 'success') {
           console.log("openCollect")
           this.activeDetail.collected_num++;
         } else {
@@ -617,7 +763,6 @@ export default {
         }
       }
       )
-
       this.showCollect = true;
     },
 
@@ -628,25 +773,6 @@ export default {
       }
       this.$message.success("正在下载原文PDF，请耐心等待！");
       console.log(this.articleDetails._source.primary_location.pdf_url.length);
-      // TIP: 下载跨域文件出问题，让后端下载到服务器再同域下载
-      // this.$axios({
-      //   method: 'post',
-      //   url: '/upload/get/pdf',
-      //   data: qs.stringify({
-      //     pdf_url: this.articleDetails.pdfs[0]
-      //   })
-      // })
-      //   .then(res => {
-      //     if (res.data.success) {
-      //       console.log(this.GLOBAL.backUrl + res.data.data);
-      //       this.$downloadSameArea(this.GLOBAL.backUrl + res.data.data, this.articleDetails.paper_title + ".pdf");
-      //       this.$message.success("下载成功！");
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.$message.error("下载失败！");
-      //     console.log(err);
-      //   })
       window.location.href(this.articleDetails._source.primary_location.pdf_url, this.articleDetails._source.display_name);
     },
 
@@ -669,33 +795,18 @@ export default {
     },
 
     getArticleDetail() {
-      GetPaper(this.paper_id).then(res => {
-        if (res.data.status === 'success') {
-          console.log("GetPaper")
-          this.articleDetails = res.data;
-        } else {
-          console.log("error")
-        }
+      console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id))))
+      const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id)))
+      GetPaper(tempSearch).then(res => {
+        console.log(res.data)
+        this.articleDetails = res.data;
       }
       )
-
     },
 
     getCitationMsg() {
-      fetch('https://api.openalex.org/works/W2748952813')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json(); // 在这里将响应转换为JSON
-        })
-        .then(data => {
-          console.log(data);
-          // 在这里处理JSON数据
-        })
-        .catch(error => {
-          console.error('There has been a problem with your fetch operation:', error);
-        });
+
+      // this.articleDetails.related_works
 
 
       // if (this.citation_msg.length >= this.articleDetails.citation_count) {
@@ -727,66 +838,19 @@ export default {
       //   })
     },
 
-    goDocument(node, data) {
-      console.log(data)
-      console.log(node)
-      getNode(node.data.id).then(res => {
-        if (res.data.status === 'success') {
-          if (res.data.data.node_type === 'Doc') {
-            console.log("go document")
-            this.$router.push({ name: 'document' }, () => { this.$router.push(`/edit/${res.data.data.doc_id}`) })
-          }
-        }
-      })
-    },
-
-    getArticle() {
-      let self = this;
-      let _loadingIns = this.$loading({ fullscreen: true, text: '拼命加载中' });
-      this.$axios.all([this.getArticleDetail()])
-        .then(this.$axios.spread(function (articleDetail) {
-          _loadingIns.close();
-
-          // Get Article Detail
-          switch (articleDetail.data.status) {
-            case 200:
-              self.articleDetails = articleDetail.data.details;
-              break;
-            case 404:
-              // this.$message.error("查无此文献！");
-              // setTimeout(() => {
-              //   this.$router.push("/");
-              // }, 1500);
-              break;
-            case 500:
-              this.$message.error("系统发生错误，请联系管理员！");
-              setTimeout(() => {
-                this.$router.push("/");
-              }, 1000);
-              break;
-          }
-
-          // switch (allComments.data.status) {
-          //   case 200:
-          //     self.comments = allComments.data.data.comments;
-          //     break;
-          //   case 403:
-          //     self.comments = [];
-          //     break;
-          //   default:
-          //     self.$message.error("评论获取失败！");
-          //     break;
-          // }
-        }))
-        .catch(err => {
-          console.log(err);
-        })
-    },
   },
+  computed: {
+    uniqueInstitutions() {
+      const institutions = this.articleDetails._source.authorships
+        .map(a => a.institutions && a.institutions[0] ? a.institutions[0].display_name : null)
+        .filter((value, index, self) => value && self.indexOf(value) === index);
+      return institutions;
+    }
+  },
+
   created() {
-    this.paper_id = 'https://openalex.org/W2783557622';
-    this.getArticle();
-    this.getCitationMsg();
+    this.getArticleDetail();
+    // this.getCitationMsg();
     //   this.getRelatedPapers();
   },
 }
