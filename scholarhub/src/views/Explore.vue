@@ -90,12 +90,8 @@ export default {
                 sort_by: "",
                 sort_order: ""
             },
-            authorDatas: {
-
-            },
-            paperDatas: {
-
-            },
+            authorDatas: [],
+            paperDatas: [],
             loading: false
         }
     },
