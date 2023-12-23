@@ -53,7 +53,7 @@ const routes = [
         component:()=>import('@/views/Authentication.vue')
       },
       {
-        path:'/explore',
+        path:`/explore/:data`,
         name:'检索结果',
         component:()=>import('@/views/Explore.vue')
       }

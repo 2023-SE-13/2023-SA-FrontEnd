@@ -17,8 +17,8 @@
                     <el-link slot="append" id="pro-search" type="primary" :underline="false"
                         @click="dialogVisible = true">高级检索</el-link>
                     <!-- <el-button id="pro-search" slot="append" icon="el-icon-search">高级检索</el-button> -->
-                    <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search"
-                        ref="button" :disabled="NotAllowSearch">检索</el-button>
+                    <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search" ref="button"
+                        :disabled="NotAllowSearch">检索</el-button>
                 </el-input>
             </div>
         </div>
@@ -49,7 +49,7 @@
 <script>
 import PaperUnit from "@/components/PaperUnit.vue"
 import router from "@/router";
-import { FuzzySearch } from "@/api/api";
+import { FuzzySearch, AuthorSearch } from "@/api/api";
 export default {
     data() {
         return {
@@ -67,9 +67,10 @@ export default {
                 search_field: '',
                 search_content: '',
                 sort_by: 'publication_date',
-                sort_order: ''
+                sort_order: '',
+                sort_type: ''
             },
-            NotAllowSearch:true
+            NotAllowSearch: true
         }
     },
     components: { PaperUnit }
@@ -122,18 +123,35 @@ export default {
                 case '3':
                     this.searchField.search_field = 'authorships.author.display_name'
                     break
+                case '4':
+                    this.searchField.search_field = 'display_name'
+                    break
             }
             this.searchField.sort_by = ''
             this.searchField.sort_order = 'desc'
             this.searchField.search_content = this.input3
+            if (this.select2 == '1') {
+                this.searchField.sort_type = 'exact'
+            } else if (this.select2 == '2') {
+                this.searchField.sort_type = 'fuzzy'
+            }
             console.log(this.searchField)
-            FuzzySearch(this.searchField).then(res=>{
-                console.log(res)
+            // if(this.searchField.search_field!=='display_name'){
+            //     FuzzySearch(this.searchField).then(res => {
+            //     console.log(res)
+            // })
+            // }else{
+            //     AuthorSearch(this.searchField).then(res=>{
+            //         console.log(res)
+            //     })
+            // }
+            this.$router.push({
+                path: '/explore/' + this.searchField
             })
         }
     },
     mounted() {
-        if (this.select === null || this.select === '' || this.select2=== null || this.select2 === '' || this.input3 === null || this.input3 === '') {
+        if (this.select === null || this.select === '' || this.select2 === null || this.select2 === '' || this.input3 === null || this.input3 === '') {
             this.$refs.button.$el.style.cursor = 'not-allowed'
         }
     }
