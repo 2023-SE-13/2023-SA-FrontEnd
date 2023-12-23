@@ -14,13 +14,42 @@
           <img v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像" width="100%" height="100%">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div id="PersonalInfo">
+        <div class="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
             用户名：{{ username }}
             <span>
             <i class="el-icon-edit" @click="modify" v-show="isSelf">详细资料</i>
-            <el-dialog>
-
+            <el-dialog class="info_dialog" :visible.sync="infoDialog" :append-to-body="true">
+              <el-descriptions :column="1" :label-style="{'font-size': '20px'}">
+                <span v-if="infoDialogTitle" slot="title" style="font-size: 25px">
+                  <i class="el-icon-postcard"></i>
+                  资料
+                </span>
+                <span v-else slot="title" style="font-size: 25px">
+                  <i class="el-icon-edit-outline"></i>
+                  编辑资料
+                </span>
+                <template v-if="infoDialogTitle" slot="extra">
+                  <el-button type="primary" size="small" @click="modify_info">编辑</el-button>
+                </template>
+                <template v-else slot="extra">
+                  <el-button type="primary" size="small" @click="modify_confirm">确认</el-button>
+                  <el-button type="danger" size="small" @click="modify_cancel">取消</el-button>
+                  <el-button type="warning" size="small" @click="modify_clear">清空</el-button>
+                </template>
+                <el-descriptions-item label="用户名">
+                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                </el-descriptions-item>
+                <el-descriptions-item label="真实姓名">
+                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                </el-descriptions-item>
+                <el-descriptions-item label="机构">
+                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                </el-descriptions-item>
+                <el-descriptions-item label="邮箱">
+                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                </el-descriptions-item>
+              </el-descriptions>
             </el-dialog>
             <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
               <i class="el-icon-plus">关注</i>
@@ -231,12 +260,27 @@ export default {
           name: 'young'
         }
       ],
+      infoDialog: false,
+      infoDialogTitle: true,
       dialogVisible: false
     };
   },
   methods: {
     modify() {
-      this.$router.push("/authentication");
+      // this.$router.push("/authentication");
+      this.infoDialog = true;
+    },
+    modify_info() {
+      this.infoDialogTitle = false;
+    },
+    modify_confirm() {
+      this.infoDialogTitle = true;
+    },
+    modify_cancel() {
+      this.infoDialogTitle = true;
+    },
+    modify_clear() {
+      this.infoDialog = false;
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -312,7 +356,7 @@ export default {
   left: 10%;
 }
 
-.Info #PersonalInfo {
+.Info .PersonalInfo {
   height: 65%;
   float: left;
   position: relative;
@@ -322,17 +366,21 @@ export default {
   line-height: 250%;
 }
 
-.Info #PersonalInfo .el-icon-edit {
+/deep/ .Info .PersonalInfo .info_dialog .el_dialog__body {
+  background-color: #00b1fd;
+}
+
+.Info .PersonalInfo .el-icon-edit {
   margin: 0 0 0 12px;
   font-size: 14px;
   color: #8590a6
 }
 
-.Info #PersonalInfo .el-icon-edit:hover {
+.Info .PersonalInfo .el-icon-edit:hover {
   color: black;
 }
 
-.Info #PersonalInfo .el-button-interest {
+.Info .PersonalInfo .el-button-interest {
   margin: 0 0 0 12px;
   position: relative;
   top: 3px;
@@ -345,18 +393,18 @@ export default {
   border-radius: 4px;
 }
 
-.Info #PersonalInfo .el-icon-plus {
+.Info .PersonalInfo .el-icon-plus {
   position: relative;
   right: 8px;
   bottom: 4px;
 }
 
-.Info #PersonalInfo .el-button-interest:hover {
+.Info .PersonalInfo .el-button-interest:hover {
   color: rgba(0, 0, 0, 0.7);
   border: 1px solid rgba(0, 0, 0, 0.7);
 }
 
-.Info #PersonalInfo .el-button-interested {
+.Info .PersonalInfo .el-button-interested {
   margin: 0 0 0 12px;
   position: relative;
   top: 3px;
@@ -369,19 +417,19 @@ export default {
   border-radius: 4px;
 }
 
-.Info #PersonalInfo .el-icon-finished {
+.Info .PersonalInfo .el-icon-finished {
   position: relative;
   right: 15px;
   bottom: 4px;
 }
 
-.Info #PersonalInfo .el-icon-cancel {
+.Info .PersonalInfo .el-icon-cancel {
   position: relative;
   right: 12.5px;
   bottom: 4px;
 }
 
-.Info #PersonalInfo .el-button-interested:hover {
+.Info .PersonalInfo .el-button-interested:hover {
   border: none;
   box-shadow: 0 0 0 2px #8590a6;
 }
