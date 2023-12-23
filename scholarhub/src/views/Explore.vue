@@ -1,91 +1,113 @@
 <template>
     <div>
-
-        <div class="Navi">
-            <div class="Ep-content">
-                <div class="content1" v-show="ConIdx === '1'">
-                    <el-menu default-active="1" class="el-menu1-demo" mode="horizontal" @select="handleSelect1">
-                        <el-menu-item index="1">论文</el-menu-item>
-                        <el-menu-item id="item2" index="2">专利</el-menu-item>
-                    </el-menu>
-                   <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
-                    <!-- <div v-show="MenuIdx === '1'">
-                        <div class="result-unit" v-for="(count, index) in counts" :key="index">
-                            <h2>论文标题</h2>
-                            <div class="unit-author">
-                                <i class="el-icon-user-solid"><span>作者</span></i>
-                            </div>
-                            <div class="unit-source">
-                                出处
-                            </div>
-                            <div class="unit-preview">
-                                引言
-                            </div>
-                            <div class="unit-keywords">关键词</div>
+        <div class="work" v-show="isWork">
+            <div class="work_left">
+                <SelectBox />
+            </div>
+            <div class="work_right">
+                <div class="work_right_content">
+                    <div class="content1">
+                        <el-menu default-active="1" class="el-menu1-demo" mode="horizontal">
+                            <el-menu-item index="1">论文</el-menu-item>
+                        </el-menu>
+                        <div>
+                            <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
                         </div>
                     </div>
-                    <div v-show="MenuIdx === '2'">
-                        222
-                    </div> -->
-                </div>
-                <div class="content2" v-show="ConIdx === '2'">
-
                 </div>
             </div>
-            <!-- 编辑表单 -->
-            <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
-                <el-form :label-position='left' label-width="80px" :model="form" @submit="" ref="formRef">
-                    <el-form-item label="证明资料">
-                        <!-- <input class="dialog-input" type="file" name="" id="" accept="image/*" ref="fileInput"> -->
-                        <picture-input ref="pictureInput" @change="test" width="600" height="600" margin="16"
-                            accept="image/jpeg,image/png" size="10" :removable="true" :customStrings="{
-                                upload: '<h1>Bummer!</h1>',
-                                drag: 'Drag a 😺 GIF or GTFO'
-                            }">
-                        </picture-input>
-                    </el-form-item>
+        </div>
+        <div class="scholar" v-show="!isWork">
+            <div class="scholar_center">
+                <div class="scholar_center_content">
+                    <div class="content2">
+                        <el-menu default-active="1" class="el-menu2-demo" mode="horizontal">
+                            <el-menu-item index="1">学者</el-menu-item>
+                        </el-menu>
+                        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" style="overflow: auto">
+                            <ScholarUnit v-for="authorData in authorDatas" :key="index" :author-data="authorData"
+                                @show-dialog="showDialog"> </ScholarUnit>
+                            <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...</p>
+                            <p v-if="noMore" style="margin: 15px; font-size: 18px"><i class="el-icon-warning-outline"></i>没有更多了</p>
+                        </div>
+                        <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
+                            <el-form :label-position='left' label-width="80px" :model="form" @submit="" ref="formRef">
+                                <el-form-item label="证明资料">
+                                    <!-- <input class="dialog-input" type="file" name="" id="" accept="image/*" ref="fileInput"> -->
+                                    <picture-input ref="pictureInput" @change="test" width="600" height="600" margin="16"
+                                        accept="image/jpeg,image/png" size="10" :removable="true" :customStrings="{
+                                            upload: '<h1>Bummer!</h1>',
+                                            drag: 'Drag a 😺 GIF or GTFO'
+                                        }">
+                                    </picture-input>
+                                </el-form-item>
 
-                    <el-form-item label="个人姓名" prop="personalName">
-                        <el-input v-model="form.personalName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="个人描述" prop="personalDescri">
-                        <el-input type="textarea" placeholder="请输入内容" v-model="form.personalDescri" maxlength="50"
-                            show-word-limit>
-                        </el-input>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <!-- <el-button @click="isShowDialog = false" class="ftbtn">取 消</el-button> -->
-                    <el-button type="primary" @click="submitApply()" class="ftbtn">确认提交</el-button>
-                </span>
-            </el-dialog>
+                                <el-form-item label="个人姓名" prop="personalName">
+                                    <el-input v-model="form.personalName"></el-input>
+                                </el-form-item>
+                                <el-form-item label="个人描述" prop="personalDescri">
+                                    <el-input type="textarea" placeholder="请输入内容" v-model="form.personalDescri"
+                                        maxlength="50" show-word-limit>
+                                    </el-input>
+                                </el-form-item>
+                            </el-form>
+                            <span slot="footer" class="dialog-footer">
+                                <!-- <el-button @click="isShowDialog = false" class="ftbtn">取 消</el-button> -->
+                                <el-button type="primary" @click="submitApply()" class="ftbtn">确认提交</el-button>
+                            </span>
+                        </el-dialog>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import { AuthorSearch, FuzzySearch, ExactSearch, AuthorFuzzySearch } from '@/api/api';
 import ExploreUnit from '@/components/ExploreUnit.vue'
 import ScholarUnit from '@/components/ScholarUnit.vue';
+import SelectBox from "@/components/SelectBox.vue";
 export default {
     data() {
         return {
+            isWork: false,
+            isExact: '',
             ConIdx: '1',
             MenuIdx: '1',
-            counts: 10,
+            counts: 6,
             isShowDialog: false,
             form: {
                 personalPhoto: null,
                 personalName: '',
                 personalDescri: ''
             },
+            searchField: {
+                search_field: "",
+                search_content: "",
+                sort_by: "",
+                sort_order: ""
+            },
+            authorDatas:[
+              {
 
+              }
+            ],
+            paperDatas: {
+
+            },
+            loading: false
         }
     },
+    computed: {
+      noMore () {
+        return this.authorDatas.length >= 20
+      },
+      disabled () {
+        return this.loading || this.noMore
+      }
+    },
     methods: {
-        handleSelect1(key, keyPath) {
-            console.log(key, keyPath);
-            this.MenuIdx = key;
-        },
         showDialog() {
             this.isShowDialog = true
             console.log(this.isShowDialog)
@@ -110,10 +132,60 @@ export default {
         },
         handleSetImage(dataURL) {
             console.log(dataURL)
+        },
+        load() {
+          this.loading = true
+          setTimeout(() => {
+            this.authorDatas.length += 2;
+            this.loading = false
+          }, 1000)
+        },
+    },
+    mounted() {
+
+    },
+    created() {
+        // console.log(this.$route.params)
+        console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.data))))
+
+        const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.data)))
+        this.searchField.search_field = tempSearch.search_field
+        this.searchField.sort_order = tempSearch.sort_order
+        this.searchField.sort_by = tempSearch.sort_by
+        this.searchField.search_content = tempSearch.search_content
+        this.isExact = tempSearch.sort_type
+        console.log(this.searchField)
+        if (this.searchField.search_field === 'display_name') {
+            this.isWork = false
+            if (this.isExact === 'exact') {
+                AuthorSearch(this.searchField).then(res => {
+                    // console.log(res)
+                    this.authorDatas = res.data.hits
+                    console.log(this.authorDatas)
+                })
+            } else {
+                AuthorFuzzySearch(this.searchField).then(res => {
+                    this.authorDatas = res.data.hits
+                })
+            }
+        } else {
+            this.isWork = true
+            if (this.isExact === 'exact') {
+                ExactSearch(this.searchField).then(res => {
+                    console.log(res)
+                })
+            } else {
+                FuzzySearch(this.searchField).then(res => {
+                    console.log(res)
+                })
+            }
         }
+
     },
     components: {
-        ExploreUnit
+        ExploreUnit,
+        ScholarUnit,
+        SelectBox
     }
 }
 </script>
@@ -158,15 +230,21 @@ export default {
     display: block;
 }
 
-.Navi {
-    width: 100%;
-    min-height: 55vh;
-    background-color: #f6f6f6;
-
+.work .work_left {
+    width: 20%;
+    height: 100%;
+    float: left;
 }
 
-.Ep-content {
-    margin: 0 7.5%;
+.work .work_right {
+    width: 80%;
+    min-height: 55vh;
+    float: left;
+    background-color: #f3f5f8;
+}
+
+.work .work_right .work_right_content {
+    /*margin: 0 7.5%;*/
     padding: 1%;
     width: 82.6%;
     /* height: 92%; */
@@ -174,13 +252,13 @@ export default {
     background-color: white;
 }
 
-.content1 .el-menu1-demo {
+.work_right_content .content1 .el-menu1-demo {
     height: 11%;
     border-bottom: 1px solid #2f3a91;
     margin-bottom: 2%;
 }
 
-.content1 .el-menu1-demo .el-menu-item {
+.work_right_content .content1 .el-menu1-demo .el-menu-item {
     color: #121212;
     font-size: 14px;
     font-weight: 700;
@@ -189,21 +267,50 @@ export default {
     height: 100%;
     line-height: 320%;
     border: 1px solid #dcdfe6;
-    border-right: none;
     border-bottom: none;
 }
 
-.content1 .el-menu1-demo #item2 {
-    border: 1px solid #dcdfe6;
-    border-bottom: none;
-}
-
-.content1 .el-menu1-demo .el-menu-item:hover {
+.work_right_content .content1 .el-menu1-demo .el-menu-item.is-active {
     background-color: #2f3a91;
     color: white;
 }
 
-.content1 .el-menu1-demo .el-menu-item.is-active {
-    background-color: #2f3a91;
-    color: white;
-}</style>
+scholar .scholar_center {
+  width: 100%;
+  min-height: 60vh;
+  background-color: #f3f5f8;
+}
+
+.scholar .scholar_center .scholar_center_content {
+  padding: 1%;
+  width: 82.6%;
+  margin-left: 7.5%;
+  /* height: 92%; */
+  min-height: 60vh;
+  position: center;
+  background-color: white;
+}
+
+.scholar_center_content .content2 .el-menu2-demo {
+  height: 11%;
+  border-bottom: 1px solid #2f3a91;
+  margin-bottom: 2%;
+}
+
+.scholar_center_content .content2 .el-menu2-demo .el-menu-item {
+  color: #121212;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: pingfang SC, helvetica neue, arial, hiragino sans gb, microsoft yahei ui, microsoft yahei, simsun, sans-serif;
+  width: 12%;
+  height: 100%;
+  line-height: 320%;
+  border: 1px solid #dcdfe6;
+  border-bottom: none;
+}
+
+.scholar_center_content .content2 .el-menu2-demo .el-menu-item.is-active {
+  background-color: #2f3a91;
+  color: white;
+}
+</style>

@@ -1,10 +1,15 @@
 <template lang="html">
   <div class="main-body">
-    <NaviBar />
+    <div class="navi">
+      <NaviBar />
+    </div>
     <div class="content">
       <router-view></router-view>
     </div>
-    <FootBar />
+    <div class="foot">
+      <FootBar />
+    </div>
+
   </div>
 </template>
 <script>
@@ -29,7 +34,17 @@ export default {
   flex-direction: column;
   min-height: 100vh;
 }
+.navi {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
 .content{
   flex: 1;
+}
+.foot {
+  position: sticky;
+  bottom: -50;
+  z-index: 1000;
 }
 </style>

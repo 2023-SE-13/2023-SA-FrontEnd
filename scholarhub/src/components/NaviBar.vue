@@ -67,7 +67,7 @@ export default {
     },
     handleCommand(command) {
       if (command === 'a' && this.$route.path !== '/php') {
-        this.$router.push("/php")
+        this.$router.push("/php/1")
       }
       if (command === 'd' && this.$route.path !== '/settings') {
         this.$router.push("/settings")

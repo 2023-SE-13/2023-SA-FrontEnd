@@ -144,6 +144,7 @@ export function MultiSearch(data) {
         data
     })
 }
+
 // 获取论文详细信息
 export function GetPaper(param) {
     return service({
@@ -176,6 +177,14 @@ export function AuthorSearch(data) {
     })
 }
 
+export function AuthorFuzzySearch(data){
+    data = JSON.stringify(data)
+    return service({
+        method:'post',
+        url:'/academia/authorfuzzysearch',
+        data
+    })
+}
 // 获取收藏学术成功列表
 export function ShowFavorites(token) {
     return service({

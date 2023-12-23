@@ -25,13 +25,14 @@
       <el-button class="binding-btn" v-if="!isBound" type="primary" round @click="gotoBinding">认证</el-button>
     </div>
     <el-divider></el-divider>
+
     <div class="cell">
       <span style="font-size: 16px;font-weight: bold;margin-left: 3%">管理员认证</span>
-      <span style="padding-left: 8.5%;margin-right: 40%;color: darkgrey">
-            {{ 1 ? '已认证' : '' }}
+      <span style="padding-left: 8.5%;margin-right: 38%;color: darkgrey">
+            {{ isAdmin ? '已认证' : '' }}
           </span>
       <el-input v-if="!isAdmin" placeholder="" v-model="AdminCode" show-password style="width: 200px;"></el-input>
-      <el-button class="admin-btn" v-if="!isAdmin" type="primary" round @click="">认证</el-button>
+      <el-button class="admin-btn" v-if="!isAdmin" type="primary" round @click="applyAdmin()">认证</el-button>
     </div>
 
     <div class="cell account-settings">
@@ -45,10 +46,9 @@
     <div class="cell">
       <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定邮箱</span>
       <span style="margin-left: 10%;margin-right: 60%;color: darkgrey">
-            {{ emailBound ? Email : '未绑定' }}
+            {{ Email }}
           </span>
-      <el-button class="edit-email-btn" v-if="!emailBound" type="primary" round @click="EditEmail = true">绑定</el-button>
-      <el-button class="edit-email-btn" v-if="emailBound" type="danger" round @click="EditEmail = true">解绑</el-button>
+      <el-button class="edit-email-btn" type="danger" round @click="EditEmail = true">换绑</el-button>
     </div>
     <el-divider></el-divider>
 
@@ -121,14 +121,22 @@
 </template>
 
 <script>
+import { SendCode, ApplyAdmin } from "@/api/api";
+
+window.isAdmin = false;
 export default {
   data() {
     return {
-      verificationCode: ['', '', '', ''],
+      isAdmin: window.isAdmin,
+      Email: localStorage.getItem('email'),
+      realName: localStorage.getItem('name'),
+      verificationCode: ['', '', '', '', '', ''],
+      AdminCode: '',
+
       EditEmail: false,
       emailForm:{
         email: '',
-        code: ''
+        code: ['', '', '', '', '', '']
       },
       emailFormRules: {
         email: [
@@ -144,6 +152,7 @@ export default {
           { required: true, message: ' ', trigger: 'blur' },
         ]
       },
+
       EditPwd: false,
       pwdForm:{
         pwd: '',
@@ -158,11 +167,10 @@ export default {
           //密码校验规则
         ]
       },
-      AdminCode: ''
+
     };
   },
   methods: {
-    // 在需要的时候修改绑定状态
     gotoBinding() {
       this.$router.push("/authentication");
     },
@@ -171,11 +179,33 @@ export default {
           .then(_ => {
             done();
           })
-          .catch(_ => {});
+          .catch(_ => {
+          });
     },
 
     sendVerificationCode() {
       // 处理发送验证码的逻辑
+      let formdata = new FormData();
+      if (typeof this.emailForm.email == "undefined" || this.emailForm.email == null || this.emailForm.email === "") {
+        this.$notify({
+          title: '警告',
+          message: '邮箱不能为空',
+          type: 'warning'
+        });
+        return;
+      }
+      //正则表达式判断邮箱格式
+      let emailReg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+      if (!emailReg.test(this.emailForm.email)) {
+        this.$notify({
+          title: '警告',
+          message: '邮箱格式不正确',
+          type: 'warning'
+        });
+        return;
+      }
+      formdata.append('email', this.emailForm.email)
+      SendCode(formdata)
       this.verificationSent = true; // 标记验证码已发送
     },
     handleVerificationInput(index) {
@@ -190,22 +220,38 @@ export default {
     },
 
     async submitEmail() {
-      try {
-        await this.$refs.regForm.validate();
-        const { email, code } = this.emailForm;
-        const response = await this.$axios.post('/api/submit', {
-          email,
-          code
-        });
-        console.log('提交成功', response.data);
-        this.EditEmail = false;
-      } catch (error) {
-        console.error('绑定失败', error);
-      }
+      // try {
+      //   await this.$refs.regForm.validate();
+      //   const { email, code } = this.emailForm;
+      //   const response = await this.$axios.post('/api/submit', {
+      //     email,
+      //     code
+      //   });
+      //   console.log('提交成功', response.data);
+      //   this.EditEmail = false;
+      // } catch (error) {
+      //   console.error('绑定失败', error);
+      // }
     },
 
     async saveNewPwd() {
 
+    },
+
+    async applyAdmin() {
+      const AdminCode = this.AdminCode;
+      // 检查AdminCode长度是否为六个字符
+      if (AdminCode.length !== 6) {
+        throw new Error('AdminCode必须是六个字符');
+      }
+      try {
+        const res = await ApplyAdmin(AdminCode, localStorage.getItem('token'));
+        console.log(res);
+        window.isAdmin = true;
+        this.isAdmin = true;
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 };
@@ -276,7 +322,7 @@ export default {
 }
 
 /* 按钮样式 */
-.edit-email-btn, .binding-btn, .sendCode-btn, .admin-btn {
+ .binding-btn, .sendCode-btn, .admin-btn {
   background-color: #45519a;
 }
 
@@ -285,7 +331,7 @@ export default {
 }
 
 /* 按钮悬停时的样式 */
-.edit-email-btn:hover, .binding-btn:hover,.sendCode-btn:hover,.admin-btn:hover {
+ .binding-btn:hover,.sendCode-btn:hover,.admin-btn:hover {
   background-color: #2f3a91;
 }
 
