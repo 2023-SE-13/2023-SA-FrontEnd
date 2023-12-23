@@ -11,7 +11,7 @@
                             <el-menu-item index="1">论文</el-menu-item>
                         </el-menu>
                         <div>
-                            <ExploreUnit v-for="index in 4" :key="index"></ExploreUnit>
+                            <ExploreUnit v-for="paperData in paperDatas" :key="index" :paper-data="paperData"></ExploreUnit>
                         </div>
                     </div>
                 </div>
@@ -93,9 +93,7 @@ export default {
 
               }
             ],
-            paperDatas: {
-
-            },
+            paperDatas: [],
             loading: false
         }
     },
@@ -147,7 +145,6 @@ export default {
     created() {
         // console.log(this.$route.params)
         console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.data))))
-
         const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.data)))
         this.searchField.search_field = tempSearch.search_field
         this.searchField.sort_order = tempSearch.sort_order
@@ -173,10 +170,12 @@ export default {
             if (this.isExact === 'exact') {
                 ExactSearch(this.searchField).then(res => {
                     console.log(res)
+                    this.paperDatas = res.data.hits
                 })
             } else {
                 FuzzySearch(this.searchField).then(res => {
                     console.log(res)
+                    this.paperDatas = res.data.hits
                 })
             }
         }
