@@ -16,7 +16,7 @@
                                 UP
                               </div>
                             </el-backtop>
-                            <ExploreUnit v-for="(paperData, index) in paperDatas.splice(begin, end0)" :key="index" :paper-data="paperData"></ExploreUnit>
+                            <ExploreUnit v-for="(paperData, index) in paperDatas" :key="index" :paper-data="paperData"></ExploreUnit>
                             <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...</p>
                             <p v-if="noMore" style="margin: 15px; font-size: 18px"><i class="el-icon-warning-outline"></i>没有更多了</p>
                         </div>

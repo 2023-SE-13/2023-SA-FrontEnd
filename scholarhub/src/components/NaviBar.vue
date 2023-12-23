@@ -66,8 +66,8 @@ export default {
       }
     },
     gotoLogin() {
-      //this.$router.push("/login")
-      this.isLogin = true
+      this.$router.push("/login")
+      // this.isLogin = true
     },
     handleCommand(command) {
       if (command === 'a' && this.$route.path !== '/php/1') {
