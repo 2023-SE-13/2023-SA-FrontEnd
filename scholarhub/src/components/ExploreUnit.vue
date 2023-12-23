@@ -1,6 +1,6 @@
 <template>
   <div class="explore-unit">
-      <div class="result-unit">
+      <div class="result-unit" @click="gotoArticle">
           <!-- 论文题目 -->
           <h2 class="unit-title">
           {{ this.paperData._source.title }}
@@ -34,10 +34,14 @@ export default {
     }
   },
   data() {
-      return {};
+      return {
+        id: 'https://openalex.org/W2783557622'
+      };
   },
-  created(){
-    console.log(this.paperData)
+  methods: {
+    gotoArticle() {
+      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
+    }
   }
 };
 </script>

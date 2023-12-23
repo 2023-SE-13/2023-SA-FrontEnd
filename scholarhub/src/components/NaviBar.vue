@@ -48,13 +48,17 @@ export default {
       ],
       input1: '',
       select: '标题',
-      isLogin: false
+      isLogin: false,
+      id: 'https://openalex.org/W2783557622'
     }
   },
   methods: {
     changeActive(index) {
       this.activeIndex = index
       console.log(this.activeIndex)
+    },
+    go() {
+      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
     },
     gotoMain() {
       if(this.$route.path!=="/main"){
@@ -66,8 +70,11 @@ export default {
       this.isLogin = true
     },
     handleCommand(command) {
-      if (command === 'a' && this.$route.path !== '/php') {
+      if (command === 'a' && this.$route.path !== '/php/1') {
         this.$router.push("/php/1")
+      }
+      if (command === 'b') {
+        this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
       }
       if (command === 'd' && this.$route.path !== '/settings') {
         this.$router.push("/settings")
