@@ -25,7 +25,7 @@
                             <el-menu-item index="1">学者</el-menu-item>
                         </el-menu>
                         <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" style="overflow: auto">
-                            <ScholarUnit v-for="authorData in authorDatas" :key="index" :author-data="authorData"
+                            <ScholarUnit v-for="(authorData, index) in authorDatas.slice(begin, end)" :key="index" :author-data="authorData"
                                 @show-dialog="showDialog"> </ScholarUnit>
                             <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...</p>
                             <p v-if="noMore" style="margin: 15px; font-size: 18px"><i class="el-icon-warning-outline"></i>没有更多了</p>
@@ -76,6 +76,8 @@ export default {
             ConIdx: '1',
             MenuIdx: '1',
             counts: 6,
+            begin: 0,
+            end: 7,
             isShowDialog: false,
             form: {
                 personalPhoto: null,
@@ -88,11 +90,9 @@ export default {
                 sort_by: "",
                 sort_order: ""
             },
-            authorDatas:[
-              {
+            authorDatas: {
 
-              }
-            ],
+            },
             paperDatas: {
 
             },
@@ -101,7 +101,7 @@ export default {
     },
     computed: {
       noMore () {
-        return this.authorDatas.length >= 20
+        return this.end >= 50
       },
       disabled () {
         return this.loading || this.noMore
@@ -136,7 +136,7 @@ export default {
         load() {
           this.loading = true
           setTimeout(() => {
-            this.authorDatas.length += 2;
+            this.end += 5;
             this.loading = false
           }, 1000)
         },
