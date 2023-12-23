@@ -11,8 +11,8 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-          <img v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像" width="100%" height="100%">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="160px" height="160px">
+          <span v-if="this.is_black" style="position: absolute;bottom: 40px; left: 20px;color:white;-moz-user-select: none;-ms-user-select: none;-webkit-user-select: none;user-select: none">修改头像</span>
         </el-upload>
         <div class="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
@@ -242,6 +242,7 @@ export default {
   },
   data() {
     return {
+      is_black: false,
       username: "username",
       name: "name",
       institution: "institution",
@@ -329,7 +330,7 @@ export default {
     },
     cancel_interest() {
       this.isInterested = false;
-    }
+    },
   }
 }
 </script>
@@ -360,6 +361,7 @@ export default {
   position: relative;
   top: 16%;
   left: 10%;
+  border-radius: 4px;
 }
 
 .Info .PersonalInfo {
@@ -638,4 +640,6 @@ export default {
   background: #e5f0fa;
   opacity: 1;
 }
+
+
 </style>
