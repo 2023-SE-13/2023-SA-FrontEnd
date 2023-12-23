@@ -38,16 +38,16 @@
                   <el-button type="warning" size="small" @click="modify_clear">清空</el-button>
                 </template>
                 <el-descriptions-item label="用户名">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="真实姓名">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="机构">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item label="邮箱">
-                  <el-input v-model="input" placeholder="请输入内容"></el-input>
+                  <el-input v-model="input" placeholder="请输入内容" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
               </el-descriptions>
             </el-dialog>
@@ -262,7 +262,8 @@ export default {
       ],
       infoDialog: false,
       infoDialogTitle: true,
-      dialogVisible: false
+      dialogVisible: false,
+      inputDisabled: true,
     };
   },
   methods: {
@@ -272,12 +273,15 @@ export default {
     },
     modify_info() {
       this.infoDialogTitle = false;
+      this.inputDisabled = false;
     },
     modify_confirm() {
       this.infoDialogTitle = true;
+      this.inputDisabled = false;
     },
     modify_cancel() {
       this.infoDialogTitle = true;
+      this.inputDisabled = false;
     },
     modify_clear() {
       this.infoDialog = false;

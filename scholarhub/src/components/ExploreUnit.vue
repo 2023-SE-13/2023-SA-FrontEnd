@@ -7,9 +7,10 @@
           </h2>
           <!-- 作者 -->
           <div class="unit-author">
-          <i class="el-icon-user-solid"
-              ><span v-for="name in this.paperData._source.authorships" >{{ name.author.display_name }} ,</span></i
-          >
+              <i class="el-icon-user-solid">
+                &nbsp;
+                  <span v-for="name in this.paperData._source.authorships" >{{ name.author.display_name }} ,</span>
+              </i>
           </div>
           <!-- 来源期刊 -->
           <!-- <div class="unit-source">《ENVIRONMENTAL SCIENCE AND ECOTECHNOLOGY》</div> -->
@@ -18,9 +19,9 @@
             {{ this.paperData._source.abstract }}
           </div>
           <div class="unit-keywords">
-          POPs Primary and secondary sources Primary and secondary emissions
+          <!-- POPs Primary and secondary sources Primary and secondary emissions
           Primary and secondary distribution patterns Primary and secondary
-          fractionations
+          fractionations -->
           </div>
       </div>
   </div>
@@ -48,8 +49,10 @@ export default {
 <style scoped>
 .explore-unit {
   background-color: rgb(221, 236, 255);
+  width: 95%;
+  height: 200px;
   /* padding: 10px; */
-  display: inline-block;
+  display: block;
   margin: 5px 15px;
   padding: 10px;
   font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
@@ -60,17 +63,33 @@ export default {
   color: #2f3a91;
   font-weight: 600;
   font-synthsis: style;
-  line-height: 1.6;
+  line-height: 2.0;
   word-break: break-word;
   cursor: pointer;
 }
+
 .unit-author {
-  -webkit-box-flex: 1;
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* line-height: 1.7; */
   overflow: hidden;
-  display: inline-block;
-  line-height: 1.7;
 }
+
+.unit-author i {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1; /* 控制显示的行数 */
+  white-space: normal;
+  line-height: 1.2;
+  width: 90%;
+  text-align: left;
+  margin-left: 20px;
+}
+
+
+
 .unit-source {
   color:rgba(128, 124, 124, 0.999);
 }
