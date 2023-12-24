@@ -11,8 +11,8 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="160px" height="160px">
-          <span v-if="this.is_black" style="position: absolute;bottom: 40px; left: 20px;color:white;-moz-user-select: none;-ms-user-select: none;-webkit-user-select: none;user-select: none">修改头像</span>
+          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="100%" height="100%">
+          <div class="image-black-cover"><i class="el-icon-plus"></i></div>
         </el-upload>
         <div class="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
@@ -214,8 +214,196 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="right4_2" v-show="Menu4Idx === '2'"></div>
-          <div class="right4_3" v-show="Menu4Idx === '3'"></div>
+          <div class="right4_2" v-show="Menu4Idx === '2'">
+            <el-table :data="work_certification">
+              <el-table-column prop="date" label="申请时间" width="240">
+                <template slot-scope="scope">
+                  <i class="el-icon-time"></i>
+                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="申请用户" width="240">
+                <template slot-scope="scope">
+                  <el-popover placement="top" trigger="hover">
+                    <el-descriptions title="用户信息" :column="3" border>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-user"></i>
+                          <span style="margin-left: 3px">用户名</span>
+                        </template>
+                        {{ scope.row.name }}
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-message"></i>
+                          <span style="margin-left: 3px">邮箱</span>
+                        </template>
+                        1060592547@qq.com
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-postcard">居住地</i>
+                        </template>
+                        苏州市
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-tickets">备注</i>
+                        </template>
+                        <el-tag size="small">学校</el-tag>
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-office-building"></i>
+                          <span style="margin-left: 3px">机构</span>
+                        </template>
+                        江苏省苏州市吴中区吴中大道 1188 号
+                      </el-descriptions-item>
+                    </el-descriptions>
+                    <div slot="reference">
+                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column prop="detail" label="详情" width="240">
+                <template slot-scope="scope">
+                  <el-button class="detail-button" @click="dialogVisible = true">点击查看</el-button>
+                  <el-dialog title="认证学者申请" :visible.sync="dialogVisible" :append-to-body="true">
+                    <el-descriptions :column="1" border>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-user"></i>
+                          用户名
+                        </template>
+                        {{ scope.row.name }}
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-mobile-phone"></i>
+                          真实姓名
+                        </template>
+                        杨硕
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-location-outline"></i>
+                          描述
+                        </template>
+                        xxxxxxxxxxxxxxxxx
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-tickets"></i>
+                          备注
+                        </template>
+                        <el-tag size="small">学校</el-tag>
+                      </el-descriptions-item>
+                    </el-descriptions>
+                  </el-dialog>
+                </template>
+              </el-table-column>
+              <el-table-column prop="operator" label="处理操作">
+                <el-button>同意</el-button>
+                <el-button>拒绝</el-button>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="right4_3" v-show="Menu4Idx === '3'">
+            <el-table :data="scholar_certification">
+              <el-table-column prop="date" label="申请时间" width="240">
+                <template slot-scope="scope">
+                  <i class="el-icon-time"></i>
+                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="申请用户" width="240">
+                <template slot-scope="scope">
+                  <el-popover placement="top" trigger="hover">
+                    <el-descriptions title="用户信息" :column="3" border>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-user"></i>
+                          <span style="margin-left: 3px">用户名</span>
+                        </template>
+                        {{ scope.row.name }}
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-message"></i>
+                          <span style="margin-left: 3px">邮箱</span>
+                        </template>
+                        1060592547@qq.com
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-postcard">居住地</i>
+                        </template>
+                        苏州市
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-tickets">备注</i>
+                        </template>
+                        <el-tag size="small">学校</el-tag>
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-office-building"></i>
+                          <span style="margin-left: 3px">机构</span>
+                        </template>
+                        江苏省苏州市吴中区吴中大道 1188 号
+                      </el-descriptions-item>
+                    </el-descriptions>
+                    <div slot="reference">
+                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column prop="detail" label="详情" width="240">
+                <template slot-scope="scope">
+                  <el-button class="detail-button" @click="dialogVisible = true">点击查看</el-button>
+                  <el-dialog title="认证学者申请" :visible.sync="dialogVisible" :append-to-body="true">
+                    <el-descriptions :column="1" border>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-user"></i>
+                          用户名
+                        </template>
+                        {{ scope.row.name }}
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-mobile-phone"></i>
+                          真实姓名
+                        </template>
+                        杨硕
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-location-outline"></i>
+                          描述
+                        </template>
+                        xxxxxxxxxxxxxxxxx
+                      </el-descriptions-item>
+                      <el-descriptions-item>
+                        <template slot="label">
+                          <i class="el-icon-tickets"></i>
+                          备注
+                        </template>
+                        <el-tag size="small">学校</el-tag>
+                      </el-descriptions-item>
+                    </el-descriptions>
+                  </el-dialog>
+                </template>
+              </el-table-column>
+              <el-table-column prop="operator" label="处理操作">
+                <el-button>同意</el-button>
+                <el-button>拒绝</el-button>
+              </el-table-column>
+            </el-table>
+          </div>
         </div>
       </div>
     </div>
@@ -258,6 +446,12 @@ export default {
       isInterested: false,
       isCancel: false,
       scholar_certification: [
+        {
+          date: '2023-12-22',
+          name: 'young'
+        }
+      ],
+      work_certification: [
         {
           date: '2023-12-22',
           name: 'young'
@@ -362,6 +556,34 @@ export default {
   top: 16%;
   left: 10%;
   border-radius: 4px;
+}
+
+.Info .avatar_upload .image-container {
+  position: relative;
+}
+
+.Info .avatar_upload .image-black-cover {
+  width: 100px;
+  height: 100px;
+  background-color: #121212;
+  display: block;
+  position: absolute;
+  opacity: 0;
+  top: 0;
+}
+
+.Info .avatar_upload .image-black-cover:hover{
+  animation: move 0.5s forwards;
+}
+
+@keyframes move {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1.5);
+  }
 }
 
 .Info .PersonalInfo {
@@ -641,5 +863,41 @@ export default {
   opacity: 1;
 }
 
+.BottomContent4 .right4_2 {
+  width: 78%;
+  height: 100%;
+  float: left;
+}
 
+.BottomContent4 .right4_2 .detail-button {
+  width: 80px;
+  font-size: 14px;
+  background: #e5f0fa;
+  opacity: 0.8;
+  padding: 12px;
+}
+
+.BottomContent4 .right4_2 .detail-button:hover {
+  background: #e5f0fa;
+  opacity: 1;
+}
+
+.BottomContent4 .right4_3 {
+  width: 78%;
+  height: 100%;
+  float: left;
+}
+
+.BottomContent4 .right4_3 .detail-button {
+  width: 80px;
+  font-size: 14px;
+  background: #e5f0fa;
+  opacity: 0.8;
+  padding: 12px;
+}
+
+.BottomContent4 .right4_3 .detail-button:hover {
+  background: #e5f0fa;
+  opacity: 1;
+}
 </style>
