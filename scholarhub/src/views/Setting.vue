@@ -57,15 +57,6 @@
       </div>
       <el-divider></el-divider>
 
-      <div class="cell content">
-        <div class="cell">
-          <span style="font-size: 16px;font-weight: bold;margin-left: 3%">修改密码</span>
-          <el-button class="edit-pwd-btn" type="danger" round @click="EditPwd = true"
-            style="margin-left: 72.5%">修改</el-button>
-        </div>
-        <el-divider></el-divider>
-      </div>
-
       <el-dialog title="换绑邮箱" :visible.sync="EditEmail" width="500px" :before-close="handleClose">
         <span>邮箱验证通过后，更换账号绑定的邮箱</span>
         <el-form :model="emailForm" :rules="emailFormRules" ref="regForm">
@@ -79,9 +70,9 @@
           </el-form-item>
           <el-form-item label="验证码" prop="code">
             <div class="verification-code">
-              <el-input v-for="index in 4" :key="index" v-model="verificationCode1[index - 1]" :maxlength="1"
+              <el-input v-for="index in 4" :key="index" v-model="verificationCode[index - 1]" :maxlength="1"
                 ref="verificationInputs" style="width: 40px; margin-right: 5px; text-align: center;"
-                @input="handleVerificationInput1(index)"></el-input>
+                @input="handleVerificationInput(index)"></el-input>
             </div>
           </el-form-item>
         </el-form>
@@ -91,50 +82,7 @@
         </span>
       </el-dialog>
 
-      <el-dialog title="修改密码" :visible.sync="EditPwd" width=350px :before-close="handleClose">
-        <el-form :model="pwdForm" :rules="pwdFormRules" ref="regForm">
-          <el-form-item label="原先密码" prop="pwd">
-            <el-input v-model="pwdForm.pwd" show-password></el-input>
-          </el-form-item>
-          <el-form-item label="新密码" prop="new_pwd">
-            <el-input v-model="pwdForm.new_pwd" show-password></el-input>
-          </el-form-item>
-        </el-form>
-        <el-link type="primary" @click="ForgetPwd = true">忘记密码</el-link>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="danger" @click="EditPwd = false">取 消</el-button>
-          <el-button type="primary" @click="changePwd()">确 定</el-button>
-        </span>
-      </el-dialog>
     </div>
-
-    <el-dialog title="忘记密码" :visible.sync="ForgetPwd" width="500px" :before-close="handleClose">
-      <span>请输入需要找回密码的账号邮箱</span>
-      <el-form :model="forgetForm" :rules="forgetFormRules" ref="regForm">
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="forgetForm.email"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button class="sendCode-btn" @click="sendVerificationCode2" :disabled="verificationSent">
-            {{ verificationSent ? '已发送' : '发送验证码' }}
-          </el-button>
-        </el-form-item>
-        <el-form-item label="新密码" prop="new_pwd">
-          <el-input v-model="forgetForm.new_pwd" show-password></el-input>
-        </el-form-item>
-        <el-form-item label="验证码" prop="code">
-          <div class="verification-code">
-            <el-input v-for="index in 4" :key="index" v-model="verificationCode2[index - 1]" :maxlength="1"
-              ref="verificationInputs2" style="width: 40px; margin-right: 5px; text-align: center;"
-              @input="handleVerificationInput2(index)"></el-input>
-          </div>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="ForgetPwd = false">取 消</el-button>
-        <el-button type="primary" @click="changePwdByEmail">确 定</el-button>
-      </span>
-    </el-dialog>
 
     <div class="right-bar">
       <div class="placeholder">
@@ -177,23 +125,8 @@ export default {
       email: '',
       realName: '',
       verificationSent: false,
-      verificationCode1: ['', '', '', ''],
-      verificationCode2: ['', '', '', ''],
+      verificationCode: ['', '', '', ''],
       AdminCode: '',
-      ForgetPwd: false,
-      forgetForm: {
-        email: '',
-        new_pwd: '',
-        code: ['', '', '', '']
-      },
-      forgetFormRules: {
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' },
-        ],
-        code: [
-          { required: true, message: ' ', trigger: 'blur' },
-        ]
-      },
 
       EditEmail: false,
       emailForm: {
@@ -208,23 +141,7 @@ export default {
           { required: true, message: ' ', trigger: 'blur' },
         ]
       },
-      EditPwd: false,
-      pwdForm: {
-        pwd: '',
-        new_pwd: ''
-      },
       Email: { email: '' },
-      password: { password: '' },
-      pwdFormRules: {
-        pwd: [
-          { required: true, message: '请输入原先密码', trigger: 'blur' },
-        ],
-        new_pwd: [
-          { required: true, message: '请输入新密码', trigger: 'blur' },
-          //密码校验规则
-        ]
-      },
-
     };
   },
   methods: {
@@ -239,24 +156,14 @@ export default {
         .catch(_ => {
         });
     },
-    handleVerificationInput1(index) {
-      const code = this.verificationCode1[index - 1];
+    handleVerificationInput(index) {
+      const code = this.verificationCode[index - 1];
       if (code.length === 1 && index < 4) {
         // 移动焦点到下一个输入框
         this.$refs.verificationInputs[index].focus();
       } else if (code.length === 0 && index > 1) {
         // 如果删除字符时，回退到前一个输入框
         this.$refs.verificationInputs[index - 2].focus();
-      }
-    },
-    handleVerificationInput2(index) {
-      const code = this.verificationCode2[index - 1];
-      if (code.length === 1 && index < 4) {
-        // 移动焦点到下一个输入框
-        this.$refs.verificationInputs2[index].focus();
-      } else if (code.length === 0 && index > 1) {
-        // 如果删除字符时，回退到前一个输入框
-        this.$refs.verificationInputs2[index - 2].focus();
       }
     },
 
@@ -286,32 +193,6 @@ export default {
       this.verificationSent = true; // 标记验证码已发送
     },
 
-    sendVerificationCode2() {
-      // 处理发送验证码的逻辑
-      let formdata = new FormData();
-      if (typeof this.forgetForm.email == "undefined" || this.forgetForm.email == null || this.forgetForm.email === "") {
-        this.$notify({
-          title: '警告',
-          message: '邮箱不能为空',
-          type: 'warning'
-        });
-        return;
-      }
-      //正则表达式判断邮箱格式
-      let emailReg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-      if (!emailReg.test(this.forgetForm.email)) {
-        this.$notify({
-          title: '警告',
-          message: '邮箱格式不正确',
-          type: 'warning'
-        });
-        return;
-      }
-      formdata.append('email', this.forgetForm.email)
-      SendCode(formdata)
-      this.verificationSent = true; // 标记验证码已发送
-    },
-
     async changeEmail() {
       this.Email.email = this.emailForm.email
       ChangeUserEmail(this.Email, localStorage.getItem('token')).then(res => {
@@ -321,32 +202,6 @@ export default {
           message:'邮箱修改成功！'
         })
         this.EditEmail = false;
-      })
-    },
-
-    changePwd() {
-      this.password.password = this.pwdForm.new_pwd
-      console.log(localStorage.getItem('token'))
-      ChangeUserPassword(this.password, localStorage.getItem('token')).then(res => {
-        console.log(res);
-        this.$message({
-          type:'success',
-          message:'密码修改成功！'
-        })
-        this.EditPwd = false;
-      })
-    },
-
-    async changePwdByEmail() {
-      this.password.password = this.forgetForm.new_pwd
-      ChangeUserPassword(this.password, localStorage.getItem('token')).then(res => {
-        console.log(res);
-        this.$message({
-          type:'success',
-          message:'密码修改成功！'
-        })
-        this.ForgetPwd = false;
-        this.EditPwd = false;
       })
     },
 
