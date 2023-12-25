@@ -62,6 +62,10 @@ export default {
       data.append('institution', this.formData.institution);
       Authentication(data, localStorage.getItem('token')).then(res => {
         console.log(res);
+        this.$message({
+          type:'success',
+          message:'实名认证申请成功！'
+        })
         this.$router.push("/settings");
       })
     }

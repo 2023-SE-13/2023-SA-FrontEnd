@@ -158,7 +158,6 @@ export default {
         this.realName = res.data.name
         this.email = res.data.email
         this.isAdmin = res.data.is_admin
-        window.isAdmin = res.data.is_admin
       } else {
         this.$notify({
           title: '警告',
@@ -174,9 +173,10 @@ export default {
   },
   data() {
     return {
-      isAdmin: window.isAdmin,
+      isAdmin: false,
       email: '',
       realName: '',
+      verificationSent: false,
       verificationCode1: ['', '', '', ''],
       verificationCode2: ['', '', '', ''],
       AdminCode: '',
@@ -213,6 +213,7 @@ export default {
         pwd: '',
         new_pwd: ''
       },
+      Email: { email: '' },
       password: { password: '' },
       pwdFormRules: {
         pwd: [
@@ -312,8 +313,14 @@ export default {
     },
 
     async changeEmail() {
-      ChangeUserEmail(this.emailForm.email, localStorage.getItem('token')).then(res => {
+      this.Email.email = this.emailForm.email
+      ChangeUserEmail(this.Email, localStorage.getItem('token')).then(res => {
         console.log(res);
+        this.$message({
+          type:'success',
+          message:'邮箱修改成功！'
+        })
+        this.EditEmail = false;
       })
     },
 
@@ -326,12 +333,20 @@ export default {
           type:'success',
           message:'密码修改成功！'
         })
+        this.EditPwd = false;
       })
     },
 
     async changePwdByEmail() {
-      ChangeUserPassword(this.forgetForm.new_pwd, localStorage.getItem('token')).then(res => {
+      this.password.password = this.forgetForm.new_pwd
+      ChangeUserPassword(this.password, localStorage.getItem('token')).then(res => {
         console.log(res);
+        this.$message({
+          type:'success',
+          message:'密码修改成功！'
+        })
+        this.ForgetPwd = false;
+        this.EditPwd = false;
       })
     },
 
@@ -340,8 +355,6 @@ export default {
       data.append('code', this.AdminCode);
       ApplyAdmin(data, localStorage.getItem('token')).then(res => {
         console.log(res);
-        window.isAdmin = true;
-        this.isAdmin = true;
       })
     },
   }

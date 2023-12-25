@@ -361,3 +361,15 @@ export function Authentication(data, token) {
         }
     })
 }
+
+//上传头像
+export function UploadAvatar(data, token) {
+    return service({
+        method: 'post',
+        url: '/user/upload_avatar',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
