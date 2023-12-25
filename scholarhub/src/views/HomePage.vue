@@ -2,7 +2,7 @@
     <div class="home-page">
         <div class="img-container">
             <div class="search-bar">
-                <el-input placeholder="发现你感兴趣的内容..." @input="allow" v-model="input3" class="input-with-select">
+                <el-input @keyup.enter.native="Search" placeholder="发现你感兴趣的内容..." @input="allow" v-model="input3" class="input-with-select">
                     <el-select class="select" v-model="select" slot="prepend" placeholder="请选择">
                         <el-option label="标题" value="1"></el-option>
                         <el-option label="关键词" value="2"></el-option>
