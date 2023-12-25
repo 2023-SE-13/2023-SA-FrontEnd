@@ -624,9 +624,10 @@ export default {
   height: 65%;
   float: left;
   position: relative;
-  top: 16%;
+  top: 9%;
   left: 10%;
   border-radius: 4px;
+  margin-right: 2%;
 }
 
 .Info .avatar_upload .image-container {
@@ -658,11 +659,18 @@ export default {
   }
 }
 
+.Info .avatar_upload .image-black-cover .el-icon-plus{
+  font-size: 30px;
+  position: relative;
+  color: white;
+  top: 70px;
+}
+
 .Info .PersonalInfo {
   height: 65%;
   float: left;
   position: relative;
-  top: 18%;
+  top: 15%;
   left: 11%;
   text-align: left;
   line-height: 250%;
@@ -695,14 +703,9 @@ export default {
   border-radius: 4px;
 }
 
-.Info .avatar_upload.image-black-cover.el-icon-plus{
-  height: 30px;
-  width: 30px;
-}
-
 .Info .PersonalInfo .el-icon-plus {
   position: relative;
-  right: 15px;
+  right: 8px;
   bottom: 4px;
 }
 
