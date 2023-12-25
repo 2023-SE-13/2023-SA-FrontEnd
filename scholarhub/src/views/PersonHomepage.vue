@@ -7,11 +7,12 @@
       <div class="Info">
         <el-upload
             class="avatar_upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="170px" height="170px">
+            :before-upload="beforeAvatarUpload"
+            :http-request="uploadPic">
+          <img class="image-container" id="Photo" :src=this.imageUrl alt="头像"  width="170px" height="170px">
           <div class="image-black-cover"><i class="el-icon-plus"></i></div>
         </el-upload>
         <div class="PersonalInfo">
@@ -33,7 +34,7 @@
                   <el-button type="primary" size="small" @click="modify_info">编辑</el-button>
                 </template>
                 <template v-else slot="extra">
-                  <el-button type="primary" size="small" @click="modify_confirm">确认</el-button>
+                  <el-button type="primary" size="small" @click="modify_confirm()">确认</el-button>
                   <el-button type="danger" size="small" @click="modify_cancel">取消</el-button>
                   <el-button type="warning" size="small" @click="modify_clear">清空</el-button>
                 </template>
@@ -51,6 +52,13 @@
                 </el-descriptions-item>
               </el-descriptions>
             </el-dialog>
+            <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
+              <i class="el-icon-plus">关注</i>
+            </el-button>
+            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest" @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
+              <i class="el-icon-finished" v-if="!isCancel">已关注</i>
+              <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
+            </el-button>
             <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
               <i class="el-icon-plus">关注</i>
             </el-button>
@@ -121,13 +129,13 @@
           </div>
           <div class="right4_1" v-show="Menu4Idx === '1'">
             <el-table :data="scholar_certification.slice(begin1, end1)">
-              <el-table-column prop="date" label="申请时间" width="240">
+              <el-table-column prop="datetime" label="申请时间" width="240">
                 <template slot-scope="scope">
                   <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
+                  <span style="margin-left: 10px">{{ scope.row.datetime }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="申请用户" width="240">
+              <el-table-column prop="username" label="申请用户" width="240">
                 <template slot-scope="scope">
                   <el-popover placement="top" trigger="hover">
                     <el-descriptions title="用户信息" :column="3" border>
@@ -136,7 +144,7 @@
                           <i class="el-icon-user"></i>
                           <span style="margin-left: 3px">用户名</span>
                         </template>
-                        {{ scope.row.name }}
+                        {{ scope.row.username }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
@@ -166,7 +174,7 @@
                       </el-descriptions-item>
                     </el-descriptions>
                     <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                      <el-tag size="medium">{{ scope.row.username }}</el-tag>
                     </div>
                   </el-popover>
                 </template>
@@ -181,7 +189,7 @@
                           <i class="el-icon-user"></i>
                           用户名
                         </template>
-                        {{ scope.row.name }}
+                        {{ scope.row.username }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
@@ -209,22 +217,24 @@
                 </template>
               </el-table-column>
               <el-table-column prop="operator" label="处理操作">
-                <el-button>同意</el-button>
-                <el-button>拒绝</el-button>
+                <template slot-scope="scope">
+                  <el-button @click="accept(scope.$index)">同意</el-button>
+                  <el-button @click="refuse(scope.$index)">拒绝</el-button>
+                </template>
               </el-table-column>
             </el-table>
-            <el-pagination background layout="prev, pager, next" :total="1000" @prev-click="prev" @next-click="next" @current-change="pageChange">
+            <el-pagination background layout="prev, pager, next" :total=Math.ceil(scholar_certification.length/10) @prev-click="prev" @next-click="next" @current-change="pageChange">
             </el-pagination>
           </div>
           <div class="right4_2" v-show="Menu4Idx === '2'">
-            <el-table :data="work_certification">
-              <el-table-column prop="date" label="申请时间" width="240">
+            <el-table :data="work_certification.slice(begin2, end2)">
+              <el-table-column prop="datetime" label="申请时间" width="240">
                 <template slot-scope="scope">
                   <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
+                  <span style="margin-left: 10px">{{ scope.row.datetime }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="申请用户" width="240">
+              <el-table-column prop="send_user" label="申请用户" width="240">
                 <template slot-scope="scope">
                   <el-popover placement="top" trigger="hover">
                     <el-descriptions title="用户信息" :column="3" border>
@@ -233,7 +243,7 @@
                           <i class="el-icon-user"></i>
                           <span style="margin-left: 3px">用户名</span>
                         </template>
-                        {{ scope.row.name }}
+                        {{ scope.row.send_user }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
@@ -263,7 +273,7 @@
                       </el-descriptions-item>
                     </el-descriptions>
                     <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                      <el-tag size="medium">{{ scope.row.send_user }}</el-tag>
                     </div>
                   </el-popover>
                 </template>
@@ -306,10 +316,14 @@
                 </template>
               </el-table-column>
               <el-table-column prop="operator" label="处理操作">
-                <el-button>同意</el-button>
-                <el-button>拒绝</el-button>
+                <template slot-scope="scope">
+                  <el-button @click = accept2(scope.$index)>同意</el-button>
+                  <el-button @click = refuse2(scope.$index)>拒绝</el-button>
+                </template>
               </el-table-column>
             </el-table>
+            <el-pagination background layout="prev, pager, next" :total=Math.ceil(this.work_certification.length/10) @prev-click="prev2" @next-click="next2" @current-change="pageChange2">
+            </el-pagination>
           </div>
           <div class="right4_3" v-show="Menu4Idx === '3'">
             <el-table :data="scholar_certification">
@@ -415,9 +429,12 @@
 <script>
 import NaviBar from "@/components/NaviBar.vue";
 import index from "vuex";
+import {getInformation} from "@/api/api";
 import {ShowAuthorMessage} from "@/api/api";
 import {ShowPaperMessage} from "@/api/api";
-
+import {HandleAuthorMessage} from "@/api/api";
+import {HandlePaperMessage} from "@/api/api";
+import {UploadAvatar} from "@/api/api";
 export default {
   name: "PersonHomepage",
   computed: {
@@ -430,14 +447,42 @@ export default {
   },
   mounted() {
     this.token = localStorage.getItem("token")
-    this.username = "younsur" + this.$route.params.id.toString();
-    this.institution = "清华大学";
-    ShowAuthorMessage(token).then(res => {
-      //todo: 接口处理
+    if (this.token === null) {
+      this.$router.push("/login")
+    }
+    getInformation(this.token).then(res => {
+      if (res.data.result === 0){
+        this.username = res.data.username
+        this.name = res.data.name
+        this.imageUrl = res.data.photo_url_out
+        this.isManager = res.data.is_admin
+      } else {
+        this.$notify({
+          title: '错误',
+          message: '获取用户信息失败',
+          type: 'error'
+        });
+        return;
+      }
     })
-    ShowPaperMessage(token).then(res => {
-      //todo: 接口处理
+    ShowAuthorMessage(this.token).then(res => {
+      if (res.data.result === 0) {
+        this.scholar_certification = res.data.messages
+        console.log(this.scholar_certification)
+      } else {
+        console.log(res.data.messages)
+      }
     })
+    ShowPaperMessage(this.token).then(res => {
+      //todo: 接口处理
+      if (res.data.result === 0) {
+        this.work_certification = res.data.messages
+        console.log(this.work_certification)
+      } else {
+        console.log(res.data.messages)
+      }
+    })
+
   },
   data() {
     return {
@@ -463,66 +508,21 @@ export default {
       end2: 10,
       scholar_certification: [
         {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
+          id: '',
+          author_id: '',
+          username: '',
+          send_user_id: '',
+          datetime: '',
+        }
       ],
       work_certification: [
         {
-          date: '2023-12-22',
-          name: 'young'
+          id: '',
+          work_id: '',
+          send_user: '',
+          send_user_id: '',
+          author_id: '',
+          datetime: '',
         }
       ],
       infoDialog: false,
@@ -596,6 +596,94 @@ export default {
     cancel_interest() {
       this.isInterested = false;
     },
+    accept(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '1');
+      formData.append('message_id', this.scholar_certification[num].id);
+      HandleAuthorMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已同意',
+            type: 'success'
+          });
+          this.scholar_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    refuse(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '0');
+      formData.append('message_id', this.scholar_certification[num].id);
+      HandleAuthorMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已拒绝',
+            type: 'success'
+          });
+          this.scholar_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    accept2(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '1');
+      formData.append('message_id', this.work_certification[num].id);
+      HandlePaperMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已同意',
+            type: 'success'
+          });
+          this.work_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    refuse2(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '0');
+      formData.append('message_id', this.work_certification[num].id);
+      HandlePaperMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已拒绝',
+            type: 'success'
+          });
+          this.work_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
     prev() {
       if (this.begin1 >= 10) {
         this.begin1 -= 10;
@@ -613,6 +701,45 @@ export default {
       console.log(val)
       this.begin1 = (val - 1) * 10;
       this.end1 = val * 10;
+    },
+    prev2() {
+      if (this.begin2 >= 10) {
+        this.begin2 -= 10;
+        this.end2 -= 10;
+      } else {
+        this.begin2 = 0;
+        this.end2 = 10;
+      }
+    },
+    next2() {
+      this.begin2 += 10;
+      this.end2 += 10;
+    },
+    pageChange2(val) {
+      console.log(val)
+      this.begin2 = (val - 1) * 10;
+      this.end2 = val * 10;
+    },
+    uploadPic(file) {
+      const formData = new FormData();
+      formData.append('avatar', file.file);
+      console.log(file.file)
+      UploadAvatar(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '上传成功',
+            type: 'success'
+          });
+          this.$router.go(0)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '上传失败',
+            type: 'warning'
+          });
+        }
+      })
     }
   }
 }
