@@ -99,8 +99,10 @@
       <el-col :span="15">
         <div class="abstract-div">
           <div class="abstract-title">摘要</div>
-          <div v-if="articleDetails._source.abstract_inverted_index && articleDetails._source.abstract_inverted_index.length > 0">
-            <div class="abstract-content _content" v-if="articleDetails._source.abstract_inverted_index.length < spanLength || isSpan">
+          <div
+            v-if="articleDetails._source.abstract_inverted_index && articleDetails._source.abstract_inverted_index.length > 0">
+            <div class="abstract-content _content"
+              v-if="articleDetails._source.abstract_inverted_index.length < spanLength || isSpan">
               {{ articleDetails._source.abstract_inverted_index }}
               <span v-if="isSpan && articleDetails._source.abstract_inverted_index.length >= spanLength" class="_link"
                 @click="isSpan = !isSpan"> 折叠</span>
@@ -120,13 +122,14 @@
           <el-tabs v-model="activeDetail" type="card">
             <el-tab-pane label="参考文献" name="first">
               <div class="reference-info">
-                <span>共 {{ articleDetails._source.referenced_works_count }} 条</span>
+
+                <span>共 {{ this.msg.reference_count }} 条</span>
               </div>
-              <div class="reference-info" v-if="articleDetails._source.referenced_works_count > 0">
+              <div class="reference-info" v-if="this.msg.reference_count > 0">
                 <span>由于版权限制，此处可能仅展示部分相关论文</span>
               </div>
               <div class="reference-article">
-                <div class="reference-article-block" v-for="(article, index) in articleDetails._source.reference_works"
+                <div class="reference-article-block" v-for="(article, index) in articleDetails._source.referenced_works"
                   :key="index">
                   <div @click="toArticle(article.id)">
                     <el-row>
@@ -151,13 +154,15 @@
             </el-tab-pane>
             <el-tab-pane label="引证文献" name="second">
               <div class="reference-info">
-                <span>共 {{ articleDetails._source.cited_by_count }} 条</span>
+
+                <span>共 {{ this.msg.related_works_count }} 条</span>
               </div>
-              <div class="reference-info" v-if="articleDetails._source.cited_by_count > 0">
+              <div class="reference-info" v-if="this.msg.related_works_count > 0">
                 <span>由于版权限制，此处可能仅展示部分相关论文</span>
               </div>
               <div class="reference-article">
-                <div class="reference-article-block" v-for="(article, index) in articleDetails._source.related_works" :key="index">
+                <div class="reference-article-block" v-for="(article, index) in articleDetails._source.related_works"
+                  :key="index">
                   <div @click="toArticle(article.id)">
                     <el-row>
                       <el-col :span="2" style="text-align: right; font-size: 15px">[{{ index + 1
@@ -189,11 +194,11 @@
         <div class="info-div">
           <el-row class="digit _bd_bottom">
             <el-col :span="8" class="digit-num _primary">
-              {{ articleDetails._source.referenced_works_count }}
+              {{ this.msg.reference_count }}
               <div class="digit-text">引用量</div>
             </el-col>
             <el-col :span="8" class="digit-num _success">
-              {{ articleDetails._source.cited_by_count }}
+              {{ this.msg.related_works_count }}
               <div class="digit-text">被引量</div>
             </el-col>
             <el-col :span="8" class="digit-num _warning">
@@ -233,7 +238,7 @@
         </div>
       </el-col>
     </el-row>
-<!-- 
+    <!-- 
     <CollectDialog :curPaper="articleDetails" :showCollect="showCollect" @collectSuccess="collectSuccess"
       @closeChildDialog="closeChildDialog"></CollectDialog> -->
 
@@ -257,8 +262,9 @@ export default {
     return {
       msg: {
         paper_id: '',
-        paper_name: '',
-
+        article_name: '',
+        reference_count: '',
+        related_works_count: ''
       },
       // 引用
       showQuote: false,
@@ -279,9 +285,7 @@ export default {
 
       myAnswer: '',
 
-      reference_msg: [
 
-      ],
       articleDetails: {
         "_index": "works",
         "_type": "_doc",
@@ -735,8 +739,13 @@ export default {
     //认领学术成果
     claimAcademic() {
       ApplyWork(this.msg.paper_id, localStorage.getItem('token')).then(res => {
-        if (res.status === 'success') {
-          this.$message.success("已发送认领学术成果申请");
+        console.log(res);
+        if (res.status === 200) {
+          if (res.data.result === 1) {
+            this.$message.error("不是学者，没有申请资格");
+          } else if (res.data.result === 0) {
+            this.$message.success("已发送认领学术成果申请");
+          }
         } else {
           this.$message.error("认领学术成果失败");
         }
@@ -753,13 +762,19 @@ export default {
     //收藏方法
     openCollect() {
       this.msg.paper_id = this.articleDetails._id;
-      this.msg.paper_name = this.articleDetails._score.display_name;
-      FavoritePaper(this.msg, localStorage.getItem('token')).then(res => {
-        if (res.status === 'success') {
-          console.log("openCollect")
-          this.activeDetail.collected_num++;
+      this.msg.article_name = this.articleDetails._source.title;
+
+      // console.log(localStorage.getItem('token'));
+      const form = new FormData()
+      form.append("paper_id", this.msg.paper_id)
+      form.append("article_name", this.msg.article_name)
+      // console.log(this.msg);
+      FavoritePaper(form, localStorage.getItem('token')).then(res => {
+        if (res.status === 200) {
+          this.$message.success("收藏成功");
+          this.activeDetail._source.collected_num++;
         } else {
-          console.log("error")
+          this.$message.error("收藏失败");
         }
       }
       )
@@ -798,47 +813,16 @@ export default {
       console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id))))
       const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id)))
       GetPaper(tempSearch).then(res => {
-        console.log(res.data)
         this.articleDetails = res.data;
+        console.log(this.articleDetails);
+        this.msg.reference_count = this.articleDetails._source.referenced_works.length;
+        this.msg.related_works_count = this.articleDetails._source.related_works.length;
+        console.log(this.msg.related_works_count);
       }
       )
     },
-
-    getCitationMsg() {
-
-      // this.articleDetails.related_works
-
-
-      // if (this.citation_msg.length >= this.articleDetails.citation_count) {
-      //   this.loadMoreDisable = true;
-      //   return;
-      // }
-
-      // this.$axios({
-      //   method: 'post',
-      //   url: '/es/get/citation/paper',
-      //   data: qs.stringify({
-      //     id: this.$route.query.v,
-      //     page: this.cita_page_idx,
-      //     size: 20
-      //   })
-      // })
-      //   .then(res => {
-      //     if (res.data.success) {
-      //       this.citation_msg = this.citation_msg.concat(res.data.citations);
-      //       this.cita_page_idx += 1;
-      //       if (this.citation_msg.length >= this.articleDetails.citation_count)
-      //         this.loadMoreDisable = true;
-      //     } else {
-      //       this.$message.error("获取引证文献失败！");
-      //     }
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   })
-    },
-
   },
+
   computed: {
     uniqueInstitutions() {
       const institutions = this.articleDetails._source.authorships
@@ -850,7 +834,7 @@ export default {
 
   created() {
     this.getArticleDetail();
-    // this.getCitationMsg();
+    this.getCitationMsg();
     //   this.getRelatedPapers();
   },
 }

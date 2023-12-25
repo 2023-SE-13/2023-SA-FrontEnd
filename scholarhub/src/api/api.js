@@ -60,6 +60,7 @@ export function VerifyCode(data, token) {
 
 // 修改邮箱
 export function ChangeUserEmail(data,token){
+    data = JSON.stringify(data)
     return service({
         method:'post',
         url:'/user/change_user_email',
@@ -73,6 +74,7 @@ export function ChangeUserEmail(data,token){
 // 修改用户密码
 export function ChangeUserPassword(data,token){
     data = JSON.stringify(data)
+    console.log(data)
     return service({
         method:'post',
         url:'/user/change_user_password',
@@ -230,18 +232,16 @@ export function ShowHot() {
     })
 }
 
-
 // 查看学者申请
-// export function ShowAuthorMessage(token) {
-//     return service({
-//         method: 'get',
-//         url: '/Administrator/show_author_message',
-//         headers: {
-//             'Authorization': `Token ${token}`
-//         }
-//     })
-// }
-
+export function ShowAuthorMessage(token) {
+    return service({
+        method: 'get',
+        url: '/Administrator/show_author_message',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
 
 // 获得论文认领申请
 export function ShowPaperMessage(token) {
@@ -332,6 +332,29 @@ export function DeleteAllBrowHistory(data, token) {
     return service({
         method: 'post',
         url: '/browhistory/delete_all_brow_history',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
+// 获取当前个人所有信息
+export function getInformation(token) {
+    return service({
+        method: 'get',
+        url: '/user/get_self_information',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
+// 实名认证
+export function Authentication(data, token) {
+    return service({
+        method: 'post',
+        url: '/user/authentication',
         data,
         headers: {
             'Authorization': `Token ${token}`
