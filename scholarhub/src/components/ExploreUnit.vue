@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     gotoArticle() {
-      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
+      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.paperData._id))));
     },
   },
   created() {

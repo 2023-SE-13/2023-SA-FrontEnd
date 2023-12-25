@@ -1,6 +1,11 @@
 <template>
     <div class="home-page">
         <div class="img-container">
+            <div class="app-news-container">
+                <div class="app-news-title">scholarhub 学术成果分享平台</div>
+                <div class="app-news-sub-title">汇聚公益学术资源，共享万众科研成果</div>
+            </div>
+            
             <div class="search-bar">
                 <el-input @keyup.enter.native="Search" placeholder="发现你感兴趣的内容..." @input="allow" v-model="input3" class="input-with-select">
                     <el-select class="select" v-model="select" slot="prepend" placeholder="请选择">
@@ -113,7 +118,6 @@ export default {
         },
         ProSearch() {
             console.log(this.proSearchField)
-
             this.proSearchField.sort_by = ''
             this.proSearchField.sort_order = 'desc'
             if (this.input4 === '' && this.input5 === '' && this.input6 === '') {
@@ -136,9 +140,6 @@ export default {
                 })
                 console.log(this.proSearchField)
             }
-
-
-
         },
         Jump() {
             this.dialogVisible = false;
@@ -207,6 +208,33 @@ export default {
 }
 </script>
 <style scoped>
+
+.app-news-logo {
+    height: 100px;
+    margin: 0 auto;
+    display: inline-block;
+}
+.app-news-container {
+    text-align: center;
+    padding-top: 50px;
+    display: inline-block;
+}
+
+.app-news-title {
+    font-size: 50px;
+    font-weight: 700;
+    background: linear-gradient(80deg, #a5d3ff, #068bff, #359dff, #236cf4);
+    background-clip: text;
+    color: transparent;
+}
+
+.app-news-sub-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: #71baff;
+    margin-top: 15px;
+}
+
 .img-container {
     display: block;
     width: 100%;
@@ -217,7 +245,7 @@ export default {
 }
 
 .search-bar {
-    margin: 20px -500px;
+    margin: 60px -500px;
     float: left;
     position: absolute;
     left: 50%;
