@@ -11,7 +11,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="100%" height="100%">
+          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="170px" height="170px">
           <div class="image-black-cover"><i class="el-icon-plus"></i></div>
         </el-upload>
         <div class="PersonalInfo">
@@ -120,7 +120,7 @@
             </el-menu>
           </div>
           <div class="right4_1" v-show="Menu4Idx === '1'">
-            <el-table :data="scholar_certification">
+            <el-table :data="scholar_certification.slice(begin1, end1)">
               <el-table-column prop="date" label="申请时间" width="240">
                 <template slot-scope="scope">
                   <i class="el-icon-time"></i>
@@ -213,6 +213,8 @@
                 <el-button>拒绝</el-button>
               </el-table-column>
             </el-table>
+            <el-pagination background layout="prev, pager, next" :total="1000" :prev-click="prev" :next-click="next">
+            </el-pagination>
           </div>
           <div class="right4_2" v-show="Menu4Idx === '2'">
             <el-table :data="work_certification">
@@ -442,14 +444,70 @@ export default {
       keywordsInput: "",
       isMasterpieceOnly: false,
       isManager: true,
-      isSelf: true,
+      isSelf: false,
       isInterested: false,
       isCancel: false,
+      begin1: 0,
+      end1: 10,
+      begin2: 0,
+      end2: 10,
       scholar_certification: [
         {
           date: '2023-12-22',
           name: 'young'
-        }
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
       ],
       work_certification: [
         {
@@ -525,6 +583,19 @@ export default {
     cancel_interest() {
       this.isInterested = false;
     },
+    prev() {
+      if (this.begin1 >= 10) {
+        this.begin1 -= 10;
+        this.end1 -= 10;
+      } else {
+        this.begin1 = 0;
+        this.end1 = 10;
+      }
+    },
+    next() {
+      this.begin1 += 10;
+      this.end1 += 10;
+    }
   }
 }
 </script>
@@ -563,8 +634,9 @@ export default {
 }
 
 .Info .avatar_upload .image-black-cover {
-  width: 100px;
-  height: 100px;
+  width: 170px;
+  height: 170px;
+  border-radius: 5px;
   background-color: #121212;
   display: block;
   position: absolute;
@@ -573,7 +645,7 @@ export default {
 }
 
 .Info .avatar_upload .image-black-cover:hover{
-  animation: move 0.5s forwards;
+  animation: move 0.6s forwards;
 }
 
 @keyframes move {
@@ -582,7 +654,7 @@ export default {
   }
   100% {
     opacity: 0.5;
-    transform: scale(1.5);
+    transform: scale(1.1);
   }
 }
 
@@ -623,9 +695,14 @@ export default {
   border-radius: 4px;
 }
 
+.Info .avatar_upload.image-black-cover.el-icon-plus{
+  height: 30px;
+  width: 30px;
+}
+
 .Info .PersonalInfo .el-icon-plus {
   position: relative;
-  right: 8px;
+  right: 15px;
   bottom: 4px;
 }
 

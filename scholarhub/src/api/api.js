@@ -57,8 +57,23 @@ export function VerifyCode(data, token) {
     })
 }
 
+
+// 修改邮箱
+export function ChangeUserEmail(data,token){
+    return service({
+        method:'post',
+        url:'/user/change_user_email',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
+
+
 // 申请成为管理员
-export function ApplyAdmin(data,token){
+export function ApplyAdmin(data, token) {
     return service({
         method: 'post',
         url: '/user/apply_admin',
@@ -70,7 +85,7 @@ export function ApplyAdmin(data,token){
 }
 
 // 认领学术成果
-export function ApplyWork(data,token){
+export function ApplyWork(data, token) {
     return service({
         method: 'post',
         url: '/user/apply_work',
@@ -82,7 +97,7 @@ export function ApplyWork(data,token){
 }
 
 // 查询处理结果
-export function GetApplyResults(token){
+export function GetApplyResults(token) {
     return service({
         method: 'get',
         url: '/user/apply_work',
@@ -93,7 +108,7 @@ export function GetApplyResults(token){
 }
 
 // 获取关注学者列表
-export function ShowFollowAuthor(token){
+export function ShowFollowAuthor(token) {
     return service({
         method: 'get',
         url: '/user/show_follow_author',
@@ -104,7 +119,7 @@ export function ShowFollowAuthor(token){
 }
 
 // 查看浏览历史
-export function ShowBrowseHistory(token){
+export function ShowBrowseHistory(token) {
     return service({
         method: 'get',
         url: '/user/show_browse_history',
@@ -177,11 +192,11 @@ export function AuthorSearch(data) {
     })
 }
 
-export function AuthorFuzzySearch(data){
+export function AuthorFuzzySearch(data) {
     data = JSON.stringify(data)
     return service({
-        method:'post',
-        url:'/academia/authorfuzzysearch',
+        method: 'post',
+        url: '/academia/authorfuzzysearch',
         data
     })
 }
@@ -267,3 +282,51 @@ export function GetSpecificAuthorApply(data, token) {
     })
 }
 
+
+
+// 获取浏览记录
+export function GetWorkList(token) {
+    return service({
+        method: 'get',
+        url: '/browhistory/get_work_list',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
+// 添加浏览记录
+export function AddBrowHistory(data, token) {
+    return service({
+        method: 'post',
+        url: '/browhistory/add_brow_history',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
+// 删除浏览记录
+export function DeleteBrowHistory(data, token) {
+    return service({
+        method: 'post',
+        url: '/browhistory/delete_brow_history',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
+// 删除所有浏览记录
+export function DeleteAllBrowHistory(data, token) {
+    return service({
+        method: 'post',
+        url: '/browhistory/delete_all_brow_history',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
