@@ -22,7 +22,8 @@
             </div>
         </div>
         <div class="paper-selection">
-            <PaperUnit v-for="index in 4" :key="index"></PaperUnit>
+            <!-- <PaperUnit v-for="index in 4" :key="index"></PaperUnit> -->
+            <PaperUnit PaperUnit v-for="(paperData, index) in limitedPaperDatas" :key="index" :paper-data="paperData"></PaperUnit>
         </div>
         <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%">
             <!-- <span>这是一段信息</span> -->
@@ -48,7 +49,7 @@
 <script>
 import PaperUnit from "@/components/PaperUnit.vue"
 import router from "@/router";
-import { FuzzySearch, AuthorSearch } from "@/api/api";
+import { FuzzySearch, AuthorSearch, ShowHot } from "@/api/api";
 export default {
     data() {
         return {
@@ -88,7 +89,7 @@ export default {
                     }
                 ]
             },
-
+            paperDatas: [],
         }
     },
     components: { PaperUnit }
@@ -192,6 +193,16 @@ export default {
         if (this.select === null || this.select === '' || this.select2 === null || this.select2 === '' || this.input3 === null || this.input3 === '') {
             this.$refs.button.$el.style.cursor = 'not-allowed'
         }
+    },
+    created() {
+        ShowHot().then(res => {
+            this.paperDatas = res.data.works
+        })
+    },
+    computed: {
+        limitedPaperDatas() {
+            return this.paperDatas.slice(0, 8);
+        },
     }
 }
 </script>

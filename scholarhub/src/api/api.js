@@ -223,13 +223,10 @@ export function ShowFavorites(token) {
 }
 
 // 展示热门成果
-export function ShowHot(token) {
+export function ShowHot() {
     return service({
         method: 'get',
-        url: '/message/show_hot',
-        headers: {
-            'Authorization': `Token ${token}`
-        }
+        url: '/message/show_hot'
     })
 }
 

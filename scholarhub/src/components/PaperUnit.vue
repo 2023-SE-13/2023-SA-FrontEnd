@@ -1,10 +1,13 @@
 <template>
-    <div class="paper-unit" @click="getPaper">
-        <!-- <img class="paper-img"  src="../assets/logo.png" alt="加载失败"> -->
-        <div class="paper-img"> <img src="" alt="图片加载失败" class="fallback-img"></div>
-        <div class="paper-title">{{ paper.title }}</div>
-        <div class="paper-abstract">{{ paper.abstract }}</div>
-        <div class="paper-author">{{ paper.author }}</div>
+    <div class="paper-unit">
+        <!-- <div class="paper-img"> <img src="" alt="图片加载失败" class="fallback-img"></div> -->
+        <div class="paper-unit-content">
+            <div class="paper-title">{{ this.paperData.title}}</div>
+            <div class="paper-abstract">{{ this.paperDetail._source.abstract_inverted_index }}</div>
+            <div class="paper-author">
+                <span v-for="authorShip in this.paperDetail._source.authorships" :key="authorShip.author.id">{{ authorShip.author.display_name }} &nbsp; </span>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -12,29 +15,20 @@ import { GetPaper } from "@/api/api"
 export default {
     name: "PaperUnit",
     props: {
-        paper: {
-            type: Object,
-            default: () => {
-                return {
-                    title: "Gold-Nanolayer-Derived Zincophilicity Suppressing Metallic Zinc Dendrites and Its Efficacy in Improving Electrochemical Stability of Aqueous Zinc-Ion Batteries",
-                    abstract: "抑制锌枝晶形成新机制，可支持在50 mA cm-2的高电流密度稳定循环1000次",
-                    author: "Yan, Pengfei; Zhang, Yufei; Wang, Zhiyu; et al.",
-                }
-            }
-        }
+        paperData:{},
     },
     data() {
         return {
-            paper_id: '',
+            paperDetail: {},
         }
     },
     methods: {
-        getPaper() {
-            GetPaper(this.paper_id).then(res=>{
-                
-            })
-        }
-    }
+    },
+    mounted() {
+        GetPaper(this.paperData.work_id).then(res => {
+            this.paperDetail = res.data
+        })
+    },
 }
 </script>
 <style>
@@ -42,7 +36,7 @@ export default {
     border-radius: 5px;
     width: 277.5px;
     /* padding: 15px; */
-    height: 380px;
+    height: 240px;
     /* background-color: rgb(249, 253, 255); */
     /* padding: 10px; */
     display: inline-block;
@@ -50,6 +44,10 @@ export default {
     font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
     /* box-shadow: 2px 2px rgba(0, 0, 0, 0.3); */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.paper-unit-content {
+    padding: 0 10px 15px 10px;
 }
 
 .paper-unit:hover {}
