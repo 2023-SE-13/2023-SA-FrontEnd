@@ -19,7 +19,7 @@
       </div>
       <div v-show="isLogin" class="photo">
         <el-dropdown placement="bottom" @command="handleCommand">
-          <el-avatar :size="35" src="../assets/cover.png"></el-avatar>
+          <el-avatar :size="35" :src="this.photoURL"></el-avatar>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="a"><i class="el-icon-house"></i>主页</el-dropdown-item>
             <el-dropdown-item command="b"><i class="el-icon-star-off"></i>收藏</el-dropdown-item>
@@ -36,6 +36,7 @@
   </div>
 </template>
 <script>
+import {getInformation} from "@/api/api";
 export default {
   data() {
     return {
@@ -58,7 +59,8 @@ export default {
       input1: '',
       select: '1',
       isLogin: false,
-      id: 'https://openalex.org/W2783557622'
+      id: '',
+      photoURL: '',
     }
   },
   methods: {
@@ -151,6 +153,19 @@ export default {
     if (this.token != null) {
       this.isLogin = true
     }
+    getInformation(this.token).then(res => {
+      if (res.data.result === 0) {
+        this.id = res.data.id
+        this.photoURL = res.data.photo_url
+      } else {
+        this.$notify({
+          title: '错误',
+          message: '获取用户信息失败',
+          type: 'error'
+        });
+        return;
+      }
+    })
     if (this.input1 === null || this.input1 === '') {
       this.$refs.button.$el.style.cursor = 'not-allowed'
     }

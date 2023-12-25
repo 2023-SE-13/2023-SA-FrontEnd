@@ -456,9 +456,9 @@ export default {
         this.isManager = res.data.is_admin
       } else {
         this.$notify({
-          title: '警告',
+          title: '错误',
           message: '获取用户信息失败',
-          type: 'warning'
+          type: 'error'
         });
         return;
       }
