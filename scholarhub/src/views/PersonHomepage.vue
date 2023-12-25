@@ -213,7 +213,7 @@
                 <el-button>拒绝</el-button>
               </el-table-column>
             </el-table>
-            <el-pagination background layout="prev, pager, next" :total="1000" :prev-click="prev" :next-click="next">
+            <el-pagination background layout="prev, pager, next" :total="1000" @prev-click="prev" @next-click="next" @current-change="pageChange">
             </el-pagination>
           </div>
           <div class="right4_2" v-show="Menu4Idx === '2'">
@@ -595,6 +595,11 @@ export default {
     next() {
       this.begin1 += 10;
       this.end1 += 10;
+    },
+    pageChange(val) {
+      console.log(val)
+      this.begin1 = (val - 1) * 10;
+      this.end1 = val * 10;
     }
   }
 }
