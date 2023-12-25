@@ -213,7 +213,7 @@ export default {
         pwd: '',
         new_pwd: ''
       },
-      Email: { new_email: '' },
+      Email: { email: '' },
       password: { password: '' },
       pwdFormRules: {
         pwd: [
@@ -313,8 +313,8 @@ export default {
     },
 
     async changeEmail() {
-      this.Email.new_email = this.emailForm.email
-      ChangeUserEmail(this.email, localStorage.getItem('token')).then(res => {
+      this.Email.email = this.emailForm.email
+      ChangeUserEmail(this.Email, localStorage.getItem('token')).then(res => {
         console.log(res);
         this.$message({
           type:'success',
