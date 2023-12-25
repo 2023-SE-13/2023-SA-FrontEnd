@@ -48,7 +48,7 @@
     <div class="cell">
       <span style="font-size: 16px;font-weight: bold;margin-left: 3%">绑定邮箱</span>
       <span style="margin-left: 10%;margin-right: 60%;color: darkgrey">
-            {{ Email }}
+            {{ email }}
           </span>
       <el-button class="edit-email-btn" type="danger" round @click="EditEmail = true">换绑</el-button>
     </div>
@@ -171,10 +171,31 @@
 import { SendCode, ApplyAdmin, ChangeUserPassword, ChangeUserEmail, getInformation } from "@/api/api";
 
 export default {
+  mounted() {
+    this.token = localStorage.getItem("token")
+    getInformation(this.token).then(res => {
+      if (res.data.result === 0) {
+        this.realName = res.data.name
+        this.email = res.data.email
+        this.isAdmin = res.data.is_admin
+        window.isAdmin = res.data.is_admin
+      } else {
+        this.$notify({
+          title: '警告',
+          message: '获取用户信息失败',
+          type: 'warning'
+        });
+        return;
+      }
+    })
+    if (this.token === null) {
+      this.$router.push("/login")
+    }
+  },
   data() {
     return {
       isAdmin: window.isAdmin,
-      Email: '',
+      email: '',
       realName: '',
       verificationCode1: ['', '', '', ''],
       verificationCode2: ['', '', '', ''],
@@ -207,7 +228,6 @@ export default {
           { required: true, message: ' ', trigger: 'blur' },
         ]
       },
-
       EditPwd: false,
       pwdForm:{
         pwd: '',
@@ -335,6 +355,12 @@ export default {
         console.log(res);
         window.isAdmin = true;
         this.isAdmin = true;
+      })
+    },
+
+    async getInfo() {
+      getInformation(localStorage.getItem('token')).then(res => {
+
       })
     }
   }
