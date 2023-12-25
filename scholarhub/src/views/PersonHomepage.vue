@@ -120,7 +120,7 @@
             </el-menu>
           </div>
           <div class="right4_1" v-show="Menu4Idx === '1'">
-            <el-table :data="scholar_certification">
+            <el-table :data="scholar_certification.slice(begin1, end1)">
               <el-table-column prop="date" label="申请时间" width="240">
                 <template slot-scope="scope">
                   <i class="el-icon-time"></i>
@@ -213,6 +213,8 @@
                 <el-button>拒绝</el-button>
               </el-table-column>
             </el-table>
+            <el-pagination background layout="prev, pager, next" :total="1000" :prev-click="prev" :next-click="next">
+            </el-pagination>
           </div>
           <div class="right4_2" v-show="Menu4Idx === '2'">
             <el-table :data="work_certification">
@@ -442,14 +444,70 @@ export default {
       keywordsInput: "",
       isMasterpieceOnly: false,
       isManager: true,
-      isSelf: true,
+      isSelf: false,
       isInterested: false,
       isCancel: false,
+      begin1: 0,
+      end1: 10,
+      begin2: 0,
+      end2: 10,
       scholar_certification: [
         {
           date: '2023-12-22',
           name: 'young'
-        }
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
+        {
+          date: '2023-12-22',
+          name: 'young'
+        },
       ],
       work_certification: [
         {
@@ -525,6 +583,19 @@ export default {
     cancel_interest() {
       this.isInterested = false;
     },
+    prev() {
+      if (this.begin1 >= 10) {
+        this.begin1 -= 10;
+        this.end1 -= 10;
+      } else {
+        this.begin1 = 0;
+        this.end1 = 10;
+      }
+    },
+    next() {
+      this.begin1 += 10;
+      this.end1 += 10;
+    }
   }
 }
 </script>
