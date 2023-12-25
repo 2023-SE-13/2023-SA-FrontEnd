@@ -55,7 +55,6 @@ export default {
         sort_order: '',
         sort_type: 'exact'
       },
-      ,
       input1: '',
       select: '1',
       isLogin: false,
