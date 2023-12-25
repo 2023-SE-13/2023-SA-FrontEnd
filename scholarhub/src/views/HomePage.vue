@@ -40,7 +40,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button class="pro-but" style="background-color: rgba(47, 58, 145, .8) !important;" type="primary"
-                    @click="Jump()">确 定</el-button>
+                    @click="ProSearch()">确 定</el-button>
                 <el-button class="pro-but" @click="ResetProSearch()">重置条件</el-button>
             </span>
         </el-dialog>
@@ -69,6 +69,25 @@ export default {
                 sort_by: 'publication_date',
                 sort_order: '',
                 sort_type: ''
+            },
+            proSearchField: {
+                sort_by: '',
+                sort_order: '',
+                search_list: []
+            },
+            proSearchFieldt: {
+                sort_by: 'desc',
+                sort_order: '',
+                search_list: [
+                    {
+                        search_content: '111',
+                        search_field: 'title'
+                    },
+                    {
+                        search_content: '111',
+                        search_field: 'title'
+                    }
+                ]
             },
             NotAllowSearch: true
         }
@@ -101,6 +120,32 @@ export default {
                 this.NotAllowSearch = true
             }
         },
+        ProSearch() {
+            console.log(this.proSearchField)
+
+            this.proSearchField.sort_by = ''
+            this.proSearchField.sort_order = 'desc'
+            if (this.input4 === '' && this.input5 === '' && this.input6 === '') {
+                this.$message( '请输入搜索内容！')
+            } else {
+                if (this.input4 !== '') {
+                    this.proSearchField.search_list.push({ search_field: 'title', search_content: this.input4 })
+                }
+                if (this.input5 !== '') {
+                    this.proSearchField.search_list.push({ search_field: 'keywords.keyword', search_content: this.input5 })
+                }
+                if (this.input6 !== '') {
+                    this.proSearchField.search_list.push({ search_field: 'authorships.author.display_name', search_content: this.input6 })
+                }
+                this.$router.push({
+                    path: '/explore/' + btoa(encodeURIComponent(JSON.stringify(this.proSearchField)))
+                })
+                console.log(this.proSearchField)
+            }
+
+
+
+        },
         Jump() {
             this.dialogVisible = false;
             router.push("/explore")
@@ -118,7 +163,7 @@ export default {
                     this.searchField.search_field = 'title'
                     break
                 case '2':
-                    this.searchField.search_field = 'keywords'
+                    this.searchField.search_field = 'keywords.keyword'
                     break
                 case '3':
                     this.searchField.search_field = 'authorships.author.display_name'
