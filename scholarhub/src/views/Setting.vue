@@ -103,7 +103,7 @@ export default {
     this.token = localStorage.getItem("token")
     getInformation(this.token).then(res => {
       if (res.data.result === 0) {
-        this.is_authentication = res.data.is_authentication
+        this.isAuthentication = res.data.is_authentication
         this.realName = res.data.true_name
         this.email = res.data.email
         this.isAdmin = res.data.is_admin
