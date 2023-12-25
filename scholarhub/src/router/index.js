@@ -75,7 +75,11 @@ const routes = [
     name:'个人主页',
     component:()=>import('@/views/PersonHomepage')
   },
-  
+  {
+    path: '/scholar/:id',
+    name: '学者主页',
+    component:()=>import('@/views/Scholar')
+  },
   {
     path:'/login',
     name:'登录',
