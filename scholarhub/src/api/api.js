@@ -70,7 +70,18 @@ export function ChangeUserEmail(data,token){
     })
 }
 
-
+// 修改用户密码
+export function ChangeUserPassword(data,token){
+    data = JSON.stringify(data)
+    return service({
+        method:'post',
+        url:'/user/change_user_password',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
 
 // 申请成为管理员
 export function ApplyAdmin(data, token) {
@@ -224,15 +235,15 @@ export function ShowHot(token) {
 
 
 // 查看学者申请
-export function ShowAuthorMessage(token) {
-    return service({
-        method: 'get',
-        url: '/Administrator/show_author_message',
-        headers: {
-            'Authorization': `Token ${token}`
-        }
-    })
-}
+// export function ShowAuthorMessage(token) {
+//     return service({
+//         method: 'get',
+//         url: '/Administrator/show_author_message',
+//         headers: {
+//             'Authorization': `Token ${token}`
+//         }
+//     })
+// }
 
 
 // 获得论文认领申请
