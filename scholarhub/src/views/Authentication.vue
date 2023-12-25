@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { Authentication } from "@/api/api";
+
 export default {
   data() {
     return {

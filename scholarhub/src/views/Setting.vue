@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import { SendCode, ApplyAdmin, ChangeUserPassword, ChangeUserEmail } from "@/api/api";
+import { SendCode, ApplyAdmin, ChangeUserPassword, ChangeUserEmail, getInformation } from "@/api/api";
 
 export default {
   data() {
