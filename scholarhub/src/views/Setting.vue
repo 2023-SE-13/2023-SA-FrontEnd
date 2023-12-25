@@ -158,7 +158,6 @@ export default {
         this.realName = res.data.name
         this.email = res.data.email
         this.isAdmin = res.data.is_admin
-        window.isAdmin = res.data.is_admin
       } else {
         this.$notify({
           title: '警告',
@@ -174,7 +173,7 @@ export default {
   },
   data() {
     return {
-      isAdmin: window.isAdmin,
+      isAdmin: false,
       email: '',
       realName: '',
       verificationSent: false,
@@ -214,6 +213,7 @@ export default {
         pwd: '',
         new_pwd: ''
       },
+      Email: { new_email: '' },
       password: { password: '' },
       pwdFormRules: {
         pwd: [
@@ -313,8 +313,8 @@ export default {
     },
 
     async changeEmail() {
-      this.email.new_email = this.emailForm.email
-      ChangeUserEmail(this.email.new_email, localStorage.getItem('token')).then(res => {
+      this.Email.new_email = this.emailForm.email
+      ChangeUserEmail(this.email, localStorage.getItem('token')).then(res => {
         console.log(res);
         this.$message({
           type:'success',
@@ -327,8 +327,7 @@ export default {
     changePwd() {
       this.password.password = this.pwdForm.new_pwd
       console.log(localStorage.getItem('token'))
-      console.log(this.password.password)
-      ChangeUserPassword(this.password.password, localStorage.getItem('token')).then(res => {
+      ChangeUserPassword(this.password, localStorage.getItem('token')).then(res => {
         console.log(res);
         this.$message({
           type:'success',
@@ -356,8 +355,7 @@ export default {
       data.append('code', this.AdminCode);
       ApplyAdmin(data, localStorage.getItem('token')).then(res => {
         console.log(res);
-        window.isAdmin = true;
-        this.isAdmin = true;
+        //this.isAdmin = true;
       })
     },
   }
