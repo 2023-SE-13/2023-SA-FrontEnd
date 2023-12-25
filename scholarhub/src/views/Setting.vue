@@ -355,7 +355,6 @@ export default {
       data.append('code', this.AdminCode);
       ApplyAdmin(data, localStorage.getItem('token')).then(res => {
         console.log(res);
-        //this.isAdmin = true;
       })
     },
   }
