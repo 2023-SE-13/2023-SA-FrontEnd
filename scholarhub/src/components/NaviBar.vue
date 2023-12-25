@@ -13,7 +13,7 @@
           <el-option label="作者" value="3" @click="select='作者'"></el-option>
         </el-select>
         <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input" @input="allow" @keyup.enter.native="search">
-          <el-button slot="suffix" icon="el-icon-search" @click="search" ref="button"></el-button>
+          <el-button slot="suffix" icon="el-icon-search" @click="search" @mouseover.native="searchOver" @mouseleave.native="searchLeave" ref="button"></el-button>
         </el-input>
       </div>
       <div v-show="isLogin" class="photo">
@@ -90,7 +90,14 @@ export default {
       }
     },
     search() {
-      alert(this.input1)
+      if (this.input1 !== null && this.input1 !== '') {
+        //todo: search
+      } else {
+        this.$message({
+          message: '请输入搜索内容',
+          type: 'info'
+        })
+      }
     },
     allow() {
       if (this.input1 !== null && this.input1 !== '') {
@@ -98,7 +105,21 @@ export default {
       } else {
         this.$refs.button.$el.style.cursor = 'not-allowed'
       }
-    }
+    },
+    searchOver() {
+      if (this.input1 !== null && this.input1 !== '') {
+        this.$refs.button.$el.style.color = '#2f3a91'
+      } else {
+        this.$refs.button.$el.style.color = '#bbbbbb'
+      }
+    },
+    searchLeave() {
+      if (this.input1 !== null && this.input1 !== '') {
+        this.$refs.button.$el.style.color = '#bbbbbb'
+      } else {
+        this.$refs.button.$el.style.color = '#bbbbbb'
+      }
+    },
   },
   mounted() {
     this.token = localStorage.getItem("token")
@@ -259,9 +280,9 @@ export default {
   color: #bbbbbb;
 }
 
-.navi-search .navi-input .el-button:hover {
-  color: #2f3a91;
-}
+/*.navi-search .navi-input .el-button:hover {*/
+/*  color: #2f3a91;*/
+/*}*/
 
 .navi-inner .photo {
   display: inline-block;

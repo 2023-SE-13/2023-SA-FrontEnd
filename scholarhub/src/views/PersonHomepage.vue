@@ -416,6 +416,8 @@
 import NaviBar from "@/components/NaviBar.vue";
 import index from "vuex";
 import {ShowAuthorMessage} from "@/api/api";
+import {ShowPaperMessage} from "@/api/api";
+
 export default {
   name: "PersonHomepage",
   computed: {
@@ -431,6 +433,9 @@ export default {
     this.username = "younsur" + this.$route.params.id.toString();
     this.institution = "清华大学";
     ShowAuthorMessage(token).then(res => {
+      //todo: 接口处理
+    })
+    ShowPaperMessage(token).then(res => {
       //todo: 接口处理
     })
   },
