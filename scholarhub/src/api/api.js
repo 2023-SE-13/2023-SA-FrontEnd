@@ -330,3 +330,13 @@ export function DeleteAllBrowHistory(data, token) {
         }
     })
 }
+
+export function ShowAuthorMessage(token) {
+    return service({
+        method: 'get',
+        url: '/Administrator/show_author_message',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}

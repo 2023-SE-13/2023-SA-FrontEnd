@@ -415,7 +415,7 @@
 <script>
 import NaviBar from "@/components/NaviBar.vue";
 import index from "vuex";
-
+import {ShowAuthorMessage} from "@/api/api";
 export default {
   name: "PersonHomepage",
   computed: {
@@ -427,11 +427,16 @@ export default {
     NaviBar,
   },
   mounted() {
+    this.token = localStorage.getItem("token")
     this.username = "younsur" + this.$route.params.id.toString();
     this.institution = "清华大学";
+    ShowAuthorMessage(token).then(res => {
+      //todo: 接口处理
+    })
   },
   data() {
     return {
+      token: null,
       is_black: false,
       username: "username",
       name: "name",
