@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="MidNav">
-        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect()" background-color="#d7ecff"
+        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
           <el-menu-item index="2">我的文库</el-menu-item>
@@ -226,14 +226,14 @@
             </el-pagination>
           </div>
           <div class="right4_2" v-show="Menu4Idx === '2'">
-            <el-table :data="work_certification">
-              <el-table-column prop="date" label="申请时间" width="240">
+            <el-table :data="work_certification.slice(begin2, end2)">
+              <el-table-column prop="datetime" label="申请时间" width="240">
                 <template slot-scope="scope">
                   <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
+                  <span style="margin-left: 10px">{{ scope.row.datetime }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="申请用户" width="240">
+              <el-table-column prop="send_user" label="申请用户" width="240">
                 <template slot-scope="scope">
                   <el-popover placement="top" trigger="hover">
                     <el-descriptions title="用户信息" :column="3" border>
@@ -242,7 +242,7 @@
                           <i class="el-icon-user"></i>
                           <span style="margin-left: 3px">用户名</span>
                         </template>
-                        {{ scope.row.name }}
+                        {{ scope.row.send_user }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
@@ -272,7 +272,7 @@
                       </el-descriptions-item>
                     </el-descriptions>
                     <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                      <el-tag size="medium">{{ scope.row.send_user }}</el-tag>
                     </div>
                   </el-popover>
                 </template>
@@ -315,10 +315,14 @@
                 </template>
               </el-table-column>
               <el-table-column prop="operator" label="处理操作">
-                <el-button>同意</el-button>
-                <el-button>拒绝</el-button>
+                <template slot-scope="scope">
+                  <el-button @click = accept2(scope.$index)>同意</el-button>
+                  <el-button @click = refuse2(scope.$index)>拒绝</el-button>
+                </template>
               </el-table-column>
             </el-table>
+            <el-pagination background layout="prev, pager, next" :total=this.work_certification.length/10 @prev-click="prev2" @next-click="next2" @current-change="pageChange2">
+            </el-pagination>
           </div>
           <div class="right4_3" v-show="Menu4Idx === '3'">
             <el-table :data="scholar_certification">
@@ -428,6 +432,7 @@ import {getInformation} from "@/api/api";
 import {ShowAuthorMessage} from "@/api/api";
 import {ShowPaperMessage} from "@/api/api";
 import {HandleAuthorMessage} from "@/api/api";
+import {HandlePaperMessage} from "@/api/api";
 export default {
   name: "PersonHomepage",
   computed: {
@@ -440,8 +445,9 @@ export default {
   },
   mounted() {
     this.token = localStorage.getItem("token")
-    this.username = "younsur" + this.$route.params.id.toString();
-    this.institution = "清华大学";
+    if (this.token === null) {
+      this.$router.push("/login")
+    }
     getInformation(this.token).then(res => {
       if (res.data.result === 0){
         this.username = res.data.username
@@ -467,10 +473,14 @@ export default {
     })
     ShowPaperMessage(this.token).then(res => {
       //todo: 接口处理
+      if (res.data.result === 0) {
+        this.work_certification = res.data.messages
+        console.log(this.work_certification)
+      } else {
+        console.log(res.data.messages)
+      }
     })
-    if (this.token === null) {
-      this.$router.push("/login")
-    }
+
   },
   data() {
     return {
@@ -504,7 +514,14 @@ export default {
         }
       ],
       work_certification: [
-
+        {
+          id: '',
+          work_id: '',
+          send_user: '',
+          send_user_id: '',
+          author_id: '',
+          datetime: '',
+        }
       ],
       infoDialog: false,
       infoDialogTitle: true,
@@ -621,6 +638,50 @@ export default {
         }
       })
     },
+    accept2(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '1');
+      formData.append('message_id', this.work_certification[num].id);
+      HandlePaperMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已同意',
+            type: 'success'
+          });
+          this.work_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    refuse2(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '0');
+      formData.append('message_id', this.work_certification[num].id);
+      HandlePaperMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已拒绝',
+            type: 'success'
+          });
+          this.work_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
     prev() {
       if (this.begin1 >= 10) {
         this.begin1 -= 10;
@@ -638,6 +699,24 @@ export default {
       console.log(val)
       this.begin1 = (val - 1) * 10;
       this.end1 = val * 10;
+    },
+    prev2() {
+      if (this.begin2 >= 10) {
+        this.begin2 -= 10;
+        this.end2 -= 10;
+      } else {
+        this.begin2 = 0;
+        this.end2 = 10;
+      }
+    },
+    next2() {
+      this.begin2 += 10;
+      this.end2 += 10;
+    },
+    pageChange2(val) {
+      console.log(val)
+      this.begin2 = (val - 1) * 10;
+      this.end2 = val * 10;
     }
   }
 }
