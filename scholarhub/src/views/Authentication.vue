@@ -25,6 +25,10 @@
           <el-button class="submit-btn" type="primary" @click="submitForm">提交</el-button>
         </el-tooltip>
       </div>
+      <div class="icon-stt">
+        <i class="el-icon-document" style="margin-left: 400px"></i>
+        <i class="el-icon-s-custom" style="margin-left: -250px; color: #e9eaee"></i>
+      </div>
     </el-form>
   </div>
   </div>
@@ -75,7 +79,7 @@ export default {
   padding: 5%;
   display: flex;
   background-color: white;
-  height: 100vh;
+  height: 80vh;
   width: 600px;
   border: 1px solid #ccc;
   justify-content: center; /* 水平居中 */
@@ -117,13 +121,10 @@ export default {
   margin-left: 3px;
 }
 
-/* 验证码输入框样式 */
-.verification-code {
-  display: flex;
+.icon-stt {
   position: absolute;
-  align-items: center;
-  margin-top: -45px;
-  margin-left: -10px;
+  font-size: 180px;
+  color: #f3f5f8;
+  margin-top: 50px;
 }
-
 </style>

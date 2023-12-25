@@ -159,8 +159,9 @@
   <div class="right-bar">
     <div class="placeholder">
       <div class="icon-stt">
-        <i class="el-icon-setting" style="color: #efebeb;"></i>
-        <i class="el-icon-setting" style="margin-left: -100px;font-size: 150px;margin-right: 50px"></i></div>
+        <i class="el-icon-setting" style="color: #f3f5f8"></i>
+        <i class="el-icon-setting" style="margin-left: -100px;font-size: 150px;margin-right: 50px"></i>
+      </div>
     </div>
   </div>
   </div>
@@ -438,7 +439,7 @@ export default {
 }
 
 .icon-stt {
-  color: #e0dcdc;
+  color: #e9eaee;
   font-size: 200px;
   z-index: -10;
   margin-left: -580px;
