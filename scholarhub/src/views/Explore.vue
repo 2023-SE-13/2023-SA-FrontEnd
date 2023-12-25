@@ -43,16 +43,15 @@
                                 </div>
                             </el-backtop>
                             <ScholarUnit v-for="(authorData, index) in authorDatas.slice(begin, end)" :key="index"
-                                :author-data="authorData" @show-dialog="showDialog"> </ScholarUnit>
+                                :author-data="authorData" @show-dialog="showDialog(authorData)"> </ScholarUnit>
                             <p v-if="loading" style="margin: 15px; font-size: 18px"><i class="el-icon-loading"></i>加载中...
                             </p>
                             <p v-if="noMore" style="margin: 15px; font-size: 18px"><i
                                     class="el-icon-warning-outline"></i>没有更多了</p>
                         </div>
-                        <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
+                        <!-- <el-dialog title="认领申请" :visible.sync="isShowDialog" width="30%" :modal="false">
                             <el-form :label-position='left' label-width="80px" :model="form" @submit="" ref="formRef">
                                 <el-form-item label="证明资料">
-                                    <!-- <input class="dialog-input" type="file" name="" id="" accept="image/*" ref="fileInput"> -->
                                     <picture-input ref="pictureInput" @change="test" width="600" height="600" margin="16"
                                         accept="image/jpeg,image/png" size="10" :removable="true" :customStrings="{
                                             upload: '<h1>Bummer!</h1>',
@@ -71,10 +70,9 @@
                                 </el-form-item>
                             </el-form>
                             <span slot="footer" class="dialog-footer">
-                                <!-- <el-button @click="isShowDialog = false" class="ftbtn">取 消</el-button> -->
                                 <el-button type="primary" @click="submitApply()" class="ftbtn">确认提交</el-button>
                             </span>
-                        </el-dialog>
+                        </el-dialog> -->
                     </div>
                 </div>
             </div>
@@ -83,7 +81,7 @@
 </template>
 
 <script>
-import { AuthorSearch, FuzzySearch, ExactSearch, AuthorFuzzySearch,MultiSearch } from '@/api/api';
+import { AuthorSearch, FuzzySearch, ExactSearch, AuthorFuzzySearch, MultiSearch } from '@/api/api';
 import ExploreUnit from '@/components/ExploreUnit.vue'
 import ScholarUnit from '@/components/ScholarUnit.vue';
 import SelectBox from "@/components/SelectBox.vue";
@@ -128,13 +126,14 @@ export default {
         }
     },
     methods: {
-        showDialog() {
+        showDialog(data) {
+            console.log(data._id)
             this.isShowDialog = true
             console.log(this.isShowDialog)
+            this.$router.push("/php/" + btoa(encodeURIComponent(data._id)))
         },
         submitApply() {
             console.log(this.form)
-
             this.isShowDialog = false
             // this.$refs.formRef.resetFields()
         },
@@ -348,4 +347,5 @@ scholar .scholar_center {
 .scholar_center_content .content2 .el-menu2-demo .el-menu-item.is-active {
     background-color: #2f3a91;
     color: white;
-}</style>
+}
+</style>
