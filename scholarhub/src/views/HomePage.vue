@@ -119,7 +119,10 @@ export default {
             this.proSearchField.sort_by = ''
             this.proSearchField.sort_order = 'desc'
             if (this.input4 === '' && this.input5 === '' && this.input6 === '') {
-                this.$message( '请输入搜索内容！')
+                this.$message({
+                    type:'error',
+                    message:'请输入搜索内容'
+                })
             } else {
                 if (this.input4 !== '') {
                     this.proSearchField.search_list.push({ search_field: 'title', search_content: this.input4 })
