@@ -2,7 +2,7 @@
     <div>
         <div class="work" v-show="isWork">
             <div class="work_left" id="mySelectBar">
-                <SelectBox />
+                <SelectBox :abc="paperDatas" @childToParent="handleDataFromChild" />
             </div>
             <div class="work_right">
                 <div class="work_right_content">
@@ -86,6 +86,11 @@ import ExploreUnit from '@/components/ExploreUnit.vue'
 import ScholarUnit from '@/components/ScholarUnit.vue';
 import SelectBox from "@/components/SelectBox.vue";
 export default {
+    props: [
+
+        //   "header_select", "input", "mode", "conditions", "min_date", "max_date",
+        //   "total_hits", "total_hits_str", "aggregation", "articles"
+    ],
     data() {
         return {
             isWork: false,
@@ -126,6 +131,8 @@ export default {
         }
     },
     methods: {
+
+    
         showDialog(data) {
             console.log(data._id)
             this.isShowDialog = true
@@ -267,7 +274,8 @@ export default {
     width: 20%;
     height: 100%;
     float: left;
-    margin-left: 4%; /* 改这里 */
+    margin-left: 4%;
+    /* 改这里 */
     margin-top: -20px;
 }
 

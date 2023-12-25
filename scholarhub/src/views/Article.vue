@@ -687,22 +687,12 @@ export default {
       this.showCollect = false;
     },
     toArticle: function (paper_id) {
-      // let routeUrl = this.$router.resolve({
-      //   path: '/article',
-      //   query: { v: paper_id }
-      // });
       this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(paper_id))));
       location.reload();
-      // this.$router.push({ name: '论文详情' }, () => { this.$router.push(`/article/${paper_id}`) })
-      // window.open(routeUrl.href, "_self");
     },
     toAuthor: function (id) {
-      this.$router.push("/php/" + id);
-      // let routeUrl = this.$router.resolve({
-      //   path: '/schPortal',
-      //   query: { v: id }
-      // });
-      // window.open(routeUrl.href, "_self");
+      console.log(id);
+      this.$router.push("/php/" + + btoa(encodeURIComponent(JSON.stringify(id))));
     },
     toDOI: function (doi) {
       window.open(doi);
@@ -817,7 +807,6 @@ export default {
         console.log(this.articleDetails);
         this.msg.reference_count = this.articleDetails._source.referenced_works.length;
         this.msg.related_works_count = this.articleDetails._source.related_works.length;
-        console.log(this.msg.related_works_count);
       }
       )
     },
@@ -834,8 +823,6 @@ export default {
 
   created() {
     this.getArticleDetail();
-    this.getCitationMsg();
-    //   this.getRelatedPapers();
   },
 }
 </script>
