@@ -75,8 +75,9 @@ export default {
   margin: 4px 15px;
   padding: 10px;
   font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  box-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.3);
   margin-bottom: 10px;
+  transition: box-shadow 0.7s;
 }
 
 .explore-unit:hover {
@@ -89,7 +90,7 @@ export default {
   margin: 5px 15px;
   padding: 10px;
   font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 7px 7px rgba(0, 0, 0, 0.2);
   margin-bottom: 20px;
 }
 
