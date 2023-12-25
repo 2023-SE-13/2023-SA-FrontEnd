@@ -22,9 +22,9 @@
         <div class="cell">
           <span style="font-size: 16px;font-weight: bold;margin-left: 3%">实名认证</span>
           <span style="padding-left: 10%;margin-right: 60%;color: darkgrey">
-            {{ realName }}
+            {{ isAuthentication ? realName : '未实名' }}
           </span>
-          <el-button class="binding-btn" v-if="!(realName === '')" type="primary" round
+          <el-button class="binding-btn" v-if="!isAuthentication" type="primary" round
             @click="gotoBinding">认证</el-button>
         </div>
         <el-divider></el-divider>
@@ -96,14 +96,15 @@
 </template>
 
 <script>
-import { SendCode, ApplyAdmin, ChangeUserPassword, ChangeUserEmail, getInformation } from "@/api/api";
+import { SendCode, ApplyAdmin, ChangeUserEmail, getInformation } from "@/api/api";
 
 export default {
   mounted() {
     this.token = localStorage.getItem("token")
     getInformation(this.token).then(res => {
       if (res.data.result === 0) {
-        this.realName = res.data.name
+        this.is_authentication = res.data.is_authentication
+        this.realName = res.data.true_name
         this.email = res.data.email
         this.isAdmin = res.data.is_admin
       } else {
@@ -112,7 +113,6 @@ export default {
           message: '获取用户信息失败',
           type: 'warning'
         });
-        return;
       }
     })
     if (this.token === null) {
@@ -122,12 +122,12 @@ export default {
   data() {
     return {
       isAdmin: false,
+      isAuthentication: false,
       email: '',
       realName: '',
       verificationSent: false,
       verificationCode: ['', '', '', ''],
       AdminCode: '',
-
       EditEmail: false,
       emailForm: {
         email: '',
