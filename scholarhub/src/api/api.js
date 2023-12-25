@@ -233,6 +233,17 @@ export function ShowHot(token) {
     })
 }
 
+// 查看学者申请
+export function ShowAuthorMessage(token) {
+    return service({
+        method: 'get',
+        url: '/Administrator/show_author_message',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
 // 获得论文认领申请
 export function ShowPaperMessage(token) {
     return service({

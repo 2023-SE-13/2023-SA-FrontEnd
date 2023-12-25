@@ -267,8 +267,7 @@ export default {
     width: 20%;
     height: 100%;
     float: left;
-    margin-left: 3%;
-    /* 改这里 */
+    margin-left: 4%; /* 改这里 */
     margin-top: -20px;
 }
 
