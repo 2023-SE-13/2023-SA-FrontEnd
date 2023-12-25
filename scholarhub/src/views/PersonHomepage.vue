@@ -11,7 +11,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
-          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="100%" height="100%">
+          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="170px" height="170px">
           <div class="image-black-cover"><i class="el-icon-plus"></i></div>
         </el-upload>
         <div class="PersonalInfo">
@@ -634,8 +634,9 @@ export default {
 }
 
 .Info .avatar_upload .image-black-cover {
-  width: 100px;
-  height: 100px;
+  width: 170px;
+  height: 170px;
+  border-radius: 5px;
   background-color: #121212;
   display: block;
   position: absolute;
@@ -644,7 +645,7 @@ export default {
 }
 
 .Info .avatar_upload .image-black-cover:hover{
-  animation: move 0.5s forwards;
+  animation: move 0.6s forwards;
 }
 
 @keyframes move {
@@ -653,7 +654,7 @@ export default {
   }
   100% {
     opacity: 0.5;
-    transform: scale(1.5);
+    transform: scale(1.1);
   }
 }
 
@@ -694,9 +695,14 @@ export default {
   border-radius: 4px;
 }
 
+.Info .avatar_upload.image-black-cover.el-icon-plus{
+  height: 30px;
+  width: 30px;
+}
+
 .Info .PersonalInfo .el-icon-plus {
   position: relative;
-  right: 8px;
+  right: 15px;
   bottom: 4px;
 }
 
