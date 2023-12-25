@@ -56,7 +56,13 @@ const routes = [
         path:`/explore/:data`,
         name:'检索结果',
         component:()=>import('@/views/Explore.vue')
-      }
+      },
+      // 文献详情模块
+      {
+        path:'/article/:paper_id',
+        name:'论文详情',
+        component:()=>import('@/views/Article')
+      },
     ]
   },
   {
@@ -64,12 +70,7 @@ const routes = [
     name:'个人主页',
     component:()=>import('@/views/PersonHomepage')
   },
-  // 文献详情模块
-  {
-    path:'/article/:paper_id',
-    name:'论文详情',
-    component:()=>import('@/views/Article')
-  },
+  
   {
     path:'/login',
     name:'登录',

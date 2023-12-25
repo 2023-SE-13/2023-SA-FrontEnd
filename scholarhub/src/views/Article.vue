@@ -257,7 +257,7 @@ export default {
     return {
       msg: {
         paper_id: '',
-        paper_name: '',
+        article_name: '',
 
       },
       // 引用
@@ -734,7 +734,7 @@ export default {
 
     //认领学术成果
     claimAcademic() {
-      ApplyWork(this.msg.paper_id, localStorage.getItem('token')).then(res => {
+      ApplyWork(this.msg.paper_id, this.$store.state.token).then(res => {
         if (res.status === 'success') {
           this.$message.success("已发送认领学术成果申请");
         } else {
@@ -753,8 +753,13 @@ export default {
     //收藏方法
     openCollect() {
       this.msg.paper_id = this.articleDetails._id;
-      this.msg.paper_name = this.articleDetails._score.display_name;
+      this.msg.article_name = this.articleDetails._source.title;
+
+      console.log(this.msg.article_name);
+      console.log(localStorage.getItem('token'));
+      console.log(this.$store.state.token);
       FavoritePaper(this.msg, localStorage.getItem('token')).then(res => {
+
         if (res.status === 'success') {
           console.log("openCollect")
           this.activeDetail.collected_num++;
