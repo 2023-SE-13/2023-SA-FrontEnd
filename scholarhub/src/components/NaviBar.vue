@@ -38,6 +38,7 @@
 export default {
   data() {
     return {
+      token: null,
       activeIndex: null,
       naviUnits: [
         { content: "首页", link_to: "/main" },
@@ -80,11 +81,11 @@ export default {
         this.$router.push("/settings")
       }
       if (command === 'e') {
+        this.isLogin = false
+        localStorage.removeItem("token")
+        this.token = null
         if (this.$route.path !== '/main') {
           this.$router.push("/main")
-          this.isLogin = false
-        } else {
-          this.isLogin = false
         }
       }
     },
@@ -100,6 +101,10 @@ export default {
     }
   },
   mounted() {
+    this.token = localStorage.getItem("token")
+    if (this.token != null){
+      this.isLogin = true
+    }
     if (this.input1 === null || this.input1 === '') {
       this.$refs.button.$el.style.cursor = 'not-allowed'
     }

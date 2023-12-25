@@ -2,9 +2,9 @@
   <div class="explore-unit">
       <div class="result-unit" @click="gotoArticle">
           <!-- 论文题目 -->
-          <h2 class="unit-title">
+          <h1 class="unit-title">
           {{ this.paperData._source.title }}
-          </h2>
+          </h1>
           <!-- 作者 -->
           <div class="unit-author">
               <i class="el-icon-user-solid">
@@ -21,7 +21,8 @@
           <div class="unit-keywords">
           POPs Primary and secondary sources Primary and secondary emissions
           Primary and secondary distribution patterns Primary and secondary
-          fractionations
+          fractionationssadasdsaPOPs Primary and secondary sources Primary and secondary emissions
+            Primary and secondary distribution patterns Primary and secondary
           </div>
       </div>
   </div>
@@ -51,6 +52,19 @@ export default {
 .explore-unit {
   background-color: rgb(221, 236, 255);
   width: 95%;
+  height: 135px;
+  /* padding: 10px; */
+  display: block;
+  margin: 12px 15px;
+  padding: 10px;
+  font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  box-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+.explore-unit:hover {
+  background-color: rgb(221, 236, 255);
+  width: 95%;
   min-height: 140px;
   max-height: 240px;
   /* padding: 10px; */
@@ -58,15 +72,22 @@ export default {
   margin: 5px 15px;
   padding: 10px;
   font-family: Inter, Roboto, pingfang SC, hiragino sans gb, Apple SD Gothic Neo, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, helvetica neue, arial, microsoft yahei ui, microsoft yahei, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  box-shadow: 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
 }
 
 .unit-title {
-  font-size: 18px;
+  font-size: 25px;
   color: #2f3a91;
   font-weight: 600;
   font-synthsis: style;
   line-height: 2.0;
+  margin-left: 20px;
+  text-align: left;
+  max-width: 800px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   word-break: break-word;
   cursor: pointer;
 }
@@ -90,6 +111,7 @@ export default {
 }
 
 .unit-author i span {
+  font-size: 15px;
   -webkit-line-clamp: 1; /* 控制显示的行数 */
 }
 

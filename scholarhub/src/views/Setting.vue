@@ -11,12 +11,13 @@
     <div class="cell certification">
     <el-divider></el-divider>
     <div class="cell">
-      <span style="font-size: 18px;font-weight: bold;margin-left: 3%"><i class="el-icon-info" style="margin-right: 4px"></i>实名认证</span>
+      <span style="font-size: 18px;font-weight: bold;margin-left: 3%;"><i class="el-icon-info" style="margin-right: 4px"></i>实名认证</span>
       <span style="color: darkgrey; margin-left: 8%">平台部分功能使用需要先完成实名认证</span>
     </div>
       <el-divider></el-divider>
     </div>
 
+    <div class="cell content">
     <div class="cell">
       <span style="font-size: 16px;font-weight: bold;margin-left: 3%">实名认证</span>
       <span style="padding-left: 10%;margin-right: 60%;color: darkgrey">
@@ -25,6 +26,7 @@
       <el-button class="binding-btn" v-if="!isBound" type="primary" round @click="gotoBinding">认证</el-button>
     </div>
     <el-divider></el-divider>
+    </div>
 
     <div class="cell">
       <span style="font-size: 16px;font-weight: bold;margin-left: 3%">管理员认证</span>
@@ -52,11 +54,13 @@
     </div>
     <el-divider></el-divider>
 
-    <div class="cell">
-      <span style="font-size: 16px;font-weight: bold;margin-left: 3%">修改密码</span>
-      <el-button class="edit-pwd-btn" type="danger" round @click="EditPwd = true" style="margin-left: 72.5%">修改</el-button>
+    <div class="cell content">
+      <div class="cell">
+        <span style="font-size: 16px;font-weight: bold;margin-left: 3%">修改密码</span>
+        <el-button class="edit-pwd-btn" type="danger" round @click="EditPwd = true" style="margin-left: 72.5%">修改</el-button>
+      </div>
+      <el-divider></el-divider>
     </div>
-    <el-divider></el-divider>
 
     <el-dialog
         title="绑定邮箱"
@@ -89,7 +93,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="danger" @click="EditEmail = false">取 消</el-button>
-        <el-button type="primary" @click="submitEmail">确 定</el-button>
+        <el-button type="primary" @click="changeEmail">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -108,22 +112,24 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="danger" @click="EditPwd = false">取 消</el-button>
-        <el-button type="primary" @click="saveNewPwd">确 定</el-button>
+        <el-button type="primary" @click="changePwd()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 
   <div class="right-bar">
     <div class="placeholder">
+      <div class="icon-stt">
+        <i class="el-icon-setting" style="color: #efebeb;"></i>
+        <i class="el-icon-setting" style="margin-left: -100px;font-size: 150px;margin-right: 50px"></i></div>
     </div>
   </div>
   </div>
 </template>
 
 <script>
-import { SendCode, ApplyAdmin } from "@/api/api";
+import { SendCode, ApplyAdmin, ChangeUserPassword } from "@/api/api";
 
-window.isAdmin = false;
 export default {
   data() {
     return {
@@ -219,39 +225,24 @@ export default {
       }
     },
 
-    async submitEmail() {
-      // try {
-      //   await this.$refs.regForm.validate();
-      //   const { email, code } = this.emailForm;
-      //   const response = await this.$axios.post('/api/submit', {
-      //     email,
-      //     code
-      //   });
-      //   console.log('提交成功', response.data);
-      //   this.EditEmail = false;
-      // } catch (error) {
-      //   console.error('绑定失败', error);
-      // }
+    async changeEmail() {
+
     },
 
-    async saveNewPwd() {
-
+    async changePwd() {
+      ChangeUserPassword(this.pwdForm.new_pwd, localStorage.getItem('token')).then(res => {
+        console.log(res);
+      })
     },
 
     async applyAdmin() {
-      const AdminCode = this.AdminCode;
-      // 检查AdminCode长度是否为六个字符
-      if (AdminCode.length !== 6) {
-        throw new Error('AdminCode必须是六个字符');
-      }
-      try {
-        const res = await ApplyAdmin(AdminCode, localStorage.getItem('token'));
+      const data = new FormData();
+      data.append('code', this.AdminCode);
+      ApplyAdmin(data, localStorage.getItem('token')).then(res => {
         console.log(res);
         window.isAdmin = true;
         this.isAdmin = true;
-      } catch (error) {
-        console.error(error);
-      }
+      })
     }
   }
 };
@@ -295,6 +286,7 @@ export default {
   width: 350px; /* 右侧边栏的宽度 */
   height: 100vh;
   border: 1px solid #ccc;
+  position: relative;
   /* 样式 */
 }
 
@@ -313,6 +305,10 @@ export default {
 /* 实名认证和账号设置的背景颜色 */
 .certification, .account-settings {
   background-color: #f5f5f5;
+}
+
+.content{
+  background-color: white;
 }
 
 .edit-pwd-btn, .edit-email-btn, .binding-btn, .admin-btn {
@@ -347,6 +343,14 @@ export default {
   top: 48px;
   left: 15px;
   align-items: center;
+}
+
+.icon-stt {
+  color: #e0dcdc;
+  font-size: 200px;
+  z-index: -10;
+  margin-left: -580px;
+  margin-top: 570px;
 }
 
 </style>

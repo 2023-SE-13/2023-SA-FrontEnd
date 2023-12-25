@@ -2,7 +2,7 @@
     <div class="home-page">
         <div class="img-container">
             <div class="search-bar">
-                <el-input placeholder="发现你感兴趣的内容..." @input="allow" v-model="input3" class="input-with-select">
+                <el-input @keyup.enter.native="Search" placeholder="发现你感兴趣的内容..." @input="allow" v-model="input3" class="input-with-select">
                     <el-select class="select" v-model="select" slot="prepend" placeholder="请选择">
                         <el-option label="标题" value="1"></el-option>
                         <el-option label="关键词" value="2"></el-option>
@@ -17,15 +17,14 @@
                     <el-link slot="append" id="pro-search" type="primary" :underline="false"
                         @click="dialogVisible = true">高级检索</el-link>
                     <!-- <el-button id="pro-search" slot="append" icon="el-icon-search">高级检索</el-button> -->
-                    <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search" ref="button"
-                        :disabled="NotAllowSearch">检索</el-button>
+                    <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search" ref="button">检索</el-button>
                 </el-input>
             </div>
         </div>
         <div class="paper-selection">
             <PaperUnit v-for="index in 4" :key="index"></PaperUnit>
         </div>
-        <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+        <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%">
             <!-- <span>这是一段信息</span> -->
             <div>
                 <el-input placeholder="请输入标题" class="pro-input" v-model="input4">
@@ -40,7 +39,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button class="pro-but" style="background-color: rgba(47, 58, 145, .8) !important;" type="primary"
-                    @click="Jump()">确 定</el-button>
+                    @click="ProSearch()">确 定</el-button>
                 <el-button class="pro-but" @click="ResetProSearch()">重置条件</el-button>
             </span>
         </el-dialog>
@@ -60,8 +59,8 @@ export default {
             input4: '',
             input5: '',
             input6: '',
-            select: '',
-            select2: '',
+            select: '1',
+            select2: '1',
             dialogVisible: false,
             searchField: {
                 search_field: '',
@@ -70,7 +69,26 @@ export default {
                 sort_order: '',
                 sort_type: ''
             },
-            NotAllowSearch: true
+            proSearchField: {
+                sort_by: '',
+                sort_order: '',
+                search_list: []
+            },
+            proSearchFieldt: {
+                sort_by: 'desc',
+                sort_order: '',
+                search_list: [
+                    {
+                        search_content: '111',
+                        search_field: 'title'
+                    },
+                    {
+                        search_content: '111',
+                        search_field: 'title'
+                    }
+                ]
+            },
+
         }
     },
     components: { PaperUnit }
@@ -82,24 +100,44 @@ export default {
                 this.input4 = '',
                 this.input5 = '',
                 this.input6 = '',
-                this.select = '',
-                this.select2 = ''
-        },
-        handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => { });
+                this.select = '1',
+                this.select2 = '1'
         },
         allow() {
             if (this.select !== null && this.select !== '' && this.select2 !== null && this.select2 !== '' && this.input3 !== null && this.input3 !== '') {
                 this.$refs.button.$el.style.cursor = 'pointer'
-                this.NotAllowSearch = false
             } else {
                 this.$refs.button.$el.style.cursor = 'not-allowed'
-                this.NotAllowSearch = true
             }
+        },
+        ProSearch() {
+            console.log(this.proSearchField)
+
+            this.proSearchField.sort_by = ''
+            this.proSearchField.sort_order = 'desc'
+            if (this.input4 === '' && this.input5 === '' && this.input6 === '') {
+                this.$message({
+                    type:'error',
+                    message:'请输入搜索内容'
+                })
+            } else {
+                if (this.input4 !== '') {
+                    this.proSearchField.search_list.push({ search_field: 'title', search_content: this.input4 })
+                }
+                if (this.input5 !== '') {
+                    this.proSearchField.search_list.push({ search_field: 'keywords.keyword', search_content: this.input5 })
+                }
+                if (this.input6 !== '') {
+                    this.proSearchField.search_list.push({ search_field: 'authorships.author.display_name', search_content: this.input6 })
+                }
+                this.$router.push({
+                    path: '/explore/' + btoa(encodeURIComponent(JSON.stringify(this.proSearchField)))
+                })
+                console.log(this.proSearchField)
+            }
+
+
+
         },
         Jump() {
             this.dialogVisible = false;
@@ -118,7 +156,7 @@ export default {
                     this.searchField.search_field = 'title'
                     break
                 case '2':
-                    this.searchField.search_field = 'keywords'
+                    this.searchField.search_field = 'keywords.keyword'
                     break
                 case '3':
                     this.searchField.search_field = 'authorships.author.display_name'
@@ -193,7 +231,6 @@ export default {
 
 /deep/.el-select {
     width: 130px;
-    border-radius: null;
 }
 
 /deep/.el-input__inner {
