@@ -33,7 +33,7 @@
                   <el-button type="primary" size="small" @click="modify_info">编辑</el-button>
                 </template>
                 <template v-else slot="extra">
-                  <el-button type="primary" size="small" @click="modify_confirm">确认</el-button>
+                  <el-button type="primary" size="small" @click="modify_confirm()">确认</el-button>
                   <el-button type="danger" size="small" @click="modify_cancel">取消</el-button>
                   <el-button type="warning" size="small" @click="modify_clear">清空</el-button>
                 </template>
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="MidNav">
-        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
+        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect()" background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
           <el-menu-item index="2">我的文库</el-menu-item>
