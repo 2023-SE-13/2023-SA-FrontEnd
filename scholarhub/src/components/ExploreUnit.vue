@@ -17,8 +17,7 @@
       <!-- <div class="unit-source">《ENVIRONMENTAL SCIENCE AND ECOTECHNOLOGY》</div> -->
       <!-- 论文摘要 -->
       <div class="unit-preview">
-        {{ this.abstract
-        }}
+        {{ this.abstract }}
       </div>
       <div>
         来源期刊:《{{ this.journal }}》
