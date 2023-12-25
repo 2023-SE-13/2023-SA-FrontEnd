@@ -287,7 +287,10 @@ export default {
       this.inputDisabled = true;
     },
     modify_clear() {
-      this.input = '';
+      this.username = '';
+      this.name = '';
+      this.institution = '';
+      this.email = '';
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);

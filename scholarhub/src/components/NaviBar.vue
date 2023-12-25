@@ -43,7 +43,7 @@ export default {
         { content: "首页", link_to: "/main" },
         { content: "资源介绍", link_to: "/introduce" },
         { content: "学术交流", link_to: "/temp1" },
-        { content: "网站声明", link_to: "/temp1" },
+        { content: "网站声明", link_to: "/declaration" },
         { content: "关于我们", link_to: "/about" }
       ],
       input1: '',

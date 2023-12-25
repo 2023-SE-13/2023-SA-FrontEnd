@@ -31,6 +31,11 @@ const routes = [
         name:'暂定1',
         component:()=>import('@/views/Temp')
       },
+      {
+        path:'/declaration',
+        name:'暂定1',
+        component:()=>import('@/views/WebDeclaration')
+      },
       // {
       //   path:'/main',
       //   name:'首页1',
