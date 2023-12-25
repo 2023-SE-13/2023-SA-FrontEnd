@@ -63,11 +63,11 @@
     </div>
 
     <el-dialog
-        title="绑定邮箱"
+        title="换绑邮箱"
         :visible.sync="EditEmail"
         width="500px"
         :before-close="handleClose">
-      <span>邮箱验证通过后，可以使用绑定的邮箱登录</span>
+      <span>邮箱验证通过后，更换账号绑定的邮箱</span>
       <el-form :model="emailForm" :rules="emailFormRules" ref="regForm">
         <el-form-item label="绑定邮箱" prop="email">
           <el-input v-model="emailForm.email"></el-input>
@@ -80,13 +80,13 @@
         <el-form-item label="验证码" prop="code">
           <div class="verification-code">
             <el-input
-                v-for="index in 6"
+                v-for="index in 4"
                 :key="index"
-                v-model="verificationCode[index - 1]"
+                v-model="verificationCode1[index - 1]"
                 :maxlength="1"
                 ref="verificationInputs"
                 style="width: 40px; margin-right: 5px; text-align: center;"
-                @input="handleVerificationInput(index)"
+                @input="handleVerificationInput1(index)"
             ></el-input>
           </div>
         </el-form-item>
@@ -110,12 +110,51 @@
           <el-input v-model="pwdForm.new_pwd" show-password></el-input>
         </el-form-item>
       </el-form>
+      <el-link type="primary" @click="ForgetPwd = true">忘记密码</el-link>
       <span slot="footer" class="dialog-footer">
         <el-button type="danger" @click="EditPwd = false">取 消</el-button>
         <el-button type="primary" @click="changePwd()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
+
+    <el-dialog
+        title="忘记密码"
+        :visible.sync="ForgetPwd"
+        width="500px"
+        :before-close="handleClose">
+      <span>请输入需要找回密码的账号邮箱</span>
+      <el-form :model="forgetForm" :rules="forgetFormRules" ref="regForm">
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="forgetForm.email"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="sendCode-btn" @click="sendVerificationCode2" :disabled="verificationSent">
+            {{ verificationSent ? '已发送' : '发送验证码' }}
+          </el-button>
+        </el-form-item>
+        <el-form-item label="新密码" prop="new_pwd">
+          <el-input v-model="forgetForm.new_pwd" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="验证码" prop="code">
+          <div class="verification-code">
+            <el-input
+                v-for="index in 4"
+                :key="index"
+                v-model="verificationCode2[index - 1]"
+                :maxlength="1"
+                ref="verificationInputs2"
+                style="width: 40px; margin-right: 5px; text-align: center;"
+                @input="handleVerificationInput2(index)"
+            ></el-input>
+          </div>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="danger" @click="ForgetPwd = false">取 消</el-button>
+        <el-button type="primary" @click="changePwdByEmail">确 定</el-button>
+      </span>
+    </el-dialog>
 
   <div class="right-bar">
     <div class="placeholder">
@@ -128,31 +167,40 @@
 </template>
 
 <script>
-import { SendCode, ApplyAdmin, ChangeUserPassword } from "@/api/api";
+import { SendCode, ApplyAdmin, ChangeUserPassword, ChangeUserEmail } from "@/api/api";
 
 export default {
   data() {
     return {
       isAdmin: window.isAdmin,
-      Email: localStorage.getItem('email'),
-      realName: localStorage.getItem('name'),
-      verificationCode: ['', '', '', '', '', ''],
+      Email: '',
+      realName: '',
+      verificationCode1: ['', '', '', ''],
+      verificationCode2: ['', '', '', ''],
       AdminCode: '',
+      ForgetPwd: false,
+      forgetForm:{
+        email: '',
+        new_pwd: '',
+        code: ['','','','']
+      },
+      forgetFormRules: {
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+        ],
+        code: [
+          { required: true, message: ' ', trigger: 'blur' },
+        ]
+      },
 
       EditEmail: false,
       emailForm:{
         email: '',
-        code: ['', '', '', '', '', '']
+        code: ['', '', '', '']
       },
       emailFormRules: {
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
-          {
-            //邮箱校验规则
-            pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-            message: '请输入合法的邮箱',
-            trigger: 'blur'
-          }
         ],
         code: [
           { required: true, message: ' ', trigger: 'blur' },
@@ -188,6 +236,26 @@ export default {
           .catch(_ => {
           });
     },
+    handleVerificationInput1(index) {
+      const code = this.verificationCode1[index - 1];
+      if (code.length === 1 && index < 4) {
+        // 移动焦点到下一个输入框
+        this.$refs.verificationInputs[index].focus();
+      } else if (code.length === 0 && index > 1) {
+        // 如果删除字符时，回退到前一个输入框
+        this.$refs.verificationInputs[index - 2].focus();
+      }
+    },
+    handleVerificationInput2(index) {
+      const code = this.verificationCode2[index - 1];
+      if (code.length === 1 && index < 4) {
+        // 移动焦点到下一个输入框
+        this.$refs.verificationInputs2[index].focus();
+      } else if (code.length === 0 && index > 1) {
+        // 如果删除字符时，回退到前一个输入框
+        this.$refs.verificationInputs2[index - 2].focus();
+      }
+    },
 
     sendVerificationCode() {
       // 处理发送验证码的逻辑
@@ -214,23 +282,47 @@ export default {
       SendCode(formdata)
       this.verificationSent = true; // 标记验证码已发送
     },
-    handleVerificationInput(index) {
-      const code = this.verificationCode[index - 1];
-      if (code.length === 1 && index < 6) {
-        // 移动焦点到下一个输入框
-        this.$refs.verificationInputs[index].focus();
-      } else if (code.length === 0 && index > 1) {
-        // 如果删除字符时，回退到前一个输入框
-        this.$refs.verificationInputs[index - 2].focus();
+
+    sendVerificationCode2() {
+      // 处理发送验证码的逻辑
+      let formdata = new FormData();
+      if (typeof this.forgetForm.email == "undefined" || this.forgetForm.email == null || this.forgetForm.email === "") {
+        this.$notify({
+          title: '警告',
+          message: '邮箱不能为空',
+          type: 'warning'
+        });
+        return;
       }
+      //正则表达式判断邮箱格式
+      let emailReg = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+      if (!emailReg.test(this.forgetForm.email)) {
+        this.$notify({
+          title: '警告',
+          message: '邮箱格式不正确',
+          type: 'warning'
+        });
+        return;
+      }
+      formdata.append('email', this.forgetForm.email)
+      SendCode(formdata)
+      this.verificationSent = true; // 标记验证码已发送
     },
 
     async changeEmail() {
-
+      ChangeUserEmail(this.emailForm.email, localStorage.getItem('token')).then(res => {
+        console.log(res);
+      })
     },
 
     async changePwd() {
       ChangeUserPassword(this.pwdForm.new_pwd, localStorage.getItem('token')).then(res => {
+        console.log(res);
+      })
+    },
+
+    async changePwdByEmail() {
+      ChangeUserPassword(this.forgetForm.new_pwd, localStorage.getItem('token')).then(res => {
         console.log(res);
       })
     },
