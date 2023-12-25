@@ -57,6 +57,21 @@ export function VerifyCode(data, token) {
     })
 }
 
+
+// 修改邮箱
+export function ChangeUserEmail(data,token){
+    return service({
+        method:'post',
+        url:'/user/change_user_email',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
+
+
+
 // 申请成为管理员
 export function ApplyAdmin(data, token) {
     return service({
