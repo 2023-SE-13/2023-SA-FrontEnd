@@ -128,13 +128,13 @@
           </div>
           <div class="right4_1" v-show="Menu4Idx === '1'">
             <el-table :data="scholar_certification.slice(begin1, end1)">
-              <el-table-column prop="date" label="申请时间" width="240">
+              <el-table-column prop="datetime" label="申请时间" width="240">
                 <template slot-scope="scope">
                   <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                  <span style="margin-left: 10px">{{ scope.row.datetime }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="申请用户" width="240">
+              <el-table-column prop="username" label="申请用户" width="240">
                 <template slot-scope="scope">
                   <el-popover placement="top" trigger="hover">
                     <el-descriptions title="用户信息" :column="3" border>
@@ -143,7 +143,7 @@
                           <i class="el-icon-user"></i>
                           <span style="margin-left: 3px">用户名</span>
                         </template>
-                        {{ scope.row.name }}
+                        {{ scope.row.username }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
@@ -173,7 +173,7 @@
                       </el-descriptions-item>
                     </el-descriptions>
                     <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                      <el-tag size="medium">{{ scope.row.username }}</el-tag>
                     </div>
                   </el-popover>
                 </template>
@@ -438,16 +438,14 @@ export default {
   },
   mounted() {
     this.token = localStorage.getItem("token")
-    if (this.token === null) {
-      this.$router.push("/login")
-    }
-    getInformation(token).then(res => {
+    this.username = "younsur" + this.$route.params.id.toString();
+    this.institution = "清华大学";
+    getInformation(this.token).then(res => {
       if (res.data.result === 0){
         this.username = res.data.username
         this.name = res.data.name
         this.imageUrl = res.data.photo_url
         this.isManager = res.data.is_admin
-
       } else {
         this.$notify({
           title: '警告',
@@ -457,6 +455,20 @@ export default {
         return;
       }
     })
+    ShowAuthorMessage(this.token).then(res => {
+      if (res.data.result === 0) {
+        this.scholar_certification = res.data.messages
+        console.log(this.scholar_certification)
+      } else {
+        console.log(res.data.messages)
+      }
+    })
+    ShowPaperMessage(this.token).then(res => {
+      //todo: 接口处理
+    })
+    if (this.token === null) {
+      this.$router.push("/login")
+    }
   },
   data() {
     return {
@@ -481,10 +493,16 @@ export default {
       begin2: 0,
       end2: 10,
       scholar_certification: [
-
+        {
+          id: '',
+          author_id: '',
+          username: '',
+          send_user_id: '',
+          datetime: '',
+        }
       ],
       work_certification: [
-        
+
       ],
       infoDialog: false,
       infoDialogTitle: true,
