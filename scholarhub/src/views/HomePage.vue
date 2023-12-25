@@ -25,7 +25,7 @@
         <div class="paper-selection">
             <PaperUnit v-for="index in 4" :key="index"></PaperUnit>
         </div>
-        <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+        <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%">
             <!-- <span>这是一段信息</span> -->
             <div>
                 <el-input placeholder="请输入标题" class="pro-input" v-model="input4">
@@ -103,13 +103,6 @@ export default {
                 this.input6 = '',
                 this.select = '',
                 this.select2 = ''
-        },
-        handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => { });
         },
         allow() {
             if (this.select !== null && this.select !== '' && this.select2 !== null && this.select2 !== '' && this.input3 !== null && this.input3 !== '') {
