@@ -156,7 +156,7 @@ export default {
     getInformation(this.token).then(res => {
       if (res.data.result === 0) {
         this.id = res.data.id
-        this.photoURL = res.data.photo_url
+        this.photoURL = res.data.photo_url_out
       } else {
         this.$notify({
           title: '错误',

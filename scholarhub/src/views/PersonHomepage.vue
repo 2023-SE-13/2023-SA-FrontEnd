@@ -7,11 +7,12 @@
       <div class="Info">
         <el-upload
             class="avatar_upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="头像"  width="170px" height="170px">
+            :before-upload="beforeAvatarUpload"
+            :http-request="uploadPic">
+          <img class="image-container" id="Photo" :src=this.imageUrl alt="头像"  width="170px" height="170px">
           <div class="image-black-cover"><i class="el-icon-plus"></i></div>
         </el-upload>
         <div class="PersonalInfo">
@@ -222,7 +223,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-pagination background layout="prev, pager, next" :total="1000" @prev-click="prev" @next-click="next" @current-change="pageChange">
+            <el-pagination background layout="prev, pager, next" :total=Math.ceil(scholar_certification.length/10) @prev-click="prev" @next-click="next" @current-change="pageChange">
             </el-pagination>
           </div>
           <div class="right4_2" v-show="Menu4Idx === '2'">
@@ -321,7 +322,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-pagination background layout="prev, pager, next" :total=this.work_certification.length/10 @prev-click="prev2" @next-click="next2" @current-change="pageChange2">
+            <el-pagination background layout="prev, pager, next" :total=Math.ceil(this.work_certification.length/10) @prev-click="prev2" @next-click="next2" @current-change="pageChange2">
             </el-pagination>
           </div>
           <div class="right4_3" v-show="Menu4Idx === '3'">
@@ -433,6 +434,7 @@ import {ShowAuthorMessage} from "@/api/api";
 import {ShowPaperMessage} from "@/api/api";
 import {HandleAuthorMessage} from "@/api/api";
 import {HandlePaperMessage} from "@/api/api";
+import {UploadAvatar} from "@/api/api";
 export default {
   name: "PersonHomepage",
   computed: {
@@ -452,7 +454,7 @@ export default {
       if (res.data.result === 0){
         this.username = res.data.username
         this.name = res.data.name
-        this.imageUrl = res.data.photo_url
+        this.imageUrl = res.data.photo_url_out
         this.isManager = res.data.is_admin
       } else {
         this.$notify({
@@ -717,6 +719,27 @@ export default {
       console.log(val)
       this.begin2 = (val - 1) * 10;
       this.end2 = val * 10;
+    },
+    uploadPic(file) {
+      const formData = new FormData();
+      formData.append('avatar', file.file);
+      console.log(file.file)
+      UploadAvatar(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '上传成功',
+            type: 'success'
+          });
+          this.$router.go(0)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '上传失败',
+            type: 'warning'
+          });
+        }
+      })
     }
   }
 }
