@@ -17,7 +17,8 @@
       <!-- <div class="unit-source">《ENVIRONMENTAL SCIENCE AND ECOTECHNOLOGY》</div> -->
       <!-- 论文摘要 -->
       <div class="unit-preview">
-        {{ this.paperData._source.abstract }}
+        {{ this.abstract
+        }}
       </div>
       <div>
         来源期刊:《{{ this.journal }}》
@@ -27,7 +28,8 @@
           Primary and secondary distribution patterns Primary and secondary
           fractionationssadasdsaPOPs Primary and secondary sources Primary and secondary emissions
             Primary and secondary distribution patterns Primary and secondary -->
-        <span>关键词:</span> <span v-for="(keyword, index) in this.paperData._source.keywords" :key="index">{{ keyword.keyword
+        <span>关键词:</span> <span v-for="(keyword, index) in this.paperData._source.keywords" :key="index">{{
+          keyword.keyword
         }},</span>
       </div>
     </div>
@@ -45,7 +47,8 @@ export default {
     return {
       id: 'https://openalex.org/W2783557622',
       isOverflow: true,
-      journal: 'unknown'
+      journal: 'unknown',
+      abstract: 'unknown'
     };
   },
   methods: {
@@ -57,6 +60,9 @@ export default {
     console.log(this.paperData)
     if (this.paperData._source.primary_location) {
       this.journal = this.paperData._source.primary_location.source.display_name
+    }
+    if (this.paperData._source.abstract_inverted_index) {
+      this.abstract = this.paperData._source.abstract_inverted_index
     }
   }
 };
@@ -175,4 +181,5 @@ export default {
 
 .unit-preview:hover {
   color: #7e7979;
-}</style>
+}
+</style>
