@@ -24,9 +24,9 @@
                                         <span>范围：</span>
                                       <div style="margin-top: 5px">
                                         <span style="color: #0274B3;" class="year-input">
-                                            <el-input size="mini" v-model="year[0]" style="width: 90%;margin-right: 10px;margin-left: 5px"></el-input>
+                                            <el-input size="mini" v-model="year[0]" style="width: 30%;margin-right: 10px;margin-left: 5px;font-size: 13px"></el-input>
                                             &nbsp;~&nbsp;
-                                            <el-input size="mini" v-model="year[1]" style="width: 90%;margin-left: 4px"></el-input>
+                                            <el-input size="mini" v-model="year[1]" style="width: 30%;margin-left: 4px;font-size: 13px"></el-input>
                                         </span>
                                       </div>
 
