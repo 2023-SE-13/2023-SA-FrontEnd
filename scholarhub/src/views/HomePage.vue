@@ -17,8 +17,7 @@
                     <el-link slot="append" id="pro-search" type="primary" :underline="false"
                         @click="dialogVisible = true">高级检索</el-link>
                     <!-- <el-button id="pro-search" slot="append" icon="el-icon-search">高级检索</el-button> -->
-                    <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search" ref="button"
-                        :disabled="NotAllowSearch">检索</el-button>
+                    <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search" ref="button">检索</el-button>
                 </el-input>
             </div>
         </div>
@@ -60,8 +59,8 @@ export default {
             input4: '',
             input5: '',
             input6: '',
-            select: '',
-            select2: '',
+            select: '1',
+            select2: '1',
             dialogVisible: false,
             searchField: {
                 search_field: '',
@@ -89,7 +88,7 @@ export default {
                     }
                 ]
             },
-            NotAllowSearch: true
+
         }
     },
     components: { PaperUnit }
@@ -101,16 +100,14 @@ export default {
                 this.input4 = '',
                 this.input5 = '',
                 this.input6 = '',
-                this.select = '',
-                this.select2 = ''
+                this.select = '1',
+                this.select2 = '1'
         },
         allow() {
             if (this.select !== null && this.select !== '' && this.select2 !== null && this.select2 !== '' && this.input3 !== null && this.input3 !== '') {
                 this.$refs.button.$el.style.cursor = 'pointer'
-                this.NotAllowSearch = false
             } else {
                 this.$refs.button.$el.style.cursor = 'not-allowed'
-                this.NotAllowSearch = true
             }
         },
         ProSearch() {
@@ -234,7 +231,6 @@ export default {
 
 /deep/.el-select {
     width: 130px;
-    border-radius: null;
 }
 
 /deep/.el-input__inner {
