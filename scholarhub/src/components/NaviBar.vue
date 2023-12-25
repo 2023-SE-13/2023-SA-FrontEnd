@@ -152,6 +152,8 @@ export default {
     this.token = localStorage.getItem("token")
     if (this.token != null) {
       this.isLogin = true
+    } else {
+      return;
     }
     getInformation(this.token).then(res => {
       if (res.data.result === 0) {
