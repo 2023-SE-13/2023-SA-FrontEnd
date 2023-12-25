@@ -252,24 +252,20 @@ export default {
     width: 20%;
     height: 100%;
     float: left;
-}
-
-.work_left {
-  margin-top: -20px;
+    margin-left: 3%; /* 改这里 */
+    margin-top: -20px;
 }
 
 .work .work_right {
-    width: 80%;
+    width: 70%;
     min-height: 105vh;
     float: left;
     margin-top: 10px;
-  //background-color: #f3f5f8;
 }
 
 .work .work_right .work_right_content {
     /*margin: 0 7.5%;*/
     padding: 1%;
-    width: 82.6%;
     /* height: 92%; */
     min-height: 105vh;
     background-color: white;
