@@ -70,7 +70,18 @@ export function ChangeUserEmail(data,token){
     })
 }
 
-
+// 修改用户密码
+export function ChangeUserPassword(data,token){
+    data = JSON.stringify(data)
+    return service({
+        method:'post',
+        url:'/user/change_user_password',
+        data,
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+}
 
 // 申请成为管理员
 export function ApplyAdmin(data, token) {
