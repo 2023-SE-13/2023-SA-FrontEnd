@@ -188,7 +188,7 @@
                           <i class="el-icon-user"></i>
                           用户名
                         </template>
-                        {{ scope.row.name }}
+                        {{ scope.row.username }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
@@ -216,8 +216,10 @@
                 </template>
               </el-table-column>
               <el-table-column prop="operator" label="处理操作">
-                <el-button>同意</el-button>
-                <el-button>拒绝</el-button>
+                <template slot-scope="scope">
+                  <el-button @click="accept(scope.$index)">同意</el-button>
+                  <el-button @click="refuse(scope.$index)">拒绝</el-button>
+                </template>
               </el-table-column>
             </el-table>
             <el-pagination background layout="prev, pager, next" :total="1000" @prev-click="prev" @next-click="next" @current-change="pageChange">
@@ -425,7 +427,7 @@ import index from "vuex";
 import {getInformation} from "@/api/api";
 import {ShowAuthorMessage} from "@/api/api";
 import {ShowPaperMessage} from "@/api/api";
-
+import {HandleAuthorMessage} from "@/api/api";
 export default {
   name: "PersonHomepage",
   computed: {
@@ -574,6 +576,50 @@ export default {
     },
     cancel_interest() {
       this.isInterested = false;
+    },
+    accept(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '1');
+      formData.append('message_id', this.scholar_certification[num].id);
+      HandleAuthorMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已同意',
+            type: 'success'
+          });
+          this.scholar_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    refuse(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '0');
+      formData.append('message_id', this.scholar_certification[num].id);
+      HandleAuthorMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已拒绝',
+            type: 'success'
+          });
+          this.scholar_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
     },
     prev() {
       if (this.begin1 >= 10) {
