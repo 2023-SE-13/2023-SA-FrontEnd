@@ -21,9 +21,9 @@
     <div class="cell">
       <span style="font-size: 16px;font-weight: bold;margin-left: 3%">实名认证</span>
       <span style="padding-left: 10%;margin-right: 60%;color: darkgrey">
-            {{ isBound ? Name : '未实名' }}
+            {{ realName }}
           </span>
-      <el-button class="binding-btn" v-if="!isBound" type="primary" round @click="gotoBinding">认证</el-button>
+      <el-button class="binding-btn" v-if="!(realName === '')" type="primary" round @click="gotoBinding">认证</el-button>
     </div>
     <el-divider></el-divider>
     </div>
@@ -69,7 +69,7 @@
         :before-close="handleClose">
       <span>邮箱验证通过后，更换账号绑定的邮箱</span>
       <el-form :model="emailForm" :rules="emailFormRules" ref="regForm">
-        <el-form-item label="绑定邮箱" prop="email">
+        <el-form-item label="新绑定邮箱" prop="email">
           <el-input v-model="emailForm.email"></el-input>
         </el-form-item>
         <el-form-item>
@@ -357,12 +357,6 @@ export default {
         this.isAdmin = true;
       })
     },
-
-    async getInfo() {
-      getInformation(localStorage.getItem('token')).then(res => {
-
-      })
-    }
   }
 };
 
