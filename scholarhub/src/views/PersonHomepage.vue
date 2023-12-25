@@ -218,7 +218,7 @@
               <el-table-column prop="operator" label="处理操作">
                 <template slot-scope="scope">
                   <el-button @click="accept(scope.$index)">同意</el-button>
-                  <el-button>拒绝</el-button>
+                  <el-button @click="refuse(scope.$index)">拒绝</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -599,8 +599,27 @@ export default {
         }
       })
     },
-    cancel() {
-
+    refuse(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '0');
+      formData.append('message_id', this.scholar_certification[num].id);
+      HandleAuthorMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '已拒绝',
+            type: 'success'
+          });
+          this.scholar_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '操作失败',
+            type: 'warning'
+          });
+        }
+      })
     },
     prev() {
       if (this.begin1 >= 10) {
