@@ -58,6 +58,13 @@
               <i class="el-icon-finished" v-if="!isCancel">已关注</i>
               <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
             </el-button>
+            <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
+              <i class="el-icon-plus">关注</i>
+            </el-button>
+            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest" @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
+              <i class="el-icon-finished" v-if="!isCancel">已关注</i>
+              <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
+            </el-button>
           </span>
           </p>
           <p style="font-size: 16px;color: #8590a6;">机构：{{ institution }}</p>
@@ -124,7 +131,7 @@
               <el-table-column prop="date" label="申请时间" width="240">
                 <template slot-scope="scope">
                   <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
+                  <span style="margin-left: 10px">{{ scope.row.date }}</span>
                 </template>
               </el-table-column>
               <el-table-column prop="name" label="申请用户" width="240">
@@ -474,68 +481,10 @@ export default {
       begin2: 0,
       end2: 10,
       scholar_certification: [
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
+
       ],
       work_certification: [
-        {
-          date: '2023-12-22',
-          name: 'young'
-        }
+        
       ],
       infoDialog: false,
       infoDialogTitle: true,
