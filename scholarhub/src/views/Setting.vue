@@ -177,6 +177,7 @@ export default {
       isAdmin: window.isAdmin,
       email: '',
       realName: '',
+      verificationSent: false,
       verificationCode1: ['', '', '', ''],
       verificationCode2: ['', '', '', ''],
       AdminCode: '',
@@ -312,26 +313,41 @@ export default {
     },
 
     async changeEmail() {
-      ChangeUserEmail(this.emailForm.email, localStorage.getItem('token')).then(res => {
+      this.email.new_email = this.emailForm.email
+      ChangeUserEmail(this.email.new_email, localStorage.getItem('token')).then(res => {
         console.log(res);
+        this.$message({
+          type:'success',
+          message:'邮箱修改成功！'
+        })
+        this.EditEmail = false;
       })
     },
 
     changePwd() {
       this.password.password = this.pwdForm.new_pwd
       console.log(localStorage.getItem('token'))
+      console.log(this.password.password)
+      ChangeUserPassword(this.password.password, localStorage.getItem('token')).then(res => {
+        console.log(res);
+        this.$message({
+          type:'success',
+          message:'密码修改成功！'
+        })
+        this.EditPwd = false;
+      })
+    },
+
+    async changePwdByEmail() {
+      this.password.password = this.forgetForm.new_pwd
       ChangeUserPassword(this.password, localStorage.getItem('token')).then(res => {
         console.log(res);
         this.$message({
           type:'success',
           message:'密码修改成功！'
         })
-      })
-    },
-
-    async changePwdByEmail() {
-      ChangeUserPassword(this.forgetForm.new_pwd, localStorage.getItem('token')).then(res => {
-        console.log(res);
+        this.ForgetPwd = false;
+        this.EditPwd = false;
       })
     },
 
