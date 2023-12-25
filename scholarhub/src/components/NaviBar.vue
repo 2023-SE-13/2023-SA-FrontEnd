@@ -3,17 +3,18 @@
     <div class="navi-inner">
       <img class="logo" alt="logo" src="../assets/logo.png" @click="gotoMain">
       <div class="navi-item" v-for="(naviUnit, index) in naviUnits" :key="index" @click="changeActive(index)"
-           :class="{ active: activeIndex === index }">
+        :class="{ active: activeIndex === index }">
         <router-link :to="naviUnit.link_to">{{ naviUnit.content }}</router-link>
       </div>
       <div class="navi-search" v-show="this.$route.path !== '/main'">
         <el-select v-model="select" :popper-append-to-body="false" slot="prepend" class="navi-select">
-          <el-option label="标题" value="1" @click="select='标题'"></el-option>
-          <el-option label="关键词" value="2" @click="select='关键词'"></el-option>
-          <el-option label="作者" value="3" @click="select='作者'"></el-option>
+          <el-option label="标题" value="1" @click="select = '标题'"></el-option>
+          <el-option label="关键词" value="2" @click="select = '关键词'"></el-option>
+          <el-option label="作者" value="3" @click="select = '作者'"></el-option>
         </el-select>
         <el-input placeholder="搜索你感兴趣的内容" v-model="input1" class="navi-input" @input="allow" @keyup.enter.native="search">
-          <el-button slot="suffix" icon="el-icon-search" @click="search" ref="button"></el-button>
+          <el-button slot="suffix" icon="el-icon-search" @click="search" @mouseover.native="searchOver"
+            @mouseleave.native="searchLeave" ref="button"></el-button>
         </el-input>
       </div>
       <div v-show="isLogin" class="photo">
@@ -38,16 +39,24 @@
 export default {
   data() {
     return {
+      token: null,
       activeIndex: null,
       naviUnits: [
         { content: "首页", link_to: "/main" },
         { content: "资源介绍", link_to: "/introduce" },
         { content: "学术交流", link_to: "/temp1" },
-        { content: "网站声明", link_to: "/temp1" },
+        { content: "网站声明", link_to: "/declaration" },
         { content: "关于我们", link_to: "/about" }
       ],
+      searchField: {
+        search_field: '',
+        search_content: '',
+        sort_by: '',
+        sort_order: '',
+        sort_type: 'exact'
+      },
       input1: '',
-      select: '标题',
+      select: '1',
       isLogin: false,
       id: 'https://openalex.org/W2783557622'
     }
@@ -61,7 +70,7 @@ export default {
       this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
     },
     gotoMain() {
-      if(this.$route.path!=="/main"){
+      if (this.$route.path !== "/main") {
         this.$router.push("/main")
       }
     },
@@ -80,16 +89,40 @@ export default {
         this.$router.push("/settings")
       }
       if (command === 'e') {
+        this.isLogin = false
+        localStorage.removeItem("token")
+        this.token = null
         if (this.$route.path !== '/main') {
           this.$router.push("/main")
-          this.isLogin = false
-        } else {
-          this.isLogin = false
         }
       }
     },
     search() {
-      alert(this.input1)
+      if (this.input1 !== null && this.input1 !== '') {
+        //todo: search
+        this.searchField.sort_order = 'desc'
+        this.searchField.sort_by = ''
+        this.searchField.search_content = this.input1
+        if (this.select === '1') {
+          this.searchField.search_field = 'title'
+        } else if (this.select === '2') {
+          this.searchField.search_field = 'keywords.keyword'
+        } else {
+          this.searchField.search_field = 'authorships.author.display_name'
+        }
+        console.log(this.searchField)
+        if (this.$route.params.data !== btoa(encodeURIComponent(JSON.stringify(this.searchField)))) {
+          this.$router.push({
+            path: '/explore/' + btoa(encodeURIComponent(JSON.stringify(this.searchField)))
+          })
+          location.reload()
+        }
+      } else {
+        this.$message({
+          message: '请输入搜索内容',
+          type: 'info'
+        })
+      }
     },
     allow() {
       if (this.input1 !== null && this.input1 !== '') {
@@ -97,9 +130,27 @@ export default {
       } else {
         this.$refs.button.$el.style.cursor = 'not-allowed'
       }
-    }
+    },
+    searchOver() {
+      if (this.input1 !== null && this.input1 !== '') {
+        this.$refs.button.$el.style.color = '#2f3a91'
+      } else {
+        this.$refs.button.$el.style.color = '#bbbbbb'
+      }
+    },
+    searchLeave() {
+      if (this.input1 !== null && this.input1 !== '') {
+        this.$refs.button.$el.style.color = '#bbbbbb'
+      } else {
+        this.$refs.button.$el.style.color = '#bbbbbb'
+      }
+    },
   },
   mounted() {
+    this.token = localStorage.getItem("token")
+    if (this.token != null) {
+      this.isLogin = true
+    }
     if (this.input1 === null || this.input1 === '') {
       this.$refs.button.$el.style.cursor = 'not-allowed'
     }
@@ -123,14 +174,14 @@ export default {
   height: 60px;
 }
 
-.navi-inner{
+.navi-inner {
   width: 86%;
   height: 100%;
   position: relative;
   left: 7%;
 }
 
-.navi-inner .logo{
+.navi-inner .logo {
   display: inline-block;
   width: 150px;
   height: 60px;
@@ -210,11 +261,11 @@ export default {
   font-size: 12px;
 }
 
-.navi-search .el-select:hover .el-input__inner{
+.navi-search .el-select:hover .el-input__inner {
   border: 1px solid transparent;
 }
 
-.navi-search .el-select .el-input__inner:focus{
+.navi-search .el-select .el-input__inner:focus {
   color: #2f3a91;
   background-color: #ffffff;
   border: 1px solid transparent;
@@ -239,7 +290,7 @@ export default {
   border: 1px solid transparent;
 }
 
-.navi-search .navi-input>.el-input__inner:focus{
+.navi-search .navi-input>.el-input__inner:focus {
   color: #2f3a91;
   background-color: #ffffff;
 }
@@ -254,9 +305,9 @@ export default {
   color: #bbbbbb;
 }
 
-.navi-search .navi-input .el-button:hover {
-  color: #2f3a91;
-}
+/*.navi-search .navi-input .el-button:hover {*/
+/*  color: #2f3a91;*/
+/*}*/
 
 .navi-inner .photo {
   display: inline-block;

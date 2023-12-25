@@ -213,7 +213,7 @@
                 <el-button>拒绝</el-button>
               </el-table-column>
             </el-table>
-            <el-pagination background layout="prev, pager, next" :total="1000" :prev-click="prev" :next-click="next">
+            <el-pagination background layout="prev, pager, next" :total="1000" @prev-click="prev" @next-click="next" @current-change="pageChange">
             </el-pagination>
           </div>
           <div class="right4_2" v-show="Menu4Idx === '2'">
@@ -415,6 +415,8 @@
 <script>
 import NaviBar from "@/components/NaviBar.vue";
 import index from "vuex";
+import {ShowAuthorMessage} from "@/api/api";
+import {ShowPaperMessage} from "@/api/api";
 
 export default {
   name: "PersonHomepage",
@@ -427,11 +429,19 @@ export default {
     NaviBar,
   },
   mounted() {
+    this.token = localStorage.getItem("token")
     this.username = "younsur" + this.$route.params.id.toString();
     this.institution = "清华大学";
+    ShowAuthorMessage(token).then(res => {
+      //todo: 接口处理
+    })
+    ShowPaperMessage(token).then(res => {
+      //todo: 接口处理
+    })
   },
   data() {
     return {
+      token: null,
       is_black: false,
       username: "username",
       name: "name",
@@ -539,7 +549,10 @@ export default {
       this.inputDisabled = true;
     },
     modify_clear() {
-      this.input = '';
+      this.username = '';
+      this.name = '';
+      this.institution = '';
+      this.email = '';
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -595,6 +608,11 @@ export default {
     next() {
       this.begin1 += 10;
       this.end1 += 10;
+    },
+    pageChange(val) {
+      console.log(val)
+      this.begin1 = (val - 1) * 10;
+      this.end1 = val * 10;
     }
   }
 }
@@ -624,9 +642,10 @@ export default {
   height: 65%;
   float: left;
   position: relative;
-  top: 16%;
+  top: 9%;
   left: 10%;
   border-radius: 4px;
+  margin-right: 2%;
 }
 
 .Info .avatar_upload .image-container {
@@ -658,11 +677,18 @@ export default {
   }
 }
 
+.Info .avatar_upload .image-black-cover .el-icon-plus{
+  font-size: 30px;
+  position: relative;
+  color: white;
+  top: 70px;
+}
+
 .Info .PersonalInfo {
   height: 65%;
   float: left;
   position: relative;
-  top: 18%;
+  top: 15%;
   left: 11%;
   text-align: left;
   line-height: 250%;
@@ -695,14 +721,9 @@ export default {
   border-radius: 4px;
 }
 
-.Info .avatar_upload.image-black-cover.el-icon-plus{
-  height: 30px;
-  width: 30px;
-}
-
 .Info .PersonalInfo .el-icon-plus {
   position: relative;
-  right: 15px;
+  right: 8px;
   bottom: 4px;
 }
 
