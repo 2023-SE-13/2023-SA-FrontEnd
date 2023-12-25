@@ -415,6 +415,7 @@
 <script>
 import NaviBar from "@/components/NaviBar.vue";
 import index from "vuex";
+import {getInformation} from "@/api/api";
 import {ShowAuthorMessage} from "@/api/api";
 import {ShowPaperMessage} from "@/api/api";
 
@@ -430,13 +431,24 @@ export default {
   },
   mounted() {
     this.token = localStorage.getItem("token")
-    this.username = "younsur" + this.$route.params.id.toString();
-    this.institution = "清华大学";
-    ShowAuthorMessage(token).then(res => {
-      //todo: 接口处理
-    })
-    ShowPaperMessage(token).then(res => {
-      //todo: 接口处理
+    if (this.token === null) {
+      this.$router.push("/login")
+    }
+    getInformation(token).then(res => {
+      if (res.data.result === 0){
+        this.username = res.data.username
+        this.name = res.data.name
+        this.imageUrl = res.data.photo_url
+        this.isManager = res.data.is_admin
+
+      } else {
+        this.$notify({
+          title: '警告',
+          message: '获取用户信息失败',
+          type: 'warning'
+        });
+        return;
+      }
     })
   },
   data() {
