@@ -139,41 +139,41 @@
               <el-table-column prop="username" label="申请用户" width="240">
                 <template slot-scope="scope">
                   <el-popover placement="top" trigger="hover">
-                    <el-descriptions title="用户信息" :column="3" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          <span style="margin-left: 3px">用户名</span>
-                        </template>
-                        {{ scope.row.username }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-message"></i>
-                          <span style="margin-left: 3px">邮箱</span>
-                        </template>
-                        1060592547@qq.com
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-postcard">居住地</i>
-                        </template>
-                        苏州市
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets">备注</i>
-                        </template>
-                        <el-tag size="small">学校</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-office-building"></i>
-                          <span style="margin-left: 3px">机构</span>
-                        </template>
-                        江苏省苏州市吴中区吴中大道 1188 号
-                      </el-descriptions-item>
-                    </el-descriptions>
+<!--                    <el-descriptions title="用户信息" :column="3" border>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-user"></i>-->
+<!--                          <span style="margin-left: 3px">用户名</span>-->
+<!--                        </template>-->
+<!--                        {{ scope.row.username }}-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-message"></i>-->
+<!--                          <span style="margin-left: 3px">邮箱</span>-->
+<!--                        </template>-->
+<!--                        {{ this.email }}-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-postcard">居住地</i>-->
+<!--                        </template>-->
+<!--                        苏州市-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-tickets">备注</i>-->
+<!--                        </template>-->
+<!--                        <el-tag size="small">学校</el-tag>-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-office-building"></i>-->
+<!--                          <span style="margin-left: 3px">机构</span>-->
+<!--                        </template>-->
+<!--                        江苏省苏州市吴中区吴中大道 1188 号-->
+<!--                      </el-descriptions-item>-->
+<!--                    </el-descriptions>-->
                     <div slot="reference">
                       <el-tag size="medium">{{ scope.row.username }}</el-tag>
                     </div>
@@ -182,7 +182,7 @@
               </el-table-column>
               <el-table-column prop="detail" label="详情" width="240">
                 <template slot-scope="scope">
-                  <el-button class="detail-button" @click="dialogVisible = true">点击查看</el-button>
+                  <el-button class="detail-button" @click="visitAuth(scope.row.author_id)">点击查看</el-button>
                   <el-dialog title="认证学者申请" :visible.sync="dialogVisible" :append-to-body="true">
                     <el-descriptions :column="1" border>
                       <el-descriptions-item>
@@ -197,21 +197,14 @@
                           <i class="el-icon-mobile-phone"></i>
                           真实姓名
                         </template>
-                        杨硕
+                        {{ null }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
                           <i class="el-icon-location-outline"></i>
                           描述
                         </template>
-                        xxxxxxxxxxxxxxxxx
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets"></i>
-                          备注
-                        </template>
-                        <el-tag size="small">学校</el-tag>
+                        {{ null }}
                       </el-descriptions-item>
                     </el-descriptions>
                   </el-dialog>
@@ -238,41 +231,41 @@
               <el-table-column prop="send_user" label="申请用户" width="240">
                 <template slot-scope="scope">
                   <el-popover placement="top" trigger="hover">
-                    <el-descriptions title="用户信息" :column="3" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          <span style="margin-left: 3px">用户名</span>
-                        </template>
-                        {{ scope.row.send_user }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-message"></i>
-                          <span style="margin-left: 3px">邮箱</span>
-                        </template>
-                        1060592547@qq.com
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-postcard">居住地</i>
-                        </template>
-                        苏州市
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets">备注</i>
-                        </template>
-                        <el-tag size="small">学校</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-office-building"></i>
-                          <span style="margin-left: 3px">机构</span>
-                        </template>
-                        江苏省苏州市吴中区吴中大道 1188 号
-                      </el-descriptions-item>
-                    </el-descriptions>
+<!--                    <el-descriptions title="用户信息" :column="3" border>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-user"></i>-->
+<!--                          <span style="margin-left: 3px">用户名</span>-->
+<!--                        </template>-->
+<!--                        {{ scope.row.send_user }}-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-message"></i>-->
+<!--                          <span style="margin-left: 3px">邮箱</span>-->
+<!--                        </template>-->
+<!--                        1060592547@qq.com-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-postcard">居住地</i>-->
+<!--                        </template>-->
+<!--                        苏州市-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-tickets">备注</i>-->
+<!--                        </template>-->
+<!--                        <el-tag size="small">学校</el-tag>-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-office-building"></i>-->
+<!--                          <span style="margin-left: 3px">机构</span>-->
+<!--                        </template>-->
+<!--                        江苏省苏州市吴中区吴中大道 1188 号-->
+<!--                      </el-descriptions-item>-->
+<!--                    </el-descriptions>-->
                     <div slot="reference">
                       <el-tag size="medium">{{ scope.row.send_user }}</el-tag>
                     </div>
@@ -296,21 +289,14 @@
                           <i class="el-icon-mobile-phone"></i>
                           真实姓名
                         </template>
-                        杨硕
+                        {{ null }}
                       </el-descriptions-item>
                       <el-descriptions-item>
                         <template slot="label">
                           <i class="el-icon-location-outline"></i>
                           描述
                         </template>
-                        xxxxxxxxxxxxxxxxx
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets"></i>
-                          备注
-                        </template>
-                        <el-tag size="small">学校</el-tag>
+                        {{ null }}
                       </el-descriptions-item>
                     </el-descriptions>
                   </el-dialog>
@@ -326,101 +312,101 @@
             <el-pagination background layout="prev, pager, next" :total=Math.ceil(this.work_certification.length/10) @prev-click="prev2" @next-click="next2" @current-change="pageChange2">
             </el-pagination>
           </div>
-          <div class="right4_3" v-show="Menu4Idx === '3'">
-            <el-table :data="scholar_certification">
-              <el-table-column prop="date" label="申请时间" width="240">
-                <template slot-scope="scope">
-                  <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="申请用户" width="240">
-                <template slot-scope="scope">
-                  <el-popover placement="top" trigger="hover">
-                    <el-descriptions title="用户信息" :column="3" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          <span style="margin-left: 3px">用户名</span>
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-message"></i>
-                          <span style="margin-left: 3px">邮箱</span>
-                        </template>
-                        1060592547@qq.com
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-postcard">居住地</i>
-                        </template>
-                        苏州市
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets">备注</i>
-                        </template>
-                        <el-tag size="small">学校</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-office-building"></i>
-                          <span style="margin-left: 3px">机构</span>
-                        </template>
-                        江苏省苏州市吴中区吴中大道 1188 号
-                      </el-descriptions-item>
-                    </el-descriptions>
-                    <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                    </div>
-                  </el-popover>
-                </template>
-              </el-table-column>
-              <el-table-column prop="detail" label="详情" width="240">
-                <template slot-scope="scope">
-                  <el-button class="detail-button" @click="dialogVisible = true">点击查看</el-button>
-                  <el-dialog title="认证学者申请" :visible.sync="dialogVisible" :append-to-body="true">
-                    <el-descriptions :column="1" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          用户名
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-mobile-phone"></i>
-                          真实姓名
-                        </template>
-                        杨硕
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-location-outline"></i>
-                          描述
-                        </template>
-                        xxxxxxxxxxxxxxxxx
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets"></i>
-                          备注
-                        </template>
-                        <el-tag size="small">学校</el-tag>
-                      </el-descriptions-item>
-                    </el-descriptions>
-                  </el-dialog>
-                </template>
-              </el-table-column>
-              <el-table-column prop="operator" label="处理操作">
-                <el-button>同意</el-button>
-                <el-button>拒绝</el-button>
-              </el-table-column>
-            </el-table>
-          </div>
+<!--          <div class="right4_3" v-show="Menu4Idx === '3'">-->
+<!--            <el-table :data="scholar_certification">-->
+<!--              <el-table-column prop="date" label="申请时间" width="240">-->
+<!--                <template slot-scope="scope">-->
+<!--                  <i class="el-icon-time"></i>-->
+<!--                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>-->
+<!--                </template>-->
+<!--              </el-table-column>-->
+<!--              <el-table-column prop="name" label="申请用户" width="240">-->
+<!--                <template slot-scope="scope">-->
+<!--                  <el-popover placement="top" trigger="hover">-->
+<!--                    <el-descriptions title="用户信息" :column="3" border>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-user"></i>-->
+<!--                          <span style="margin-left: 3px">用户名</span>-->
+<!--                        </template>-->
+<!--                        {{ scope.row.name }}-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-message"></i>-->
+<!--                          <span style="margin-left: 3px">邮箱</span>-->
+<!--                        </template>-->
+<!--                        1060592547@qq.com-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-postcard">居住地</i>-->
+<!--                        </template>-->
+<!--                        苏州市-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-tickets">备注</i>-->
+<!--                        </template>-->
+<!--                        <el-tag size="small">学校</el-tag>-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-office-building"></i>-->
+<!--                          <span style="margin-left: 3px">机构</span>-->
+<!--                        </template>-->
+<!--                        江苏省苏州市吴中区吴中大道 1188 号-->
+<!--                      </el-descriptions-item>-->
+<!--                    </el-descriptions>-->
+<!--                    <div slot="reference">-->
+<!--                      <el-tag size="medium">{{ scope.row.name }}</el-tag>-->
+<!--                    </div>-->
+<!--                  </el-popover>-->
+<!--                </template>-->
+<!--              </el-table-column>-->
+<!--              <el-table-column prop="detail" label="详情" width="240">-->
+<!--                <template slot-scope="scope">-->
+<!--                  <el-button class="detail-button" @click="dialogVisible = true">点击查看</el-button>-->
+<!--                  <el-dialog title="认证学者申请" :visible.sync="dialogVisible" :append-to-body="true">-->
+<!--                    <el-descriptions :column="1" border>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-user"></i>-->
+<!--                          用户名-->
+<!--                        </template>-->
+<!--                        {{ scope.row.name }}-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-mobile-phone"></i>-->
+<!--                          真实姓名-->
+<!--                        </template>-->
+<!--                        杨硕-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-location-outline"></i>-->
+<!--                          描述-->
+<!--                        </template>-->
+<!--                        xxxxxxxxxxxxxxxxx-->
+<!--                      </el-descriptions-item>-->
+<!--                      <el-descriptions-item>-->
+<!--                        <template slot="label">-->
+<!--                          <i class="el-icon-tickets"></i>-->
+<!--                          备注-->
+<!--                        </template>-->
+<!--                        <el-tag size="small">学校</el-tag>-->
+<!--                      </el-descriptions-item>-->
+<!--                    </el-descriptions>-->
+<!--                  </el-dialog>-->
+<!--                </template>-->
+<!--              </el-table-column>-->
+<!--              <el-table-column prop="operator" label="处理操作">-->
+<!--                <el-button>同意</el-button>-->
+<!--                <el-button>拒绝</el-button>-->
+<!--              </el-table-column>-->
+<!--            </el-table>-->
+<!--          </div>-->
         </div>
       </div>
     </div>
@@ -574,6 +560,11 @@ export default {
       end3: 10,
       begin4:0,
       end4:10,
+      author: {
+        name: '',
+        institution: '',
+        email: '',
+      },
       scholar_certification: [
         {
           id: '',
@@ -851,6 +842,23 @@ export default {
             message: res.data.message,
             type: 'error'
           });
+        }
+      })
+    },
+    visitAuth(aid) {
+      this.dialogVisible = true;
+      GetAuthor(this.aid).then(res => {
+        console.log(res)
+        console.log(res.data._source)
+        if (res.data._source.last_known_institution === null) {
+          this.institution = "暂无机构信息";
+        } else {
+          this.institution = res.data._source.last_known_institution.display_name
+        }
+        if (res.data._source.display_name === null) {
+          this.name = null;
+        } else {
+          this.name = res.data._source.display_name
         }
       })
     },
