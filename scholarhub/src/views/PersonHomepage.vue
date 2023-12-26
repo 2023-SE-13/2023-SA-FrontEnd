@@ -113,10 +113,10 @@
           </el-pagination>
         </div>
         <div class="BottomContent3" v-show="MidNavIdx === '3'">
-          <el-table :data="collect_data.slice(begin3, end3)" style="width: 100%">
-            <el-table-column label="学术成果" prop="paper_name"></el-table-column>
+          <el-table :data="visit_data.slice(begin4, end4)" style="width: 100%">
+            <el-table-column label="浏览记录" prop="work_name"></el-table-column>
           </el-table>
-          <el-pagination background layout="prev, pager, next" :total=Math.ceil(collect_data.length/10) @prev-click="prev3" @next-click="next3" @current-change="pageChange3">
+          <el-pagination background layout="prev, pager, next" :total=Math.ceil(visit_data.length/10) @prev-click="prev4" @next-click="next4" @current-change="pageChange4">
           </el-pagination>
         </div>
         <div class="BottomContent4" v-show="MidNavIdx === '4'">
@@ -530,7 +530,7 @@ export default {
     })
     GetWorkList(this.token).then(res => {
       if (res.data.result === 0) {
-        this.visit_data = res.data.messages
+        this.visit_data = res.data.objects
       } else {
         this.$notify({
           title: '错误',
@@ -567,6 +567,8 @@ export default {
       end2: 10,
       begin3: 0,
       end3: 0,
+      begin4:0,
+      end4:0,
       scholar_certification: [
         {
           id: '',
@@ -594,6 +596,10 @@ export default {
       ],
       visit_data: [
         {
+          id: '',
+          work_name: "",
+          work_id: "",
+          time: ""
 
         }
       ],
@@ -812,6 +818,24 @@ export default {
       console.log(val)
       this.begin3 = (val - 1) * 10;
       this.end3 = val * 10;
+    },
+    prev4() {
+      if (this.begin4 >= 10) {
+        this.begin4 -= 10;
+        this.end4 -= 10;
+      } else {
+        this.begin4 = 0;
+        this.end4 = 10;
+      }
+    },
+    next4() {
+      this.begin4 += 10;
+      this.end4 += 10;
+    },
+    pageChange4(val) {
+      console.log(val)
+      this.begin4 = (val - 1) * 10;
+      this.end4 = val * 10;
     },
     uploadPic(file) {
       const formData = new FormData();
