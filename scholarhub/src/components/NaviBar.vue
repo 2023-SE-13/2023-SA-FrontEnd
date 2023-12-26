@@ -68,9 +68,6 @@ export default {
       this.activeIndex = index
       console.log(this.activeIndex)
     },
-    go() {
-      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
-    },
     gotoMain() {
       if (this.$route.path !== "/main") {
         this.$router.push("/main")
@@ -81,11 +78,11 @@ export default {
       // this.isLogin = true
     },
     handleCommand(command) {
-      if (command === 'a' && this.$route.path !== '/php/1') {
-        this.$router.push("/php/1")
+      if (command === 'a' && this.$route.path !== '/php/' + this.id) {
+        this.$router.push("/php/" + this.id)
       }
       if (command === 'b') {
-        this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
+        this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))))
       }
       if (command === 'd' && this.$route.path !== '/settings') {
         this.$router.push("/settings")

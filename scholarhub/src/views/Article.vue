@@ -220,7 +220,7 @@
             </div>
           </el-row>
 
-          <!-- <el-row class="relation" v-if="related_papers.length > 0"> 
+          <!-- <el-row class="relation" v-if="related_papers.length > 0">
             <div class="field-title">相关文献</div>
             <div class="relation-article" v-for="(article, index) in related_papers" :key="index">
               <div class="relation-title">
@@ -238,7 +238,7 @@
         </div>
       </el-col>
     </el-row>
-    <!-- 
+    <!--
     <CollectDialog :curPaper="articleDetails" :showCollect="showCollect" @collectSuccess="collectSuccess"
       @closeChildDialog="closeChildDialog"></CollectDialog> -->
 
@@ -246,7 +246,7 @@
     </CiteDialog>
   </div>
 </template>
-  
+
 <script>
 //   import user from "../../store/user";
 import { GetPaper, FavoritePaper, ApplyWork } from '@/api/api';
@@ -826,7 +826,7 @@ export default {
   },
 }
 </script>
-  
+
 <style scoped>
 .article {
   background-color: #f1f3f6;

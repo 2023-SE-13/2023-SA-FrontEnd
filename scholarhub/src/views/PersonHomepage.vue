@@ -208,8 +208,8 @@
               </el-table-column>
               <el-table-column prop="operator" label="处理操作">
                 <template slot-scope="scope">
-                  <el-button @click="accept(scope.$index)">同意</el-button>
-                  <el-button @click="refuse(scope.$index)">拒绝</el-button>
+                  <el-button class="check" @click="accept(scope.$index)"><i class="el-icon-check"></i></el-button>
+                  <el-button class="close" @click="refuse(scope.$index)"><i class="el-icon-close"></i></el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -307,8 +307,8 @@
               </el-table-column>
               <el-table-column prop="operator" label="处理操作">
                 <template slot-scope="scope">
-                  <el-button @click = accept2(scope.$index)>同意</el-button>
-                  <el-button @click = refuse2(scope.$index)>拒绝</el-button>
+                  <el-button class="check" @click="accept2(scope.$index)"><i class="el-icon-check"></i></el-button>
+                  <el-button class="close" @click="refuse2(scope.$index)"><i class="el-icon-close"></i></el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -459,16 +459,17 @@ export default {
           let s = btoa(encodeURIComponent(JSON.stringify(res.data.author_id)));
           let aid = JSON.parse(decodeURIComponent(atob(s)));
           GetAuthor(aid).then(res => {
-            if (res.data.result === 0) {
+            console.log(res)
+            if (res.data._source.last_known_institution) {
+              console.log('you')
               this.institution = res.data._source.last_known_institution.display_name
+            } else {
+              this.institution = null
+            }
+            if (res.data._source.display_name) {
               this.name = res.data._source.display_name
             } else {
-              this.$notify({
-                title: '错误',
-                message: '获取学者信息失败',
-                type: 'error'
-              });
-              return;
+              this.name = null
             }
           })
         } else {
@@ -494,7 +495,6 @@ export default {
       }
     })
     ShowPaperMessage(this.token).then(res => {
-      //todo: 接口处理
       if (res.data.result === 0) {
         this.work_certification = res.data.messages
         console.log(this.work_certification)
@@ -761,7 +761,7 @@ export default {
           });
         }
       })
-    }
+    },
   }
 }
 </script>
@@ -1107,6 +1107,46 @@ export default {
 .BottomContent4 .right4_1 .detail-button:hover {
   background: #e5f0fa;
   opacity: 1;
+}
+
+.check {
+  width: 30px;
+  height: 30px;
+  padding: 5px 5px;
+  background-color: #67C23A;
+  color: white;
+  opacity: 0.8;
+  filter: brightness(1.0);
+}
+
+.check:hover {
+  background-color: #57ff2A;
+  opacity: 2.0;
+  filter: brightness(1.2);
+}
+
+.check.is-active {
+  border: 1px solid white;
+}
+
+.close {
+  width: 30px;
+  height: 30px;
+  padding: 5px 5px;
+  background-color: #F56C6C;
+  color: white;
+  opacity: 0.8;
+  filter: brightness(1.0);
+}
+
+.close:hover {
+  background-color: #ff4844;
+  opacity: 2.0;
+  filter: brightness(1.0);
+}
+
+.close.is-active {
+  border: 1px solid white;
 }
 
 .BottomContent4 .right4_2 {
