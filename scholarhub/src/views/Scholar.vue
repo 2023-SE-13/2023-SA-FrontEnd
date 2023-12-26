@@ -140,17 +140,17 @@ export default {
     if (this.token === null) {
       this.$router.push("/login")
     }
-    getInformation(this.token).then(res => {
-      if (res.data.result === 0) {
-        this.imageUrl = res.data.photo_url_out
-      } else {
-        this.$notify({
-          title: '警告',
-          message: '获取用户信息失败',
-          type: 'warning'
-        });
-      }
-    })
+    // getInformation(this.token).then(res => {
+    //   if (res.data.result === 0) {
+    //     this.imageUrl = res.data.photo_url_out
+    //   } else {
+    //     this.$notify({
+    //       title: '警告',
+    //       message: '获取用户信息失败',
+    //       type: 'warning'
+    //     });
+    //   }
+    // })
     // console.log(this.$route.params.id)
     // console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.id))))
     GetAuthor(JSON.parse(decodeURIComponent(atob(this.$route.params.id)))).then(res => {

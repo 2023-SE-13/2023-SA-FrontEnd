@@ -59,13 +59,6 @@
               <i class="el-icon-finished" v-if="!isCancel">已关注</i>
               <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
             </el-button>
-            <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
-              <i class="el-icon-plus">关注</i>
-            </el-button>
-            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest" @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
-              <i class="el-icon-finished" v-if="!isCancel">已关注</i>
-              <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
-            </el-button>
           </span>
           </p>
           <p style="font-size: 16px;color: #8590a6;">机构：{{ institution }}</p>
@@ -75,7 +68,7 @@
         <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
-          <el-menu-item index="2">我的文库</el-menu-item>
+          <el-menu-item index="2">我的推荐</el-menu-item>
           <el-menu-item index="3">我的收藏</el-menu-item>
           <el-menu-item v-show="isManager" index="4">待办审核</el-menu-item>
         </el-menu>
@@ -94,14 +87,11 @@
                        inactive-color="#646464"></el-switch>
             <el-dropdown class="dropdown">
               <el-button>
-                更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                作者筛选<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                <el-dropdown-item>双皮奶</el-dropdown-item>
-                <el-dropdown-item>蚵仔煎</el-dropdown-item>
+                <el-dropdown-item>第一作者</el-dropdown-item>
+                <el-dropdown-item>第二作者</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
@@ -435,6 +425,8 @@ import {ShowPaperMessage} from "@/api/api";
 import {HandleAuthorMessage} from "@/api/api";
 import {HandlePaperMessage} from "@/api/api";
 import {UploadAvatar} from "@/api/api";
+import {GetAuthor} from "@/api/api";
+
 export default {
   name: "PersonHomepage",
   computed: {
@@ -452,10 +444,38 @@ export default {
     }
     getInformation(this.token).then(res => {
       if (res.data.result === 0){
+        if (res.data.id === parseInt(this.$route.params.id)) {
+          this.isSelf = true
+        } else {
+          this.isSelf = false
+        }
+        this.email = res.data.email
         this.username = res.data.username
         this.name = res.data.name
         this.imageUrl = res.data.photo_url_out
         this.isManager = res.data.is_admin
+        if (res.data.is_author) {
+          this.isAuthor = true
+          let s = btoa(encodeURIComponent(JSON.stringify(res.data.author_id)));
+          let aid = JSON.parse(decodeURIComponent(atob(s)));
+          GetAuthor(aid).then(res => {
+            if (res.data.result === 0) {
+              this.institution = res.data._source.last_known_institution.display_name
+              this.name = res.data._source.display_name
+            } else {
+              this.$notify({
+                title: '错误',
+                message: '获取学者信息失败',
+                type: 'error'
+              });
+              return;
+            }
+          })
+        } else {
+          this.isAuthor = false
+          this.name = null
+          this.institution = null
+        }
       } else {
         this.$notify({
           title: '错误',
@@ -491,14 +511,15 @@ export default {
       username: "username",
       name: "name",
       institution: "institution",
-      email: "email",
+      email: '',
       imageUrl: '',
       MidNavIdx: '1',
       Menu1Idx: '1',
       Menu4Idx: '1',
       keywordsInput: "",
       isMasterpieceOnly: false,
-      isManager: true,
+      isAuthor: false,
+      isManager: false,
       isSelf: false,
       isInterested: false,
       isCancel: false,
