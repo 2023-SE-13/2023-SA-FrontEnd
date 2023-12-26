@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="navi">
-      <NaviBar />
+      <NaviBar/>
     </div>
     <div class="phpContainer">
       <div class="Info">
@@ -12,7 +12,7 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             :http-request="uploadPic">
-          <img class="image-container" id="Photo" :src=this.imageUrl alt="头像"  width="170px" height="170px">
+          <img class="image-container" id="Photo" :src=this.imageUrl alt="头像" width="170px" height="170px">
           <div class="image-black-cover"><i class="el-icon-plus"></i></div>
         </el-upload>
         <div class="PersonalInfo">
@@ -55,14 +55,16 @@
             <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
               <i class="el-icon-plus">关注</i>
             </el-button>
-            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest" @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
+            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest"
+                       @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
               <i class="el-icon-finished" v-if="!isCancel">已关注</i>
               <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
             </el-button>
             <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
               <i class="el-icon-plus">关注</i>
             </el-button>
-            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest" @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
+            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest"
+                       @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
               <i class="el-icon-finished" v-if="!isCancel">已关注</i>
               <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
             </el-button>
@@ -72,7 +74,8 @@
         </div>
       </div>
       <div class="MidNav">
-        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
+        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+                 background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
         </el-menu>
@@ -84,7 +87,8 @@
             <el-menu-item id="item2" index="2">专利</el-menu-item>
           </el-menu>
           <div v-show="Menu1Idx === '1'">
-            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
+            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput"
+                      @keyup.enter.native="search">
               <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
             </el-input>
             <el-switch class="mp_switch" v-model="isMasterpieceOnly" active-text="仅看代表作" active-color="#2f3a91"
@@ -101,13 +105,18 @@
                 <el-dropdown-item>蚵仔煎</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
+            <el-empty class="empty"
+                      image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D"
+                      description="空空如也~"></el-empty>
           </div>
           <div v-show="Menu1Idx === '2'">
-            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
+            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput"
+                      @keyup.enter.native="search">
               <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
             </el-input>
-            <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
+            <el-empty class="empty"
+                      image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D"
+                      description="空空如也~"></el-empty>
           </div>
         </div>
       </div>
@@ -125,6 +134,7 @@ import {HandleAuthorMessage} from "@/api/api";
 import {HandlePaperMessage} from "@/api/api";
 import {UploadAvatar} from "@/api/api";
 import {GetAuthor} from "@/api/api";
+
 export default {
   name: "PersonHomepage",
   computed: {
@@ -140,45 +150,16 @@ export default {
     if (this.token === null) {
       this.$router.push("/login")
     }
-    // getInformation(this.token).then(res => {
-    //   if (res.data.result === 0) {
-    //     this.imageUrl = res.data.photo_url_out
-    //   } else {
-    //     this.$notify({
-    //       title: '警告',
-    //       message: '获取用户信息失败',
-    //       type: 'warning'
-    //     });
-    //   }
-    // })
-    // console.log(this.$route.params.id)
-    // console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.id))))
-    GetAuthor(JSON.parse(decodeURIComponent(atob(this.$route.params.id)))).then(res => {
-      if (res.data.result === 0) {
-        this.name = res.data.display_name
-        this.institution = res.data.last_known_institution.display_name
+    
+    GetAuthor(decodeURIComponent(atob(this.$route.params.id))).then(res => {
+      this.name = res.data._source.display_name
+      if (res.data._source.last_known_institution === null) {
+        this.institution = "未知"
       } else {
-        console.log(res.data.messages)
+        this.institution = res.data._source.last_known_institution.display_name
       }
-    })
-    ShowAuthorMessage(this.token).then(res => {
-      if (res.data.result === 0) {
-        this.scholar_certification = res.data.messages
-        console.log(this.scholar_certification)
-      } else {
-        console.log(res.data.messages)
-      }
-    })
-    ShowPaperMessage(this.token).then(res => {
-      //todo: 接口处理
-      if (res.data.result === 0) {
-        this.work_certification = res.data.messages
-        console.log(this.work_certification)
-      } else {
-        console.log(res.data.messages)
-      }
-    })
 
+    })
   },
   data() {
     return {
@@ -486,7 +467,7 @@ export default {
   top: 0;
 }
 
-.Info .avatar_upload .image-black-cover:hover{
+.Info .avatar_upload .image-black-cover:hover {
   animation: move 0.6s forwards;
 }
 
@@ -500,7 +481,7 @@ export default {
   }
 }
 
-.Info .avatar_upload .image-black-cover .el-icon-plus{
+.Info .avatar_upload .image-black-cover .el-icon-plus {
   font-size: 30px;
   position: relative;
   color: white;
@@ -563,8 +544,8 @@ export default {
   height: 30px;
   font-size: 14px;
   color: white;
-  background: rgba(0,0,0,.45);
-  box-shadow: 0 0 0 2px hsla(0,0%,100%,.3);
+  background: rgba(0, 0, 0, .45);
+  box-shadow: 0 0 0 2px hsla(0, 0%, 100%, .3);
   border-radius: 4px;
 }
 
@@ -742,7 +723,7 @@ export default {
   margin-right: 2%;
 }
 
-.BottomContent4 .left4 .el-menu4-demo{
+.BottomContent4 .left4 .el-menu4-demo {
   border: 1px solid #ebebeb;
   border-top: 5px solid #828ad8;
   padding-top: 20px;
