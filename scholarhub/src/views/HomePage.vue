@@ -1,5 +1,5 @@
 <template>
-    <div class="home-page" style="font-family: 幼圆;">
+    <div class="home-page">
         <div class="img-container">
             <div class="app-news-container">
                 <div class="app-news-title">scholarhub 学术成果分享平台</div>
