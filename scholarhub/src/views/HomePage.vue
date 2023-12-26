@@ -32,10 +32,19 @@
                 <div class="app-counting-item">{{this.browseNum}} 浏览量</div>
             </div>
         </div>
+        <div class="app-title">
+            <img src="@/assets/app-label-head.png" class="app-title-head">
+            <div class="app-title-text">热门文章</div>
+        </div>
         <div class="paper-selection">
             <!-- <PaperUnit v-for="index in 4" :key="index"></PaperUnit> -->
             <PaperUnit PaperUnit v-for="(paperData, index) in limitedPaperDatas" :key="index" :paper-data="paperData"></PaperUnit>
         </div>
+        <div class="app-title">
+            <img src="@/assets/app-label-head.png" class="app-title-head">
+            <div class="app-title-text">技术支持方</div>
+        </div>
+        <div style="margin-left: 11%; font-size: 24px; text-align: left; font-weight: 600; margin-bottom: 20px;">MSI软件分析小组</div>
         <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%">
             <!-- <span>这是一段信息</span> -->
             <div>
@@ -264,6 +273,7 @@ export default {
     transition: opacity .3s;
     font-size: 20px;
     border-left: 0.5px solid #ffffff; /* 设置左侧边框颜色和样式 */
+    font-weight: 500;
 }
 
 .app-news-logo {
@@ -428,5 +438,30 @@ export default {
 
 .pro-but {
     width: 115px;
+}
+
+.app-title {
+    width: 78%;
+    height: 32px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    border-bottom: 1px solid #dcdfe6;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    margin-left: 11%;
+}
+.app-title-head {
+    width: 20px;
+    height: 17px;
+    margin: 0 16px 0 0!important;
+}
+.app-title-text {
+    color: #2f3a91;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 8px;
+    margin-top: -4px;
 }
 </style>
