@@ -668,13 +668,18 @@ export default {
     },
   },
   mounted() {
+    this.getArticleDetail();
     const data = {
-      work_id: this.paper_id,
+      work_id: JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id))),
       work_name: this.articleDetails._source.title
     }
-    AddBrowHistory(data, localStorage.getItem('token')).then(res => {
-      console.log(res);
-    })
+    console.log(data)
+    let token = localStorage.getItem('token')
+    if (token !== null) {
+      AddBrowHistory(data, localStorage.getItem('token')).then(res => {
+        console.log(res)
+      })
+    }
   },
   methods: {
     getAuthorPositionNumber(position) {
@@ -829,10 +834,6 @@ export default {
         .filter((value, index, self) => value && self.indexOf(value) === index);
       return institutions;
     }
-  },
-
-  created() {
-    this.getArticleDetail();
   },
 }
 </script>
