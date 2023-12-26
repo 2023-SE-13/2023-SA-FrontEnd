@@ -253,6 +253,7 @@ import { GetPaper, FavoritePaper, ApplyWork } from '@/api/api';
 import qs from "qs";
 import CiteDialog from "../components/CiteDialog";
 import CollectDialog from "../components/CollectDialog";
+import {AddBrowHistory} from "@/api/api";
 
 export default {
   name: "Article",
@@ -665,6 +666,15 @@ export default {
     citation_msg(val) {
       this.loadMoreDisable = val.length >= this.articleDetails.citation_count;
     },
+  },
+  mounted() {
+    const data = {
+      work_id: this.paper_id,
+      work_name: this.articleDetails._source.title
+    }
+    AddBrowHistory(data, localStorage.getItem('token')).then(res => {
+      console.log(res);
+    })
   },
   methods: {
     getAuthorPositionNumber(position) {
