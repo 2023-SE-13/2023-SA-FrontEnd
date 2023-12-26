@@ -692,7 +692,7 @@ export default {
     },
     toAuthor: function (id) {
       console.log(id);
-      this.$router.push("/php/" + + btoa(encodeURIComponent(JSON.stringify(id))));
+      this.$router.push("/scholar/" + btoa(encodeURIComponent(JSON.stringify(id))));
     },
     toDOI: function (doi) {
       window.open(doi);
