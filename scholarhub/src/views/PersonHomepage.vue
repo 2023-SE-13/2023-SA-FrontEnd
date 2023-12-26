@@ -529,6 +529,7 @@ export default {
       }
     })
     GetWorkList(this.token).then(res => {
+      console.log(res)
       if (res.data.result === 0) {
         this.visit_data = res.data.objects
       } else {
