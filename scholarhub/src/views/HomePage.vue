@@ -26,7 +26,7 @@
                 </el-input>
             </div>
             <div class="app-counting-items" style="font-family: 幼圆">
-                <div class="app-counting-item">1372233670 期刊论文</div>
+                <div class="app-counting-item">1,372,233,670 期刊论文</div>
                 <div class="app-counting-item">{{this.userNum}} 学者用户</div>
                 <div class="app-counting-item">{{this.authorNum}} 科研作者</div>
                 <div class="app-counting-item">{{this.browseNum}} 浏览量</div>
@@ -44,7 +44,7 @@
             <img src="@/assets/app-label-head.png" class="app-title-head">
             <div class="app-title-text">技术支持方</div>
         </div>
-        <div style="margin-left: 11%; font-size: 24px; text-align: left; font-weight: 600; margin-bottom: 20px;">MSI软件分析小组</div>
+        <div style="margin-left: 11%; font-size: 24px; text-align: left; font-weight: 300; margin-bottom: 20px;">MSI软件分析小组</div>
         <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%">
             <!-- <span>这是一段信息</span> -->
             <div>
@@ -220,9 +220,9 @@ export default {
             this.paperDatas = res.data.works
         })
         ShowAll().then(res => {
-            this.userNum = res.data.user_count
-            this.authorNum = res.data.author_count
-            this.browseNum = res.data.browse_times_sum
+            this.userNum = res.data.user_count.toLocaleString();
+            this.authorNum = res.data.author_count.toLocaleString();
+            this.browseNum = res.data.browse_times_sum.toLocaleString();
         })
     },
     computed: {
