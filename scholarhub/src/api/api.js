@@ -331,7 +331,7 @@ export function DeleteBrowHistory(data, token) {
 // 删除所有浏览记录
 export function DeleteAllBrowHistory(token) {
     return service({
-        method: 'post',
+        method: 'get',
         url: '/browhistory/delete_all_brow_history',
         headers: {
             'Authorization': `Token ${token}`
