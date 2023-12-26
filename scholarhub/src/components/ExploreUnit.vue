@@ -29,7 +29,7 @@
         </div>
         <div class="unit-keywords">
           <span>关键词:</span> <span v-for="(keyword, index) in this.paperData._source.keywords" :key="index">
-            {{ keyword.keyword }},
+            {{ keyword.keyword }} <span v-if="index < paperData._source.keywords.length-1"></span>
           </span>
         </div>
       </div>
