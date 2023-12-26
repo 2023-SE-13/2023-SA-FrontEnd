@@ -135,5 +135,6 @@ export default {
     font-weight: 100;
     text-align: left; /* 设置文本靠左对齐 */
     color:#999999;
+    margin-top: 50px;
 }
 </style>
