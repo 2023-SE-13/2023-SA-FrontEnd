@@ -113,6 +113,7 @@
           </el-pagination>
         </div>
         <div class="BottomContent3" v-show="MidNavIdx === '3'">
+          <el-button class="clear_button" @click="clear_visit()">清空</el-button>
           <el-table :data="visit_data.slice(begin4, end4)" style="width: 100%">
             <el-table-column label="浏览记录" prop="work_name"></el-table-column>
           </el-table>
@@ -438,6 +439,7 @@ import {UploadAvatar} from "@/api/api";
 import {GetAuthor} from "@/api/api";
 import {ShowFavorites} from "@/api/api";
 import {GetWorkList} from "@/api/api";
+import {DeleteAllBrowHistory} from "@/api/api";
 
 export default {
   name: "PersonHomepage",
@@ -529,7 +531,10 @@ export default {
       }
     })
     GetWorkList(this.token).then(res => {
+      console.log(res)
       if (res.data.result === 0) {
+        console.log("1")
+        console.log(res.data.objects, "33333")
         this.visit_data = res.data.objects
       } else {
         this.$notify({
@@ -566,9 +571,9 @@ export default {
       begin2: 0,
       end2: 10,
       begin3: 0,
-      end3: 0,
+      end3: 10,
       begin4:0,
-      end4:0,
+      end4:10,
       scholar_certification: [
         {
           id: '',
@@ -600,7 +605,6 @@ export default {
           work_name: "",
           work_id: "",
           time: ""
-
         }
       ],
       infoDialog: false,
@@ -836,6 +840,19 @@ export default {
       console.log(val)
       this.begin4 = (val - 1) * 10;
       this.end4 = val * 10;
+    },
+    clear_visit(){
+      DeleteAllBrowHistory(this.token).then(res=>{
+        if (res.data.result === 0){
+          this.visit_data = this.visit_data.slice(0,0)
+        } else {
+          this.$notify({
+            title: '错误',
+            message: res.data.message,
+            type: 'error'
+          });
+        }
+      })
     },
     uploadPic(file) {
       const formData = new FormData();
@@ -1162,6 +1179,29 @@ export default {
   width: 82.6%;
   height: 98%;
   background-color: white;
+}
+
+.BottomContent3 .el-table {
+  position: relative;
+  top: -30px;
+}
+
+.BottomContent3 .clear_button {
+  width: 80px;
+  height: 40px;
+  float: right;
+  background-color: #67C23A;
+  color: white;
+  font-size: 16px;
+  padding: 12px;
+  position: relative;
+  top: 10px;
+  right: 20px;
+  z-index: 500;
+}
+
+.BottomContent3 .clear_button:hover {
+  filter: brightness(1.2);
 }
 
 .BottomContent4 {
