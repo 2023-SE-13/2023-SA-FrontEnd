@@ -1,5 +1,5 @@
 <template>
-    <div class="home-page" style="font-family: 幼圆;">
+    <div class="home-page">
         <div class="img-container">
             <div class="app-news-container">
                 <div class="app-news-title">scholarhub 学术成果分享平台</div>
@@ -26,10 +26,12 @@
                 </el-input>
             </div>
             <div class="app-counting-items" style="font-family: 幼圆">
-                <div class="app-counting-item">1,372,233,670 期刊论文</div>
-                <div class="app-counting-item">{{this.userNum}} 学者用户</div>
-                <div class="app-counting-item">{{this.authorNum}} 已认领学者</div>
-                <div class="app-counting-item">{{this.browseNum}} 浏览量</div>
+              
+                <div class="app-counting-item">1,372,233,670 期刊论文</div><img style="height:7%; width: 2%; position: absolute; left: 630px;color: white" src="../assets/book.png" id=""/>
+                <div class="app-counting-item">{{this.userNum}} 学者用户</div><img style="height:10%; width: 2.2%; position: absolute; left: 840px;color: white" src="../assets/master.png" id=""/>
+                <div class="app-counting-item">{{this.authorNum}} 科研作者</div><img style="height:6%; width: 1.6%; position: absolute; left: 1060px;color: white" src="../assets/sc.png" id=""/>
+                <div class="app-counting-item">{{this.browseNum}} 浏览量</div><img style="height:4.5%; width: 1.5%; position: absolute; left: 1305px;color: white" src="../assets/view.png" id=""/>
+
             </div>
         </div>
         <div class="app-title">
