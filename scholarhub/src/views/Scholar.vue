@@ -17,7 +17,7 @@
         </el-upload>
         <div class="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
-            姓名：{{ name }}
+            {{ name }}
             <span>
             <i class="el-icon-edit" @click="modify" v-show="isSelf">详细资料</i>
             <el-dialog class="info_dialog" :visible.sync="infoDialog" :append-to-body="true">
@@ -52,21 +52,37 @@
                 </el-descriptions-item>
               </el-descriptions>
             </el-dialog>
-            <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
-              <i class="el-icon-plus">关注</i>
+            <el-button class="el-button-interest" @click="turn" v-show="!is_applied">
+              <i class="el-icon-plus">认领</i>
             </el-button>
-            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest"
+              <el-dialog title="认领" :visible.sync="this.dialogVisible" :append-to-body="true" width="30%">
+                <!--需要输入真实姓名，描述内容，照片-->
+                <el-form :model="form" ref="form" label-width="80px">
+                  <el-form-item label="真实姓名" prop="name">
+                    <el-input v-model="form.name"></el-input>
+                  </el-form-item>
+                  <el-form-item label="描述内容" prop="description">
+                    <el-input v-model="form.description"></el-input>
+                    </el-form-item>
+                  <el-form-item label="照片" prop="photo">
+                    <el-upload
+                        class="avatar-uploader"
+                        action="#"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload"
+                        :http-request="uploadPic2">
+                      <img class="avatar" :src="form.photo" alt="">
+                      <i class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                  </el-form-item>
+                </el-form>
+                  <el-button @click="dialogVisible = false">取 消</el-button>
+                  <el-button type="primary" @click="interest">确 定</el-button>
+              </el-dialog>
+            <el-button class="el-button-interested" v-show="is_applied" @click="cancel_interest"
                        @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
-              <i class="el-icon-finished" v-if="!isCancel">已关注</i>
-              <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
-            </el-button>
-            <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
-              <i class="el-icon-plus">关注</i>
-            </el-button>
-            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest"
-                       @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
-              <i class="el-icon-finished" v-if="!isCancel">已关注</i>
-              <span class="el-icon-cancel" v-if="isCancel">取消关注</span>
+              <i class="el-icon-finished">已认领</i>
             </el-button>
           </span>
           </p>
@@ -134,6 +150,7 @@ import {HandleAuthorMessage} from "@/api/api";
 import {HandlePaperMessage} from "@/api/api";
 import {UploadAvatar} from "@/api/api";
 import {GetAuthor} from "@/api/api";
+import {ApplyAuthor} from "@/api/api";
 
 export default {
   name: "PersonHomepage",
@@ -150,7 +167,8 @@ export default {
     if (this.token === null) {
       this.$router.push("/login")
     }
-    
+    this.imageUrl = "http://116.63.49.180/avatar/default_avatar.png"
+    this.form.author_id = decodeURIComponent(atob(this.$route.params.id))
     GetAuthor(decodeURIComponent(atob(this.$route.params.id))).then(res => {
       this.name = res.data._source.display_name
       if (res.data._source.last_known_institution === null) {
@@ -158,11 +176,20 @@ export default {
       } else {
         this.institution = res.data._source.last_known_institution.display_name
       }
-
+      this.is_applied = res.data.is_applied
+      console.log(this.is_applied)
     })
   },
   data() {
     return {
+      form: {
+        author_id:'',
+        name: '',
+        description: '',
+        photo: '',
+      },
+      file: null,
+      is_applied: false,
       token: null,
       is_black: false,
       username: "username",
@@ -209,6 +236,9 @@ export default {
     };
   },
   methods: {
+    turn(){
+      this.dialogVisible = true;
+    },
     modify() {
       // this.$router.push("/authentication");
       this.infoDialog = true;
@@ -262,7 +292,23 @@ export default {
       alert(this.keywordsInput)
     },
     interest() {
-      this.isInterested = true;
+      this.dialogVisible = false
+      this.form.photo = this.file
+      ApplyAuthor(this.form, this.token).then(res=>{
+        if (res.data.result === 0) {
+          this.$notify({
+            title: '成功',
+            message: '申请成功',
+            type: 'success'
+          });
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '申请失败',
+            type: 'warning'
+          });
+        }
+      })
     },
     cancel_display() {
       this.isCancel = true;
@@ -417,7 +463,10 @@ export default {
           });
         }
       })
-    }
+    },
+    uploadPic2(file) {
+      this.file = file.file;
+    },
   }
 }
 </script>
