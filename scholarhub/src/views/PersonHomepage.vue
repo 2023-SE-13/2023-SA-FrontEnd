@@ -72,7 +72,7 @@
         </div>
       </div>
       <div class="MidNav">
-        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
+        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
           <el-menu-item index="2">我的文库</el-menu-item>
@@ -493,7 +493,7 @@ export default {
       institution: "institution",
       email: "email",
       imageUrl: '',
-      MidNavIdx: '4',
+      MidNavIdx: '1',
       Menu1Idx: '1',
       Menu4Idx: '1',
       keywordsInput: "",
