@@ -1,5 +1,5 @@
 <template>
-    <div class="home-page">
+    <div class="home-page" style="font-family: 幼圆;">
         <div class="img-container">
             <div class="app-news-container">
                 <div class="app-news-title">scholarhub 学术成果分享平台</div>
@@ -25,7 +25,7 @@
                     <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search" ref="button">检索</el-button>
                 </el-input>
             </div>
-            <div class="app-counting-items">
+            <div class="app-counting-items" style="font-family: 幼圆">
                 <div class="app-counting-item">1,372,233,670 期刊论文</div>
                 <div class="app-counting-item">{{this.userNum}} 学者用户</div>
                 <div class="app-counting-item">{{this.authorNum}} 已认领学者</div>
