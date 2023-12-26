@@ -117,7 +117,9 @@ export default {
           this.$router.push({
             path: '/explore/' + btoa(encodeURIComponent(JSON.stringify(this.searchField)))
           })
-          location.reload()
+          setTimeout(() => {
+            location.reload()
+          }, 100)
         }
       } else {
         this.$message({
