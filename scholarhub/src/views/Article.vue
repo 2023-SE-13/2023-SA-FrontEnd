@@ -775,15 +775,17 @@ export default {
       form.append("article_name", this.msg.article_name)
       // console.log(this.msg);
       FavoritePaper(form, localStorage.getItem('token')).then(res => {
-        if (res.status === 200) {
+        if (res.data.result === 0) {
           this.$message.success("收藏成功");
-          this.activeDetail._source.collected_num++;
+          this.articleDetails._source.collected_num = res.data.collected_num;
+          this.showCollect = true;
+        } else if (res.data.result === 1) {
+          this.$message.error(res.data.message);
         } else {
           this.$message.error("收藏失败");
         }
       }
       )
-      this.showCollect = true;
     },
 
     download() {
@@ -875,7 +877,7 @@ export default {
 }
 
 .article .title-text {
-  font-family: Tahoma, fantasy;
+  font-family: Tahoma, sans-serif;
   text-align: left;
   padding-top: 50px;
   padding-left: 20px;
@@ -884,6 +886,7 @@ export default {
   line-height: 40px;
   color: #353535;
 }
+
 
 .article .sub-title {
   text-align: left;
