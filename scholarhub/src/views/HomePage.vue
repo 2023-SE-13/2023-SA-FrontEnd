@@ -25,6 +25,12 @@
                     <el-button slot="append" id="search-button" icon="el-icon-search" @click="Search" ref="button">检索</el-button>
                 </el-input>
             </div>
+            <div class="app-counting-items">
+                <div class="app-counting-item">1372233670 期刊论文</div>
+                <div class="app-counting-item">{{this.userNum}} 学者用户</div>
+                <div class="app-counting-item">{{this.authorNum}} 科研作者</div>
+                <div class="app-counting-item">{{this.browseNum}} 浏览量</div>
+            </div>
         </div>
         <div class="paper-selection">
             <!-- <PaperUnit v-for="index in 4" :key="index"></PaperUnit> -->
@@ -54,7 +60,7 @@
 <script>
 import PaperUnit from "@/components/PaperUnit.vue"
 import router from "@/router";
-import { FuzzySearch, AuthorSearch, ShowHot } from "@/api/api";
+import { FuzzySearch, AuthorSearch, ShowHot, ShowAll} from "@/api/api";
 export default {
     data() {
         return {
@@ -95,6 +101,10 @@ export default {
                 ]
             },
             paperDatas: [],
+            userNum: 0,
+            authorNum: 0,
+            browseNum: 0,
+
         }
     },
     components: { PaperUnit }
@@ -200,6 +210,11 @@ export default {
         ShowHot().then(res => {
             this.paperDatas = res.data.works
         })
+        ShowAll().then(res => {
+            this.userNum = res.data.user_count
+            this.authorNum = res.data.author_count
+            this.browseNum = res.data.browse_times_sum
+        })
     },
     computed: {
         limitedPaperDatas() {
@@ -209,6 +224,47 @@ export default {
 }
 </script>
 <style scoped>
+
+.app-counting-items {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #fff;
+    margin-top: 170px; 
+    max-width: 60%;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    margin-left: 20%;
+    height: 100px;
+}
+
+.app-counting-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 0 36px;
+    position: relative;
+    cursor: pointer;
+    -webkit-transition: opacity .3s;
+    transition: opacity .3s;
+    font-size: 20px;
+    border-left: 0.5px solid #ffffff; /* 设置左侧边框颜色和样式 */
+}
 
 .app-news-logo {
     height: 100px;

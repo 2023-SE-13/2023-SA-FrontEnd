@@ -68,8 +68,8 @@
         <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
           <el-menu-item index="1">我的成果</el-menu-item>
-          <el-menu-item index="2">我的推荐</el-menu-item>
-          <el-menu-item index="3">我的收藏</el-menu-item>
+          <el-menu-item index="2">我的收藏</el-menu-item>
+          <el-menu-item index="3">浏览记录</el-menu-item>
           <el-menu-item v-show="isManager" index="4">待办审核</el-menu-item>
         </el-menu>
       </div>
@@ -104,10 +104,20 @@
           </div>
         </div>
         <div class="BottomContent2" v-show="MidNavIdx === '2'">
-
+          <el-table :data="collect_data.slice(begin3, end3)" style="width: 100%">
+            <template slot-scope="scope">
+              <el-table-column label="学术成果" prop="paper_name" @click="gotoColArt(scope.row.paper_id)"></el-table-column>
+            </template>
+          </el-table>
+          <el-pagination background layout="prev, pager, next" :total=Math.ceil(collect_data.length/10) @prev-click="prev3" @next-click="next3" @current-change="pageChange3">
+          </el-pagination>
         </div>
         <div class="BottomContent3" v-show="MidNavIdx === '3'">
-
+          <el-table :data="visit_data.slice(begin4, end4)" style="width: 100%">
+            <el-table-column label="浏览记录" prop="work_name"></el-table-column>
+          </el-table>
+          <el-pagination background layout="prev, pager, next" :total=Math.ceil(visit_data.length/10) @prev-click="prev4" @next-click="next4" @current-change="pageChange4">
+          </el-pagination>
         </div>
         <div class="BottomContent4" v-show="MidNavIdx === '4'">
           <div class="left4">
@@ -426,6 +436,8 @@ import {HandleAuthorMessage} from "@/api/api";
 import {HandlePaperMessage} from "@/api/api";
 import {UploadAvatar} from "@/api/api";
 import {GetAuthor} from "@/api/api";
+import {ShowFavorites} from "@/api/api";
+import {GetWorkList} from "@/api/api";
 
 export default {
   name: "PersonHomepage",
@@ -453,29 +465,47 @@ export default {
         this.username = res.data.username
         this.name = res.data.name
         this.imageUrl = res.data.photo_url_out
-        this.isManager = res.data.is_admin
         if (res.data.is_author) {
           this.isAuthor = true
-          let s = btoa(encodeURIComponent(JSON.stringify(res.data.author_id)));
-          let aid = JSON.parse(decodeURIComponent(atob(s)));
-          GetAuthor(aid).then(res => {
+          this.aid = res.data.author_id;
+          console.log(this.aid)
+          GetAuthor(this.aid).then(res => {
             console.log(res)
-            if (res.data._source.last_known_institution) {
-              console.log('you')
+            console.log(res.data._source)
+            if (res.data._source.last_known_institution === null) {
+              this.institution = "暂无机构信息";
+            } else {
               this.institution = res.data._source.last_known_institution.display_name
-            } else {
-              this.institution = null
             }
-            if (res.data._source.display_name) {
-              this.name = res.data._source.display_name
+            if (res.data._source.display_name === null) {
+              this.name = null;
             } else {
-              this.name = null
+              this.name = res.data._source.display_name
             }
           })
         } else {
           this.isAuthor = false
           this.name = null
-          this.institution = null
+          this.institution = "暂无机构信息"
+        }
+        this.isManager = res.data.is_admin
+        if (this.isManager) {
+          ShowAuthorMessage(this.token).then(res => {
+            if (res.data.result === 0) {
+              this.scholar_certification = res.data.messages
+              console.log(this.scholar_certification)
+            } else {
+              console.log(res.data.messages)
+            }
+          })
+          ShowPaperMessage(this.token).then(res => {
+            if (res.data.result === 0) {
+              this.work_certification = res.data.messages
+              console.log(this.work_certification)
+            } else {
+              console.log(res.data.messages)
+            }
+          })
         }
       } else {
         this.$notify({
@@ -486,26 +516,37 @@ export default {
         return;
       }
     })
-    ShowAuthorMessage(this.token).then(res => {
+    ShowFavorites(this.token).then(res => {
       if (res.data.result === 0) {
-        this.scholar_certification = res.data.messages
-        console.log(this.scholar_certification)
+        this.collect_data = res.data.messages
       } else {
-        console.log(res.data.messages)
+        this.$notify({
+          title: '错误',
+          message: '获取收藏成果失败',
+          type: 'error'
+        });
+        return;
       }
     })
-    ShowPaperMessage(this.token).then(res => {
+    GetWorkList(this.token).then(res => {
+      console.log(res)
       if (res.data.result === 0) {
-        this.work_certification = res.data.messages
-        console.log(this.work_certification)
+        console.log("1")
+        console.log(res.data.objects, "33333")
+        this.visit_data = res.data.objects
       } else {
-        console.log(res.data.messages)
+        this.$notify({
+          title: '错误',
+          message: '获取浏览记录失败',
+          type: 'error'
+        });
+        return;
       }
     })
-
   },
   data() {
     return {
+      aid: "",
       token: null,
       is_black: false,
       username: "username",
@@ -527,6 +568,10 @@ export default {
       end1: 10,
       begin2: 0,
       end2: 10,
+      begin3: 0,
+      end3: 0,
+      begin4:0,
+      end4:0,
       scholar_certification: [
         {
           id: '',
@@ -544,6 +589,20 @@ export default {
           send_user_id: '',
           author_id: '',
           datetime: '',
+        }
+      ],
+      collect_data: [
+        {
+          paper_id: '',
+          paper_name: '',
+        }
+      ],
+      visit_data: [
+        {
+          id: '',
+          work_name: "",
+          work_id: "",
+          time: ""
         }
       ],
       infoDialog: false,
@@ -616,6 +675,9 @@ export default {
     },
     cancel_interest() {
       this.isInterested = false;
+    },
+    gotoColArt(val) {
+      this.$router.push("/paper/" + btoa(encodeURIComponent(JSON.stringify(val))))
     },
     accept(num) {
       console.log(num);
@@ -740,6 +802,42 @@ export default {
       console.log(val)
       this.begin2 = (val - 1) * 10;
       this.end2 = val * 10;
+    },
+    prev3() {
+      if (this.begin3 >= 10) {
+        this.begin3 -= 10;
+        this.end3 -= 10;
+      } else {
+        this.begin3 = 0;
+        this.end3 = 10;
+      }
+    },
+    next3() {
+      this.begin3 += 10;
+      this.end3 += 10;
+    },
+    pageChange3(val) {
+      console.log(val)
+      this.begin3 = (val - 1) * 10;
+      this.end3 = val * 10;
+    },
+    prev4() {
+      if (this.begin4 >= 10) {
+        this.begin4 -= 10;
+        this.end4 -= 10;
+      } else {
+        this.begin4 = 0;
+        this.end4 = 10;
+      }
+    },
+    next4() {
+      this.begin4 += 10;
+      this.end4 += 10;
+    },
+    pageChange4(val) {
+      console.log(val)
+      this.begin4 = (val - 1) * 10;
+      this.end4 = val * 10;
     },
     uploadPic(file) {
       const formData = new FormData();
@@ -1050,6 +1148,22 @@ export default {
   margin: 0;
   font-size: 14px;
   color: #8590a6;
+}
+
+.BottomContent2 {
+  margin: 0 7.5%;
+  padding: 1% 1% 0;
+  width: 82.6%;
+  height: 98%;
+  background-color: white;
+}
+
+.BottomContent3 {
+  margin: 0 7.5%;
+  padding: 1% 1% 0;
+  width: 82.6%;
+  height: 98%;
+  background-color: white;
 }
 
 .BottomContent4 {

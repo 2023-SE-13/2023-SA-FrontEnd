@@ -46,7 +46,7 @@ const routes = [
         name:'首页1',
         component:()=>import('@/views/HomePage')
       },
-      
+
       {
         path:'/settings',
         name:'设置',
@@ -90,10 +90,6 @@ const routes = [
     name:'注册',
     component:()=>import('@/views/RegisterPage')
   },
-  {
-    path: '*',
-    redirect: '/main'
-  }
 ]
 
 const router = new VueRouter({

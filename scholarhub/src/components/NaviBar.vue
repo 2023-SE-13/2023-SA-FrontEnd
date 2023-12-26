@@ -82,7 +82,10 @@ export default {
         this.$router.push("/php/" + this.id)
       }
       if (command === 'b') {
-        this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))))
+
+      }
+      if (command === 'c') {
+
       }
       if (command === 'd' && this.$route.path !== '/settings') {
         this.$router.push("/settings")
@@ -114,7 +117,9 @@ export default {
           this.$router.push({
             path: '/explore/' + btoa(encodeURIComponent(JSON.stringify(this.searchField)))
           })
-          location.reload()
+          setTimeout(() => {
+            location.reload()
+          }, 100)
         }
       } else {
         this.$message({
