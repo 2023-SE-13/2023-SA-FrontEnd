@@ -684,17 +684,19 @@ export default {
           this.msg.related_works_count = this.articleDetails._source.related_works.length;
         }
     )
-    const data = {
-      work_id: JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id))),
-      work_name: this.articleDetails._source.title
-    }
-    console.log(data)
-    let token = localStorage.getItem('token')
-    if (token !== null) {
-      AddBrowHistory(data, localStorage.getItem('token')).then(res => {
-        console.log(res)
-      })
-    }
+    setTimeout(()=>{
+      const data = {
+        work_id: JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id))),
+        work_name: this.articleDetails._source.title
+      }
+      console.log(data)
+      let token = localStorage.getItem('token')
+      if (token !== null) {
+        AddBrowHistory(data, localStorage.getItem('token')).then(res => {
+          console.log(res)
+        })
+      }
+    },500)
   },
   methods: {
     getAuthorPositionNumber(position) {
