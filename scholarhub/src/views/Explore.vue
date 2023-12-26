@@ -57,7 +57,7 @@
                                                         }})</span>
                                                     </el-checkbox>
                                                 </el-checkbox-group>
-                                                <!-- 
+                                                <!--
                                                 <el-button @click="isExpanded0 = !isExpanded0">
                                                     {{ isExpanded0 ? '收起' : '展开' }}
                                                 </el-button> -->
@@ -635,7 +635,7 @@ export default {
             console.log(data._id)
             this.isShowDialog = true
             console.log(this.isShowDialog)
-            this.$router.push("/php/" + btoa(encodeURIComponent(data._id)))
+            this.$router.push("/scholar/" + btoa(encodeURIComponent(data._id)))
         },
         submitApply() {
             console.log(this.form)
