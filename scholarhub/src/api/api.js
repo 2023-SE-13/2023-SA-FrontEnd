@@ -384,3 +384,10 @@ export function GetAuthor(param) {
         }
     })
 }
+
+export function ShowAll() {
+    return service({
+        method: 'get',
+        url: `/message/show_all`
+    })
+}
