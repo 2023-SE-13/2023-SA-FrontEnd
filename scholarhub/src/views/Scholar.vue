@@ -1,417 +1,138 @@
 <template>
   <div>
     <div class="navi">
-      <NaviBar />
+      <NaviBar/>
     </div>
     <div class="phpContainer">
       <div class="Info">
         <el-upload
             class="avatar_upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-          <img class="image-container" v-if="!imageUrl" id="Photo" src="../assets/photo.png" alt="Õ∑œÒ"  width="170px" height="170px">
+            :before-upload="beforeAvatarUpload"
+            :http-request="uploadPic">
+          <img class="image-container" id="Photo" :src=this.imageUrl alt="Â§¥ÂÉè" width="170px" height="170px">
           <div class="image-black-cover"><i class="el-icon-plus"></i></div>
         </el-upload>
         <div class="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
-            ”√ªß√˚£∫{{ username }}
+            {{ name }}
             <span>
-            <i class="el-icon-edit" @click="modify" v-show="isSelf">œÍœ∏◊ ¡œ</i>
+            <i class="el-icon-edit" @click="modify" v-show="isSelf">ËØ¶ÁªÜËµÑÊñô</i>
             <el-dialog class="info_dialog" :visible.sync="infoDialog" :append-to-body="true">
               <el-descriptions :column="1" :label-style="{'font-size': '20px'}">
                 <span v-if="infoDialogTitle" slot="title" style="font-size: 25px">
                   <i class="el-icon-postcard"></i>
-                  ◊ ¡œ
+                  ËµÑÊñô
                 </span>
                 <span v-else slot="title" style="font-size: 25px">
                   <i class="el-icon-edit-outline"></i>
-                  ±‡º≠◊ ¡œ
+                  ÁºñËæëËµÑÊñô
                 </span>
                 <template v-if="infoDialogTitle" slot="extra">
-                  <el-button type="primary" size="small" @click="modify_info">±‡º≠</el-button>
+                  <el-button type="primary" size="small" @click="modify_info">ÁºñËæë</el-button>
                 </template>
                 <template v-else slot="extra">
-                  <el-button type="primary" size="small" @click="modify_confirm">»∑»œ</el-button>
-                  <el-button type="danger" size="small" @click="modify_cancel">»°œ˚</el-button>
-                  <el-button type="warning" size="small" @click="modify_clear">«Âø’</el-button>
+                  <el-button type="primary" size="small" @click="modify_confirm()">Á°ÆËÆ§</el-button>
+                  <el-button type="danger" size="small" @click="modify_cancel">ÂèñÊ∂à</el-button>
+                  <el-button type="warning" size="small" @click="modify_clear">Ê∏ÖÁ©∫</el-button>
                 </template>
-                <el-descriptions-item label="”√ªß√˚">
-                  <el-input v-model="username" placeholder="«Î ‰”√ªß√˚" :disabled="inputDisabled"></el-input>
+                <el-descriptions-item label="Áî®Êà∑Âêç">
+                  <el-input v-model="username" placeholder="ËØ∑ËæìÂÖ•Áî®Êà∑Âêç" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
-                <el-descriptions-item label="’Ê µ–’√˚">
-                  <el-input v-model="name" placeholder="«Î ‰»Î’Ê µ–’√˚" :disabled="inputDisabled"></el-input>
+                <el-descriptions-item label="ÁúüÂÆûÂßìÂêç">
+                  <el-input v-model="name" placeholder="ËØ∑ËæìÂÖ•ÁúüÂÆûÂßìÂêç" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
-                <el-descriptions-item label="ª˙ππ">
-                  <el-input v-model="institution" placeholder="«Î ‰»Îª˙ππ" :disabled="inputDisabled"></el-input>
+                <el-descriptions-item label="Êú∫ÊûÑ">
+                  <el-input v-model="institution" placeholder="ËØ∑ËæìÂÖ•Êú∫ÊûÑ" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
-                <el-descriptions-item label="” œ‰">
-                  <el-input v-model="email" placeholder="«Î ‰»Î” œ‰" :disabled="inputDisabled"></el-input>
+                <el-descriptions-item label="ÈÇÆÁÆ±">
+                  <el-input v-model="email" placeholder="ËØ∑ËæìÂÖ•ÈÇÆÁÆ±" :disabled="inputDisabled"></el-input>
                 </el-descriptions-item>
               </el-descriptions>
             </el-dialog>
-            <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
-              <i class="el-icon-plus">πÿ◊¢</i>
+            <el-button class="el-button-interest" @click="turn" v-show="!is_applied">
+              <i class="el-icon-plus">ËÆ§È¢Ü</i>
             </el-button>
-            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest" @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
-              <i class="el-icon-finished" v-if="!isCancel">“—πÿ◊¢</i>
-              <span class="el-icon-cancel" v-if="isCancel">»°œ˚πÿ◊¢</span>
-            </el-button>
-            <el-button class="el-button-interest" v-show="!isSelf && !isInterested" @click="interest">
-              <i class="el-icon-plus">πÿ◊¢</i>
-            </el-button>
-            <el-button class="el-button-interested" v-show="!isSelf && isInterested" @click="cancel_interest" @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
-              <i class="el-icon-finished" v-if="!isCancel">“—πÿ◊¢</i>
-              <span class="el-icon-cancel" v-if="isCancel">»°œ˚πÿ◊¢</span>
+              <el-dialog title="ËÆ§È¢Ü" :visible.sync="this.dialogVisible" :append-to-body="true" width="30%">
+                <!--ÈúÄË¶ÅËæìÂÖ•ÁúüÂÆûÂßìÂêçÔºåÊèèËø∞ÂÜÖÂÆπÔºåÁÖßÁâá-->
+                <el-form :model="form" ref="form" label-width="80px">
+                  <el-form-item label="ÁúüÂÆûÂßìÂêç" prop="name">
+                    <el-input v-model="form.name"></el-input>
+                  </el-form-item>
+                  <el-form-item label="ÊèèËø∞ÂÜÖÂÆπ" prop="description">
+                    <el-input v-model="form.description"></el-input>
+                    </el-form-item>
+                  <el-form-item label="ÁÖßÁâá" prop="photo">
+                    <el-upload
+                        class="avatar-uploader"
+                        action="#"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload"
+                        :http-request="uploadPic2">
+                      <img class="avatar" :src="form.photo" alt="">
+                      <i class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                  </el-form-item>
+                </el-form>
+                  <el-button @click="dialogVisible = false">Âèñ Ê∂à</el-button>
+                  <el-button type="primary" @click="interest">Á°Æ ÂÆö</el-button>
+              </el-dialog>
+            <el-button class="el-button-interested" v-show="is_applied" @click="cancel_interest"
+                       @mouseover.native="cancel_display" @mouseleave.native="cancel_hide">
+              <i class="el-icon-finished">Â∑≤ËÆ§È¢Ü</i>
             </el-button>
           </span>
           </p>
-          <p style="font-size: 16px;color: #8590a6;">ª˙ππ£∫{{ institution }}</p>
+          <p style="font-size: 16px;color: #8590a6;">Êú∫ÊûÑÔºö{{ institution }}</p>
         </div>
       </div>
       <div class="MidNav">
-        <el-menu default-active="4" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#d7ecff"
+        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+                 background-color="#d7ecff"
                  text-color="#121212" active-text-color="#2f3a91">
-          <el-menu-item index="1">Œ“µƒ≥…π˚</el-menu-item>
-          <el-menu-item index="2">Œ“µƒŒƒø‚</el-menu-item>
-          <el-menu-item index="3">Œ“µƒ ’≤ÿ</el-menu-item>
-          <el-menu-item v-show="isManager" index="4">¥˝∞Ï…Û∫À</el-menu-item>
+          <el-menu-item index="1">ÊàëÁöÑÊàêÊûú</el-menu-item>
         </el-menu>
       </div>
       <div class="Bottom">
         <div class="BottomContent1" v-show="MidNavIdx === '1'">
           <el-menu default-active="1" class="el-menu1-demo" mode="horizontal" @select="handleSelect1">
-            <el-menu-item index="1">¬€Œƒ</el-menu-item>
-            <el-menu-item id="item2" index="2">◊®¿˚</el-menu-item>
+            <el-menu-item index="1">ËÆ∫Êñá</el-menu-item>
+            <el-menu-item id="item2" index="2">‰∏ìÂà©</el-menu-item>
           </el-menu>
           <div v-show="Menu1Idx === '1'">
-            <el-input class="keywordSearch" placeholder="πÿº¸¥ ºÏÀ˜" v-model="keywordsInput" @keyup.enter.native="search">
+            <el-input class="keywordSearch" placeholder="ÂÖ≥ÈîÆËØçÊ£ÄÁ¥¢" v-model="keywordsInput"
+                      @keyup.enter.native="search">
               <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
             </el-input>
-            <el-switch class="mp_switch" v-model="isMasterpieceOnly" active-text="Ωˆø¥¥˙±Ì◊˜" active-color="#2f3a91"
+            <el-switch class="mp_switch" v-model="isMasterpieceOnly" active-text="‰ªÖÁúã‰ª£Ë°®‰Ωú" active-color="#2f3a91"
                        inactive-color="#646464"></el-switch>
             <el-dropdown class="dropdown">
               <el-button>
-                ∏¸∂‡≤Àµ•<i class="el-icon-arrow-down el-icon--right"></i>
+                Êõ¥Â§öËèúÂçï<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>ª∆Ω∏‚</el-dropdown-item>
-                <el-dropdown-item> ®◊”Õ∑</el-dropdown-item>
-                <el-dropdown-item>¬›Úœ∑€</el-dropdown-item>
-                <el-dropdown-item>À´∆§ƒÃ</el-dropdown-item>
-                <el-dropdown-item>Ú¬◊–ºÂ</el-dropdown-item>
+                <el-dropdown-item>ÈªÑÈáëÁ≥ï</el-dropdown-item>
+                <el-dropdown-item>ÁãÆÂ≠êÂ§¥</el-dropdown-item>
+                <el-dropdown-item>Ëû∫Ëõ≥Á≤â</el-dropdown-item>
+                <el-dropdown-item>ÂèåÁöÆÂ•∂</el-dropdown-item>
+                <el-dropdown-item>Ëöµ‰ªîÁÖé</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="ø’ø’»Á“≤~"></el-empty>
+            <el-empty class="empty"
+                      image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D"
+                      description="Á©∫Á©∫Â¶Ç‰πü~"></el-empty>
           </div>
           <div v-show="Menu1Idx === '2'">
-            <el-input class="keywordSearch" placeholder="πÿº¸¥ ºÏÀ˜" v-model="keywordsInput" @keyup.enter.native="search">
+            <el-input class="keywordSearch" placeholder="ÂÖ≥ÈîÆËØçÊ£ÄÁ¥¢" v-model="keywordsInput"
+                      @keyup.enter.native="search">
               <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
             </el-input>
-            <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="ø’ø’»Á“≤~"></el-empty>
-          </div>
-        </div>
-        <div class="BottomContent2" v-show="MidNavIdx === '2'">
-
-        </div>
-        <div class="BottomContent3" v-show="MidNavIdx === '3'">
-
-        </div>
-        <div class="BottomContent4" v-show="MidNavIdx === '4'">
-          <div class="left4">
-            <el-menu class="el-menu4-demo" mode="vertical" default-active="1" @select="handleSelect4">
-              <el-menu-item index="1">¥˝»œ÷§—ß’ﬂ</el-menu-item>
-              <el-menu-item index="2">¥˝»œ¡Ï≥…π˚</el-menu-item>
-              <el-menu-item index="3">¥˝¥¶¿Ì…ÍÀﬂ</el-menu-item>
-            </el-menu>
-          </div>
-          <div class="right4_1" v-show="Menu4Idx === '1'">
-            <el-table :data="scholar_certification.slice(begin1, end1)">
-              <el-table-column prop="date" label="…Í«Î ±º‰" width="240">
-                <template slot-scope="scope">
-                  <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="…Í«Î”√ªß" width="240">
-                <template slot-scope="scope">
-                  <el-popover placement="top" trigger="hover">
-                    <el-descriptions title="”√ªß–≈œ¢" :column="3" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          <span style="margin-left: 3px">”√ªß√˚</span>
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-message"></i>
-                          <span style="margin-left: 3px">” œ‰</span>
-                        </template>
-                        1060592547@qq.com
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-postcard">æ”◊°µÿ</i>
-                        </template>
-                        À’÷› –
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets">±∏◊¢</i>
-                        </template>
-                        <el-tag size="small">—ß–£</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-office-building"></i>
-                          <span style="margin-left: 3px">ª˙ππ</span>
-                        </template>
-                        Ω≠À’ °À’÷› –Œ‚÷–«¯Œ‚÷–¥Ûµ¿ 1188 ∫≈
-                      </el-descriptions-item>
-                    </el-descriptions>
-                    <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                    </div>
-                  </el-popover>
-                </template>
-              </el-table-column>
-              <el-table-column prop="detail" label="œÍ«È" width="240">
-                <template slot-scope="scope">
-                  <el-button class="detail-button" @click="dialogVisible = true">µ„ª˜≤Èø¥</el-button>
-                  <el-dialog title="»œ÷§—ß’ﬂ…Í«Î" :visible.sync="dialogVisible" :append-to-body="true">
-                    <el-descriptions :column="1" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          ”√ªß√˚
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-mobile-phone"></i>
-                          ’Ê µ–’√˚
-                        </template>
-                        —ÓÀ∂
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-location-outline"></i>
-                          √Ë ˆ
-                        </template>
-                        xxxxxxxxxxxxxxxxx
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets"></i>
-                          ±∏◊¢
-                        </template>
-                        <el-tag size="small">—ß–£</el-tag>
-                      </el-descriptions-item>
-                    </el-descriptions>
-                  </el-dialog>
-                </template>
-              </el-table-column>
-              <el-table-column prop="operator" label="¥¶¿Ì≤Ÿ◊˜">
-                <el-button>Õ¨“‚</el-button>
-                <el-button>æ‹æ¯</el-button>
-              </el-table-column>
-            </el-table>
-            <el-pagination background layout="prev, pager, next" :total="1000" @prev-click="prev" @next-click="next" @current-change="pageChange">
-            </el-pagination>
-          </div>
-          <div class="right4_2" v-show="Menu4Idx === '2'">
-            <el-table :data="work_certification">
-              <el-table-column prop="date" label="…Í«Î ±º‰" width="240">
-                <template slot-scope="scope">
-                  <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="…Í«Î”√ªß" width="240">
-                <template slot-scope="scope">
-                  <el-popover placement="top" trigger="hover">
-                    <el-descriptions title="”√ªß–≈œ¢" :column="3" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          <span style="margin-left: 3px">”√ªß√˚</span>
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-message"></i>
-                          <span style="margin-left: 3px">” œ‰</span>
-                        </template>
-                        1060592547@qq.com
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-postcard">æ”◊°µÿ</i>
-                        </template>
-                        À’÷› –
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets">±∏◊¢</i>
-                        </template>
-                        <el-tag size="small">—ß–£</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-office-building"></i>
-                          <span style="margin-left: 3px">ª˙ππ</span>
-                        </template>
-                        Ω≠À’ °À’÷› –Œ‚÷–«¯Œ‚÷–¥Ûµ¿ 1188 ∫≈
-                      </el-descriptions-item>
-                    </el-descriptions>
-                    <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                    </div>
-                  </el-popover>
-                </template>
-              </el-table-column>
-              <el-table-column prop="detail" label="œÍ«È" width="240">
-                <template slot-scope="scope">
-                  <el-button class="detail-button" @click="dialogVisible = true">µ„ª˜≤Èø¥</el-button>
-                  <el-dialog title="»œ÷§—ß’ﬂ…Í«Î" :visible.sync="dialogVisible" :append-to-body="true">
-                    <el-descriptions :column="1" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          ”√ªß√˚
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-mobile-phone"></i>
-                          ’Ê µ–’√˚
-                        </template>
-                        —ÓÀ∂
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-location-outline"></i>
-                          √Ë ˆ
-                        </template>
-                        xxxxxxxxxxxxxxxxx
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets"></i>
-                          ±∏◊¢
-                        </template>
-                        <el-tag size="small">—ß–£</el-tag>
-                      </el-descriptions-item>
-                    </el-descriptions>
-                  </el-dialog>
-                </template>
-              </el-table-column>
-              <el-table-column prop="operator" label="¥¶¿Ì≤Ÿ◊˜">
-                <el-button>Õ¨“‚</el-button>
-                <el-button>æ‹æ¯</el-button>
-              </el-table-column>
-            </el-table>
-          </div>
-          <div class="right4_3" v-show="Menu4Idx === '3'">
-            <el-table :data="scholar_certification">
-              <el-table-column prop="date" label="…Í«Î ±º‰" width="240">
-                <template slot-scope="scope">
-                  <i class="el-icon-time"></i>
-                  <span style="margin-left: 10px">{{ scope.row.date }}{{ scope.row.$index }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="…Í«Î”√ªß" width="240">
-                <template slot-scope="scope">
-                  <el-popover placement="top" trigger="hover">
-                    <el-descriptions title="”√ªß–≈œ¢" :column="3" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          <span style="margin-left: 3px">”√ªß√˚</span>
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-message"></i>
-                          <span style="margin-left: 3px">” œ‰</span>
-                        </template>
-                        1060592547@qq.com
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-postcard">æ”◊°µÿ</i>
-                        </template>
-                        À’÷› –
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets">±∏◊¢</i>
-                        </template>
-                        <el-tag size="small">—ß–£</el-tag>
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-office-building"></i>
-                          <span style="margin-left: 3px">ª˙ππ</span>
-                        </template>
-                        Ω≠À’ °À’÷› –Œ‚÷–«¯Œ‚÷–¥Ûµ¿ 1188 ∫≈
-                      </el-descriptions-item>
-                    </el-descriptions>
-                    <div slot="reference">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                    </div>
-                  </el-popover>
-                </template>
-              </el-table-column>
-              <el-table-column prop="detail" label="œÍ«È" width="240">
-                <template slot-scope="scope">
-                  <el-button class="detail-button" @click="dialogVisible = true">µ„ª˜≤Èø¥</el-button>
-                  <el-dialog title="»œ÷§—ß’ﬂ…Í«Î" :visible.sync="dialogVisible" :append-to-body="true">
-                    <el-descriptions :column="1" border>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-user"></i>
-                          ”√ªß√˚
-                        </template>
-                        {{ scope.row.name }}
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-mobile-phone"></i>
-                          ’Ê µ–’√˚
-                        </template>
-                        —ÓÀ∂
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-location-outline"></i>
-                          √Ë ˆ
-                        </template>
-                        xxxxxxxxxxxxxxxxx
-                      </el-descriptions-item>
-                      <el-descriptions-item>
-                        <template slot="label">
-                          <i class="el-icon-tickets"></i>
-                          ±∏◊¢
-                        </template>
-                        <el-tag size="small">—ß–£</el-tag>
-                      </el-descriptions-item>
-                    </el-descriptions>
-                  </el-dialog>
-                </template>
-              </el-table-column>
-              <el-table-column prop="operator" label="¥¶¿Ì≤Ÿ◊˜">
-                <el-button>Õ¨“‚</el-button>
-                <el-button>æ‹æ¯</el-button>
-              </el-table-column>
-            </el-table>
+            <el-empty class="empty"
+                      image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D"
+                      description="Á©∫Á©∫Â¶Ç‰πü~"></el-empty>
           </div>
         </div>
       </div>
@@ -422,8 +143,14 @@
 <script>
 import NaviBar from "@/components/NaviBar.vue";
 import index from "vuex";
+import {getInformation} from "@/api/api";
 import {ShowAuthorMessage} from "@/api/api";
 import {ShowPaperMessage} from "@/api/api";
+import {HandleAuthorMessage} from "@/api/api";
+import {HandlePaperMessage} from "@/api/api";
+import {UploadAvatar} from "@/api/api";
+import {GetAuthor} from "@/api/api";
+import {ApplyAuthor} from "@/api/api";
 
 export default {
   name: "PersonHomepage",
@@ -437,19 +164,31 @@ export default {
   },
   mounted() {
     this.token = localStorage.getItem("token")
-    this.username = "younsur" + this.$route.params.id.toString();
-    this.institution = "«Âª™¥Û—ß";
-    ShowAuthorMessage(token).then(res => {
-      if (res.data.result === 0) {
-        this.scholar_certification = res.data.messages
+    if (this.token === null) {
+      this.$router.push("/login")
+    }
+    this.imageUrl = "http://116.63.49.180/avatar/default_avatar.png"
+    this.form.author_id = decodeURIComponent(atob(this.$route.params.id))
+    GetAuthor(decodeURIComponent(atob(this.$route.params.id))).then(res => {
+      this.name = res.data._source.display_name
+      if (res.data._source.last_known_institution === null) {
+        this.institution = "Êú™Áü•"
+      } else {
+        this.institution = res.data._source.last_known_institution.display_name
       }
-    })
-    ShowPaperMessage(token).then(res => {
-      //todo: Ω”ø⁄¥¶¿Ì
+      this.is_applied = res.data.is_applied
     })
   },
   data() {
     return {
+      form: {
+        author_id:'',
+        name: '',
+        description: '',
+        photo: '',
+      },
+      file: null,
+      is_applied: false,
       token: null,
       is_black: false,
       username: "username",
@@ -457,7 +196,7 @@ export default {
       institution: "institution",
       email: "email",
       imageUrl: '',
-      MidNavIdx: '4',
+      MidNavIdx: '1',
       Menu1Idx: '1',
       Menu4Idx: '1',
       keywordsInput: "",
@@ -472,66 +211,21 @@ export default {
       end2: 10,
       scholar_certification: [
         {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
-        {
-          date: '2023-12-22',
-          name: 'young'
-        },
+          id: '',
+          author_id: '',
+          username: '',
+          send_user_id: '',
+          datetime: '',
+        }
       ],
       work_certification: [
         {
-          date: '2023-12-22',
-          name: 'young'
+          id: '',
+          work_id: '',
+          send_user: '',
+          send_user_id: '',
+          author_id: '',
+          datetime: '',
         }
       ],
       infoDialog: false,
@@ -541,6 +235,9 @@ export default {
     };
   },
   methods: {
+    turn(){
+      this.dialogVisible = true;
+    },
     modify() {
       // this.$router.push("/authentication");
       this.infoDialog = true;
@@ -571,10 +268,10 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error('…œ¥´Õ∑œÒÕº∆¨÷ªƒ‹ « JPG ∏Ò Ω!');
+        this.$message.error('‰∏ä‰º†Â§¥ÂÉèÂõæÁâáÂè™ËÉΩÊòØ JPG Ê†ºÂºè!');
       }
       if (!isLt2M) {
-        this.$message.error('…œ¥´Õ∑œÒÕº∆¨¥Û–°≤ªƒ‹≥¨π˝ 2MB!');
+        this.$message.error('‰∏ä‰º†Â§¥ÂÉèÂõæÁâáÂ§ßÂ∞è‰∏çËÉΩË∂ÖËøá 2MB!');
       }
       return isJPG && isLt2M;
     },
@@ -594,7 +291,28 @@ export default {
       alert(this.keywordsInput)
     },
     interest() {
-      this.isInterested = true;
+      this.dialogVisible = false
+      this.form.photo = this.file
+      const formData = new FormData();
+      formData.append('author_id', this.form.author_id);
+      formData.append('name', this.form.name);
+      formData.append('content', this.form.description);
+      formData.append('photo', this.form.photo);
+      ApplyAuthor(formData, this.token).then(res=>{
+        if (res.data.result === 0) {
+          this.$notify({
+            title: 'ÊàêÂäü',
+            message: 'Áî≥ËØ∑ÊàêÂäü',
+            type: 'success'
+          });
+        } else {
+          this.$notify({
+            title: 'Ë≠¶Âëä',
+            message: 'Áî≥ËØ∑Â§±Ë¥•',
+            type: 'warning'
+          });
+        }
+      })
     },
     cancel_display() {
       this.isCancel = true;
@@ -604,6 +322,94 @@ export default {
     },
     cancel_interest() {
       this.isInterested = false;
+    },
+    accept(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '1');
+      formData.append('message_id', this.scholar_certification[num].id);
+      HandleAuthorMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: 'ÊàêÂäü',
+            message: 'Â∑≤ÂêåÊÑè',
+            type: 'success'
+          });
+          this.scholar_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: 'Ë≠¶Âëä',
+            message: 'Êìç‰ΩúÂ§±Ë¥•',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    refuse(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '0');
+      formData.append('message_id', this.scholar_certification[num].id);
+      HandleAuthorMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: 'ÊàêÂäü',
+            message: 'Â∑≤ÊãíÁªù',
+            type: 'success'
+          });
+          this.scholar_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: 'Ë≠¶Âëä',
+            message: 'Êìç‰ΩúÂ§±Ë¥•',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    accept2(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '1');
+      formData.append('message_id', this.work_certification[num].id);
+      HandlePaperMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: 'ÊàêÂäü',
+            message: 'Â∑≤ÂêåÊÑè',
+            type: 'success'
+          });
+          this.work_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: 'Ë≠¶Âëä',
+            message: 'Êìç‰ΩúÂ§±Ë¥•',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    refuse2(num) {
+      console.log(num);
+      const formData = new FormData();
+      formData.append('result', '0');
+      formData.append('message_id', this.work_certification[num].id);
+      HandlePaperMessage(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: 'ÊàêÂäü',
+            message: 'Â∑≤ÊãíÁªù',
+            type: 'success'
+          });
+          this.work_certification.splice(num, 1)
+        } else {
+          this.$notify({
+            title: 'Ë≠¶Âëä',
+            message: 'Êìç‰ΩúÂ§±Ë¥•',
+            type: 'warning'
+          });
+        }
+      })
     },
     prev() {
       if (this.begin1 >= 10) {
@@ -622,7 +428,49 @@ export default {
       console.log(val)
       this.begin1 = (val - 1) * 10;
       this.end1 = val * 10;
-    }
+    },
+    prev2() {
+      if (this.begin2 >= 10) {
+        this.begin2 -= 10;
+        this.end2 -= 10;
+      } else {
+        this.begin2 = 0;
+        this.end2 = 10;
+      }
+    },
+    next2() {
+      this.begin2 += 10;
+      this.end2 += 10;
+    },
+    pageChange2(val) {
+      console.log(val)
+      this.begin2 = (val - 1) * 10;
+      this.end2 = val * 10;
+    },
+    uploadPic(file) {
+      const formData = new FormData();
+      formData.append('avatar', file.file);
+      console.log(file.file)
+      UploadAvatar(formData, this.token).then(res => {
+        if (res.data.result === 0) {
+          this.$notify({
+            title: 'ÊàêÂäü',
+            message: '‰∏ä‰º†ÊàêÂäü',
+            type: 'success'
+          });
+          this.$router.go(0)
+        } else {
+          this.$notify({
+            title: 'Ë≠¶Âëä',
+            message: '‰∏ä‰º†Â§±Ë¥•',
+            type: 'warning'
+          });
+        }
+      })
+    },
+    uploadPic2(file) {
+      this.file = file.file;
+    },
   }
 }
 </script>
@@ -672,7 +520,7 @@ export default {
   top: 0;
 }
 
-.Info .avatar_upload .image-black-cover:hover{
+.Info .avatar_upload .image-black-cover:hover {
   animation: move 0.6s forwards;
 }
 
@@ -686,7 +534,7 @@ export default {
   }
 }
 
-.Info .avatar_upload .image-black-cover .el-icon-plus{
+.Info .avatar_upload .image-black-cover .el-icon-plus {
   font-size: 30px;
   position: relative;
   color: white;
@@ -749,8 +597,8 @@ export default {
   height: 30px;
   font-size: 14px;
   color: white;
-  background: rgba(0,0,0,.45);
-  box-shadow: 0 0 0 2px hsla(0,0%,100%,.3);
+  background: rgba(0, 0, 0, .45);
+  box-shadow: 0 0 0 2px hsla(0, 0%, 100%, .3);
   border-radius: 4px;
 }
 
@@ -928,7 +776,7 @@ export default {
   margin-right: 2%;
 }
 
-.BottomContent4 .left4 .el-menu4-demo{
+.BottomContent4 .left4 .el-menu4-demo {
   border: 1px solid #ebebeb;
   border-top: 5px solid #828ad8;
   padding-top: 20px;
@@ -1008,4 +856,3 @@ export default {
   opacity: 1;
 }
 </style>
-

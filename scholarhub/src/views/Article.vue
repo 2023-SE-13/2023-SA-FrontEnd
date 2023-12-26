@@ -220,7 +220,7 @@
             </div>
           </el-row>
 
-          <!-- <el-row class="relation" v-if="related_papers.length > 0"> 
+          <!-- <el-row class="relation" v-if="related_papers.length > 0">
             <div class="field-title">相关文献</div>
             <div class="relation-article" v-for="(article, index) in related_papers" :key="index">
               <div class="relation-title">
@@ -238,7 +238,7 @@
         </div>
       </el-col>
     </el-row>
-    <!-- 
+    <!--
     <CollectDialog :curPaper="articleDetails" :showCollect="showCollect" @collectSuccess="collectSuccess"
       @closeChildDialog="closeChildDialog"></CollectDialog> -->
 
@@ -246,7 +246,7 @@
     </CiteDialog>
   </div>
 </template>
-  
+
 <script>
 //   import user from "../../store/user";
 import { GetPaper, FavoritePaper, ApplyWork } from '@/api/api';
@@ -687,22 +687,12 @@ export default {
       this.showCollect = false;
     },
     toArticle: function (paper_id) {
-      // let routeUrl = this.$router.resolve({
-      //   path: '/article',
-      //   query: { v: paper_id }
-      // });
       this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(paper_id))));
       location.reload();
-      // this.$router.push({ name: '论文详情' }, () => { this.$router.push(`/article/${paper_id}`) })
-      // window.open(routeUrl.href, "_self");
     },
     toAuthor: function (id) {
-      this.$router.push("/php/" + id);
-      // let routeUrl = this.$router.resolve({
-      //   path: '/schPortal',
-      //   query: { v: id }
-      // });
-      // window.open(routeUrl.href, "_self");
+      console.log(id);
+      this.$router.push("/scholar/" + btoa(encodeURIComponent(JSON.stringify(id))));
     },
     toDOI: function (doi) {
       window.open(doi);
@@ -782,13 +772,13 @@ export default {
     },
 
     download() {
-      if (this.articleDetails._source.primary_location.pdf_url.length === 0) {
+      const url = this.articleDetails._source.primary_location.pdf_url;
+      if (url === null) {
         this.$message.error("未找到该文献原文PDF！");
-        return;
+      } else {
+        this.$message.success("正在下载原文PDF，请耐心等待！");
+        window.open(url, '_blank');
       }
-      this.$message.success("正在下载原文PDF，请耐心等待！");
-      console.log(this.articleDetails._source.primary_location.pdf_url.length);
-      window.location.href(this.articleDetails._source.primary_location.pdf_url, this.articleDetails._source.display_name);
     },
 
     getRelatedPapers() {
@@ -817,7 +807,6 @@ export default {
         console.log(this.articleDetails);
         this.msg.reference_count = this.articleDetails._source.referenced_works.length;
         this.msg.related_works_count = this.articleDetails._source.related_works.length;
-        console.log(this.msg.related_works_count);
       }
       )
     },
@@ -834,12 +823,10 @@ export default {
 
   created() {
     this.getArticleDetail();
-    this.getCitationMsg();
-    //   this.getRelatedPapers();
   },
 }
 </script>
-  
+
 <style scoped>
 .article {
   background-color: #f1f3f6;

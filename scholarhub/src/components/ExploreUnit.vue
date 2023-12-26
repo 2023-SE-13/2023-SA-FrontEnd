@@ -2,8 +2,11 @@
   <div class="explore-unit">
     <div class="result-unit" @click="gotoArticle">
       <div class="content-unit">
+        <h1 v-if="paperData.highlight && paperData.highlight.title" v-html="paperData.highlight.title[0]" class="unit-title">
+        </h1>
+        <!-- 当 highlight.title 不存在时，直接显示 title -->
         <!-- 论文题目 -->
-        <h1 class="unit-title">
+        <h1 v-else class="unit-title">
           {{ this.paperData._source.title }}
         </h1>
         <!-- 作者 -->
@@ -26,7 +29,7 @@
         </div>
         <div class="unit-keywords">
           <span>关键词:</span> <span v-for="(keyword, index) in this.paperData._source.keywords" :key="index">
-            {{keyword.keyword}},
+            {{ keyword.keyword }},
           </span>
         </div>
       </div>
@@ -51,7 +54,7 @@ export default {
   },
   methods: {
     gotoArticle() {
-      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.id))));
+      this.$router.push("/article/" + btoa(encodeURIComponent(JSON.stringify(this.paperData._id))));
     },
   },
   created() {

@@ -374,3 +374,13 @@ export function UploadAvatar(data, token) {
         }
     })
 }
+
+export function GetAuthor(param) {
+    return service({
+        method: 'get',
+        url: `/academia/get_author`,
+        params: {
+            'author_id': param
+        }
+    })
+}

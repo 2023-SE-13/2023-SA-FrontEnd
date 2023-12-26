@@ -1,5 +1,5 @@
 <template>
-    <div class="paper-unit">
+    <div class="paper-unit" @click="gotoPaper">
         <!-- <div class="paper-img"> <img src="" alt="图片加载失败" class="fallback-img"></div> -->
         <div class="paper-unit-content">
             <div class="paper-title">{{ this.paperData.title}}</div>
@@ -23,6 +23,11 @@ export default {
         }
     },
     methods: {
+        gotoPaper() {
+            this.$router.push({
+                path: '/article/' +  btoa(encodeURIComponent(JSON.stringify(this.paperDetail._id)))
+            })
+        },
     },
     mounted() {
         GetPaper(this.paperData.work_id).then(res => {

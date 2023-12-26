@@ -107,12 +107,11 @@ export default {
         if (count > 0) {
           count--
           document.getElementById("Code").innerText = count + '秒后重发'
-        } else {
-          clearInterval(timer)
-          document.getElementById("Code").innerText = '发送验证码'
-          this.loading = false
         }
       }, 1000)
+      clearInterval(timer)
+      document.getElementById("Code").innerText = '发送验证码'
+      this.loading = false
     },
     register() {
       if (typeof this.registerForm.username == "undefined" || this.registerForm.username == null || this.registerForm.username === "") {
