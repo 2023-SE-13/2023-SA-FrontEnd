@@ -531,6 +531,8 @@ export default {
     GetWorkList(this.token).then(res => {
       console.log(res)
       if (res.data.result === 0) {
+        console.log("1")
+        console.log(res.data.objects, "33333")
         this.visit_data = res.data.objects
       } else {
         this.$notify({
@@ -601,7 +603,6 @@ export default {
           work_name: "",
           work_id: "",
           time: ""
-
         }
       ],
       infoDialog: false,
