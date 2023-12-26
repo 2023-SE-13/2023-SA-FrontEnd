@@ -46,7 +46,7 @@ export default {
   },
   data() {
     return {
-      id: 'https://openalex.org/W2783557622',
+      id: '',
       isOverflow: true,
       journal: 'unknown',
       abstract: 'unknown'

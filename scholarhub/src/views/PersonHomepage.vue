@@ -456,26 +456,26 @@ export default {
         this.isManager = res.data.is_admin
         if (res.data.is_author) {
           this.isAuthor = true
-          let s = btoa(encodeURIComponent(JSON.stringify(res.data.author_id)));
-          let aid = JSON.parse(decodeURIComponent(atob(s)));
-          GetAuthor(aid).then(res => {
+          this.aid = res.data.author_id;
+          console.log(this.aid)
+          GetAuthor(this.aid).then(res => {
             console.log(res)
-            if (res.data._source.last_known_institution) {
-              console.log('you')
+            console.log(res.data._source)
+            if (res.data._source.last_known_institution === null) {
+              this.institution = "暂无机构信息";
+            } else {
               this.institution = res.data._source.last_known_institution.display_name
-            } else {
-              this.institution = null
             }
-            if (res.data._source.display_name) {
-              this.name = res.data._source.display_name
+            if (res.data._source.display_name === null) {
+              this.name = null;
             } else {
-              this.name = null
+              this.name = res.data._source.display_name
             }
           })
         } else {
           this.isAuthor = false
           this.name = null
-          this.institution = null
+          this.institution = "暂无机构信息"
         }
       } else {
         this.$notify({
@@ -506,6 +506,7 @@ export default {
   },
   data() {
     return {
+      aid: "",
       token: null,
       is_black: false,
       username: "username",
