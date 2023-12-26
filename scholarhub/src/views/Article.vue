@@ -50,17 +50,21 @@
             &nbsp;{{ articleDetails._source.primary_location.publisher }}
             <!-- 其他出版信息，根据您的数据结构可能需要调整 -->
             <span v-if="articleDetails._source.primary_location.source.volume"> | Volume: {{
-              articleDetails._source.primary_location.source.volume }}</span>
+                articleDetails._source.primary_location.source.volume
+              }}</span>
             <span v-if="articleDetails._source.primary_location.source.first_page">, pp {{
-              articleDetails._source.primary_location.source.first_page }}</span>
+                articleDetails._source.primary_location.source.first_page
+              }}</span>
             <span v-if="articleDetails._source.primary_location.source.last_page">-{{
-              articleDetails._source.primary_location.source.last_page }}</span>
+                articleDetails._source.primary_location.source.last_page
+              }}</span>
           </span>
         </div>
         <div class="sub-title" v-if="articleDetails._source.doi">
           <!-- 显示 DOI -->
           <span class="_info">DOI: <span class="_link" @click="toDOI(articleDetails._source.doi)">{{
-            articleDetails._source.doi }}</span></span>
+              articleDetails._source.doi
+            }}</span></span>
         </div>
 
         <div class="title-button">
@@ -100,12 +104,12 @@
         <div class="abstract-div">
           <div class="abstract-title">摘要</div>
           <div
-            v-if="articleDetails._source.abstract_inverted_index && articleDetails._source.abstract_inverted_index.length > 0">
+              v-if="articleDetails._source.abstract_inverted_index && articleDetails._source.abstract_inverted_index.length > 0">
             <div class="abstract-content _content"
-              v-if="articleDetails._source.abstract_inverted_index.length < spanLength || isSpan">
+                 v-if="articleDetails._source.abstract_inverted_index.length < spanLength || isSpan">
               {{ articleDetails._source.abstract_inverted_index }}
               <span v-if="isSpan && articleDetails._source.abstract_inverted_index.length >= spanLength" class="_link"
-                @click="isSpan = !isSpan"> 折叠</span>
+                    @click="isSpan = !isSpan"> 折叠</span>
             </div>
             <div class="abstract-content _content" v-else>
               {{ articleDetails._source.abstract_inverted_index.substring(0, 570) }}...
@@ -130,11 +134,13 @@
               </div>
               <div class="reference-article">
                 <div class="reference-article-block" v-for="(article, index) in articleDetails._source.referenced_works"
-                  :key="index">
+                     :key="index">
                   <div @click="toArticle(article.id)">
                     <el-row>
-                      <el-col :span="2" style="text-align: right; font-size: 15px">[{{ index + 1
-                      }}]&nbsp;&nbsp;&nbsp;</el-col>
+                      <el-col :span="2" style="text-align: right; font-size: 15px">[{{
+                          index + 1
+                        }}]&nbsp;&nbsp;&nbsp;
+                      </el-col>
                       <el-col :span="22">
                         <div class="reference-title">
                           <span>{{ article.title }}</span>
@@ -162,11 +168,13 @@
               </div>
               <div class="reference-article">
                 <div class="reference-article-block" v-for="(article, index) in articleDetails._source.related_works"
-                  :key="index">
+                     :key="index">
                   <div @click="toArticle(article.id)">
                     <el-row>
-                      <el-col :span="2" style="text-align: right; font-size: 15px">[{{ index + 1
-                      }}]&nbsp;&nbsp;&nbsp;</el-col>
+                      <el-col :span="2" style="text-align: right; font-size: 15px">[{{
+                          index + 1
+                        }}]&nbsp;&nbsp;&nbsp;
+                      </el-col>
                       <el-col :span="22">
                         <div class="reference-title">
                           <span>{{ article.title }}</span>
@@ -213,7 +221,7 @@
 
 
           <el-row class="field _bd_bottom"
-            v-if="articleDetails._source.concepts && articleDetails._source.concepts.length > 0">
+                  v-if="articleDetails._source.concepts && articleDetails._source.concepts.length > 0">
             <div class="field-title">领域</div>
             <div class="field-content" v-for="(concept, index) in articleDetails._source.concepts" :key="index">
               -&ensp;<span>{{ concept.display_name }}</span>
@@ -249,7 +257,7 @@
 
 <script>
 //   import user from "../../store/user";
-import { GetPaper, FavoritePaper, ApplyWork } from '@/api/api';
+import {GetPaper, FavoritePaper, ApplyWork} from '@/api/api';
 import qs from "qs";
 import CiteDialog from "../components/CiteDialog";
 import CollectDialog from "../components/CollectDialog";
@@ -257,7 +265,7 @@ import {AddBrowHistory} from "@/api/api";
 
 export default {
   name: "Article",
-  components: { CiteDialog, CollectDialog },
+  components: {CiteDialog, CollectDialog},
   props: ['paper_id'],
   data() {
     return {
@@ -668,7 +676,14 @@ export default {
     },
   },
   mounted() {
-    this.getArticleDetail();
+    const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id)))
+    GetPaper(tempSearch).then(res => {
+          this.articleDetails = res.data;
+          console.log("artical" + this.articleDetails._source.title);
+          this.msg.reference_count = this.articleDetails._source.referenced_works.length;
+          this.msg.related_works_count = this.articleDetails._source.related_works.length;
+        }
+    )
     const data = {
       work_id: JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id))),
       work_name: this.articleDetails._source.title
@@ -718,8 +733,7 @@ export default {
         let ten_thousand = Math.floor(num / 10000)
         let thousand = Math.floor(num % 10000 / 1000)
         num = ten_thousand + "." + thousand + "w"
-      }
-      else if (num >= 1000) {
+      } else if (num >= 1000) {
         let thousand = Math.floor(num / 1000)
         let hundred = Math.floor(num % 1000 / 100)
         num = thousand + "." + hundred + "k"
@@ -744,17 +758,17 @@ export default {
     //认领学术成果
     claimAcademic() {
       ApplyWork(this.msg.paper_id, localStorage.getItem('token')).then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          if (res.data.result === 1) {
-            this.$message.error("不是学者，没有申请资格");
-          } else if (res.data.result === 0) {
-            this.$message.success("已发送认领学术成果申请");
+            console.log(res);
+            if (res.status === 200) {
+              if (res.data.result === 1) {
+                this.$message.error("不是学者，没有申请资格");
+              } else if (res.data.result === 0) {
+                this.$message.success("已发送认领学术成果申请");
+              }
+            } else {
+              this.$message.error("认领学术成果失败");
+            }
           }
-        } else {
-          this.$message.error("认领学术成果失败");
-        }
-      }
       )
 
     },
@@ -775,16 +789,16 @@ export default {
       form.append("article_name", this.msg.article_name)
       // console.log(this.msg);
       FavoritePaper(form, localStorage.getItem('token')).then(res => {
-        if (res.data.result === 0) {
-          this.$message.success("收藏成功");
-          this.articleDetails._source.collected_num = res.data.collected_num;
-          this.showCollect = true;
-        } else if (res.data.result === 1) {
-          this.$message.error(res.data.message);
-        } else {
-          this.$message.error("收藏失败");
-        }
-      }
+            if (res.data.result === 0) {
+              this.$message.success("收藏成功");
+              this.articleDetails._source.collected_num = res.data.collected_num;
+              this.showCollect = true;
+            } else if (res.data.result === 1) {
+              this.$message.error(res.data.message);
+            } else {
+              this.$message.error("收藏失败");
+            }
+          }
       )
     },
 
@@ -816,24 +830,13 @@ export default {
       //   })
     },
 
-    getArticleDetail() {
-      console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id))))
-      const tempSearch = JSON.parse(decodeURIComponent(atob(this.$route.params.paper_id)))
-      GetPaper(tempSearch).then(res => {
-        this.articleDetails = res.data;
-        console.log(this.articleDetails);
-        this.msg.reference_count = this.articleDetails._source.referenced_works.length;
-        this.msg.related_works_count = this.articleDetails._source.related_works.length;
-      }
-      )
-    },
   },
 
   computed: {
     uniqueInstitutions() {
       const institutions = this.articleDetails._source.authorships
-        .map(a => a.institutions && a.institutions[0] ? a.institutions[0].display_name : null)
-        .filter((value, index, self) => value && self.indexOf(value) === index);
+          .map(a => a.institutions && a.institutions[0] ? a.institutions[0].display_name : null)
+          .filter((value, index, self) => value && self.indexOf(value) === index);
       return institutions;
     }
   },

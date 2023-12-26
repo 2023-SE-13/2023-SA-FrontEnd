@@ -113,6 +113,7 @@
           </el-pagination>
         </div>
         <div class="BottomContent3" v-show="MidNavIdx === '3'">
+          <el-button >清空</el-button>
           <el-table :data="visit_data.slice(begin4, end4)" style="width: 100%">
             <el-table-column label="浏览记录" prop="work_name"></el-table-column>
           </el-table>
