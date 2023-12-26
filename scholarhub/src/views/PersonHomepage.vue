@@ -844,7 +844,7 @@ export default {
     clear_visit(){
       DeleteAllBrowHistory(this.token).then(res=>{
         if (res.data.result === 0){
-          this.visit_data.clear()
+          this.visit_data = this.visit_data.slice(0,0)
         } else {
           this.$notify({
             title: '错误',
