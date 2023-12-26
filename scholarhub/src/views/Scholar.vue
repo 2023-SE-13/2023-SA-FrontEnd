@@ -177,7 +177,6 @@ export default {
         this.institution = res.data._source.last_known_institution.display_name
       }
       this.is_applied = res.data.is_applied
-      console.log(this.is_applied)
     })
   },
   data() {
@@ -294,7 +293,12 @@ export default {
     interest() {
       this.dialogVisible = false
       this.form.photo = this.file
-      ApplyAuthor(this.form, this.token).then(res=>{
+      const formData = new FormData();
+      formData.append('author_id', this.form.author_id);
+      formData.append('name', this.form.name);
+      formData.append('content', this.form.description);
+      formData.append('photo', this.form.photo);
+      ApplyAuthor(formData, this.token).then(res=>{
         if (res.data.result === 0) {
           this.$notify({
             title: '成功',
