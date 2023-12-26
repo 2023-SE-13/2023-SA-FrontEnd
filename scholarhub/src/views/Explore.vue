@@ -195,7 +195,7 @@
 import { AuthorSearch, FuzzySearch, ExactSearch, AuthorFuzzySearch, MultiSearch } from '@/api/api';
 import ExploreUnit from '@/components/ExploreUnit.vue'
 import ScholarUnit from '@/components/ScholarUnit.vue';
-import SelectBox from "@/components/SelectBox.vue";
+
 export default {
     props: [
 
