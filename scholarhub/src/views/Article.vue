@@ -772,13 +772,13 @@ export default {
     },
 
     download() {
-      if (this.articleDetails._source.primary_location.pdf_url.length === 0) {
+      const url = this.articleDetails._source.primary_location.pdf_url;
+      if (url === null) {
         this.$message.error("未找到该文献原文PDF！");
-        return;
+      } else {
+        this.$message.success("正在下载原文PDF，请耐心等待！");
+        window.open(url, '_blank');
       }
-      this.$message.success("正在下载原文PDF，请耐心等待！");
-      console.log(this.articleDetails._source.primary_location.pdf_url.length);
-      window.location.href(this.articleDetails._source.primary_location.pdf_url, this.articleDetails._source.display_name);
     },
 
     getRelatedPapers() {
