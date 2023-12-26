@@ -115,7 +115,6 @@ export default {
                 'zh-cn': '简体中文',
                 'nl': '荷兰语',
                 'no': '挪威语',
-
                 'so': '伊那里萨摩斯语',
                 'it': '意大利文',
                 'tl': '他加禄语',
@@ -382,7 +381,6 @@ export default {
         },
         makeSure() {
             this.selectSearch();
-
         },
         cancel() {
             this.checkFieldList = [];
@@ -398,9 +396,9 @@ export default {
             this.pageIdx = val;
             this.selectSearch();
         },
-        changeCollect(data) {
-            this.$emit('changeCollect', data);
-        },
+        // changeCollect(data) {
+        //     this.$emit('changeCollect', data);
+        // },
         changeYear() {
             this.selectSearch();
         },
@@ -456,6 +454,9 @@ export default {
             // 使用 $emit 发送事件，并附带数据
             let filteredPaperDatas = this.abc.filter(data => data._source.language !== null && this.checkLanguageList.includes(data._source.language));
             console.log(filteredPaperDatas);
+            
+            //调用接口
+
             // this.$emit('childToParent', filteredPaperDatas);
             // let _loadingIns = this.$loading({ fullscreen: true, text: '拼命加载中' });
 

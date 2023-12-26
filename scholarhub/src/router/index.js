@@ -46,7 +46,7 @@ const routes = [
         name:'首页1',
         component:()=>import('@/views/HomePage')
       },
-
+      
       {
         path:'/settings',
         name:'设置',
@@ -75,7 +75,6 @@ const routes = [
     name:'个人主页',
     component:()=>import('@/views/PersonHomepage')
   },
-  
   {
     path:'/login',
     name:'登录',
