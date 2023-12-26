@@ -80,26 +80,26 @@
             <el-menu-item id="item2" index="2">专利</el-menu-item>
           </el-menu>
           <div v-show="Menu1Idx === '1'">
-            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
-              <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
-            </el-input>
-            <el-switch class="mp_switch" v-model="isMasterpieceOnly" active-text="仅看代表作" active-color="#2f3a91"
-                       inactive-color="#646464"></el-switch>
-            <el-dropdown class="dropdown">
-              <el-button>
-                作者筛选<i class="el-icon-arrow-down el-icon--right"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>第一作者</el-dropdown-item>
-                <el-dropdown-item>第二作者</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+<!--            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">-->
+<!--              <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>-->
+<!--            </el-input>-->
+<!--            <el-switch class="mp_switch" v-model="isMasterpieceOnly" active-text="仅看代表作" active-color="#2f3a91"-->
+<!--                       inactive-color="#646464"></el-switch>-->
+<!--            <el-dropdown class="dropdown">-->
+<!--              <el-button>-->
+<!--                作者筛选<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
+<!--              </el-button>-->
+<!--              <el-dropdown-menu slot="dropdown">-->
+<!--                <el-dropdown-item>第一作者</el-dropdown-item>-->
+<!--                <el-dropdown-item>第二作者</el-dropdown-item>-->
+<!--              </el-dropdown-menu>-->
+<!--            </el-dropdown>-->
             <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
           </div>
           <div v-show="Menu1Idx === '2'">
-            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">
-              <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>
-            </el-input>
+<!--            <el-input class="keywordSearch" placeholder="关键词检索" v-model="keywordsInput" @keyup.enter.native="search">-->
+<!--              <el-button slot="suffix" icon="el-icon-search" @click="search"></el-button>-->
+<!--            </el-input>-->
             <el-empty class="empty" image="https://p3-bcy-sign.bcyimg.com/banciyuan/98758c3b7b734765a1d72d8adce82a65~tplv-banciyuan-w650.image?x-expires=1704558020&x-signature=pKwEtXe1SEZI7S9mE2pfRusp%2BRU%3D" description="空空如也~"></el-empty>
           </div>
         </div>
