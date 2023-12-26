@@ -113,7 +113,7 @@
           </el-pagination>
         </div>
         <div class="BottomContent3" v-show="MidNavIdx === '3'">
-          <el-button >清空</el-button>
+          <el-button class="clear_button">清空</el-button>
           <el-table :data="visit_data.slice(begin4, end4)" style="width: 100%">
             <el-table-column label="浏览记录" prop="work_name"></el-table-column>
           </el-table>
@@ -1165,6 +1165,29 @@ export default {
   width: 82.6%;
   height: 98%;
   background-color: white;
+}
+
+.BottomContent3 .el-table {
+  position: relative;
+  top: -30px;
+}
+
+.BottomContent3 .clear_button {
+  width: 80px;
+  height: 40px;
+  float: right;
+  background-color: #67C23A;
+  color: white;
+  font-size: 16px;
+  padding: 12px;
+  position: relative;
+  top: 10px;
+  right: 20px;
+  z-index: 500;
+}
+
+.BottomContent3 .clear_button:hover {
+  filter: brightness(1.2);
 }
 
 .BottomContent4 {
