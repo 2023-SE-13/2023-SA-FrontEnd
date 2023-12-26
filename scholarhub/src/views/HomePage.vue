@@ -28,7 +28,7 @@
             <div class="app-counting-items">
                 <div class="app-counting-item">1,372,233,670 期刊论文</div>
                 <div class="app-counting-item">{{this.userNum}} 学者用户</div>
-                <div class="app-counting-item">{{this.authorNum}} 科研作者</div>
+                <div class="app-counting-item">{{this.authorNum}} 已认领学者</div>
                 <div class="app-counting-item">{{this.browseNum}} 浏览量</div>
             </div>
         </div>
@@ -40,11 +40,6 @@
             <!-- <PaperUnit v-for="index in 4" :key="index"></PaperUnit> -->
             <PaperUnit PaperUnit v-for="(paperData, index) in limitedPaperDatas" :key="index" :paper-data="paperData"></PaperUnit>
         </div>
-        <div class="app-title">
-            <img src="@/assets/app-label-head.png" class="app-title-head">
-            <div class="app-title-text">技术支持方</div>
-        </div>
-        <div style="margin-left: 11%; font-size: 24px; text-align: left; font-weight: 300; margin-bottom: 20px;">MSI软件分析小组</div>
         <el-dialog title="高级检索" :visible.sync="dialogVisible" width="50%">
             <!-- <span>这是一段信息</span> -->
             <div>
