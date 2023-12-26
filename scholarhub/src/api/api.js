@@ -61,6 +61,7 @@ export function VerifyCode(data, token) {
 // 修改邮箱
 export function ChangeUserEmail(data,token){
     data = JSON.stringify(data)
+    console.log(data,token)
     return service({
         method:'post',
         url:'/user/change_user_email',

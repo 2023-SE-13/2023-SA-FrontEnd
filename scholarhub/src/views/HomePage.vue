@@ -195,6 +195,7 @@ export default {
         }
     },
     created() {
+        console.log(localStorage.getItem('token'))
         ShowHot().then(res => {
             this.paperDatas = res.data.works
         })

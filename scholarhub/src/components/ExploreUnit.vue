@@ -10,8 +10,9 @@
         <div class="unit-author">
           <i class="el-icon-user-solid">
             &nbsp;
-            <span v-for="name in this.paperData._source.authorships" :key="name.author.display_name">
-              {{name.author.display_name }}&nbsp;,&nbsp;&nbsp;
+            <span v-for="(name,index) in paperData._source.authorships" :key="index">
+              {{name.author.display_name}}&nbsp;
+              <span v-if="index < paperData._source.authorships.length - 1">,&nbsp;&nbsp;</span>
             </span>
           </i>
         </div>
