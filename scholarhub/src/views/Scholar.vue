@@ -17,7 +17,7 @@
         </el-upload>
         <div class="PersonalInfo">
           <p style="font-size: 20px;color: black;font-weight: bold">
-            用户名：{{ username }}
+            姓名：{{ name }}
             <span>
             <i class="el-icon-edit" @click="modify" v-show="isSelf">详细资料</i>
             <el-dialog class="info_dialog" :visible.sync="infoDialog" :append-to-body="true">
@@ -124,6 +124,7 @@ import {ShowPaperMessage} from "@/api/api";
 import {HandleAuthorMessage} from "@/api/api";
 import {HandlePaperMessage} from "@/api/api";
 import {UploadAvatar} from "@/api/api";
+import {GetAuthor} from "@/api/api";
 export default {
   name: "PersonHomepage",
   computed: {
@@ -140,18 +141,24 @@ export default {
       this.$router.push("/login")
     }
     getInformation(this.token).then(res => {
-      if (res.data.result === 0){
-        this.username = res.data.username
-        this.name = res.data.name
+      if (res.data.result === 0) {
         this.imageUrl = res.data.photo_url_out
-        this.isManager = res.data.is_admin
       } else {
         this.$notify({
-          title: '错误',
+          title: '警告',
           message: '获取用户信息失败',
-          type: 'error'
+          type: 'warning'
         });
-        return;
+      }
+    })
+    // console.log(this.$route.params.id)
+    // console.log(JSON.parse(decodeURIComponent(atob(this.$route.params.id))))
+    GetAuthor(JSON.parse(decodeURIComponent(atob(this.$route.params.id)))).then(res => {
+      if (res.data.result === 0) {
+        this.name = res.data.display_name
+        this.institution = res.data.last_known_institution.display_name
+      } else {
+        console.log(res.data.messages)
       }
     })
     ShowAuthorMessage(this.token).then(res => {
